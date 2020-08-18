@@ -36,6 +36,18 @@ int StringViewToInteger(const std::string_view& s_view) {
   int result;
   std::stringstream error_message;
 
+  if (!s_view.empty()) {
+    std::string_view::const_iterator it{s_view.cbegin()};
+    while (it != s_view.cend()) {
+      if (!std::isdigit(*it)) {
+        error_message << "Unable to convert field to integer: '" << s_view
+                      << "'.";
+        throw exceptions::ParsingError(error_message.str());
+      }
+      ++it;
+    }
+  }
+
   std::from_chars_result conversion_result = std::from_chars(
       s_view.data(), s_view.data() + s_view.size(), result);
   if (conversion_result.ec == std::errc::invalid_argument

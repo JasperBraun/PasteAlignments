@@ -32,23 +32,7 @@ namespace Catch {
 template<>
 struct StringMaker<paste_alignments::Alignment> {
   static std::string convert(const paste_alignments::Alignment& alignment) {
-    std::stringstream  ss;
-    ss << std::boolalpha << "(id=" << alignment.id()
-       << ", qstart=" << alignment.qstart()
-       << ", qend=" << alignment.qend()
-       << ", sstart=" << alignment.sstart()
-       << ", send=" << alignment.send()
-       << ", plus_strand=" << alignment.plus_strand()
-       << ", nident=" << alignment.nident()
-       << ", mismatch=" << alignment.mismatch()
-       << ", gapopen=" << alignment.gapopen()
-       << ", gaps=" << alignment.gaps()
-       << ", qlen=" << alignment.qlen()
-       << ", slen=" << alignment.slen()
-       << ", qseq='" << alignment.qseq()
-       << "', sseq='" << alignment.sseq()
-       << "')";
-    return ss.str();
+    return alignment.DebugString();
   }
 };
 

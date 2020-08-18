@@ -26,16 +26,17 @@
 
 #include "string_conversions.h" // include after catch.h
 
+#include "exceptions.h"
+
 // AlignmentBatch tests
 //
 // Test correctness for:
 // * FromStringFields
 // 
 // Test invariants for:
-// * FromStringFields
 //
 // Test exceptions for:
-// * FromStringFields
+// * FromStringFields // ensures invariants
 
 // string fields for alignments are (in this order):
 //
@@ -119,6 +120,306 @@ SCENARIO("Test correctness of Alignment::FromStringFields.",
       }
     }
   }
+}
+
+SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
+         "[Alignment][FromStringFields][exceptions]") {
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "1101", "1110",
+        "10", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("One of the first 10 fields cannot be converted to an integer.") {
+    std::vector<std::string_view> test_a{
+        "a", "110", "abc", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "b", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "c", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{
+        "101", "110", "1101", "d",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_e{
+        "101", "110", "1101", "1110",
+        "e", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_f{
+        "101", "110", "1101", "1110",
+        "10", "", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_g{
+        "101", "110", "1101", "1110",
+        "10", "0", "foo", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_h{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", std::to_string(2 * std::numeric_limits<int>::max()),
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_i{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "\t", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_j{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "\n",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_e),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_f),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_g),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_h),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_i),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_j),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "110", "101", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "1", "0", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "-101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "-110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "-1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{
+        "101", "110", "1101", "-1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "101", "110", "1101", "1110",
+        "-10", "10", "10", "10",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "110", "1101", "1110",
+        "10", "-10", "10", "10",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "1101", "1110",
+        "10", "10", "-10", "10",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{
+        "101", "110", "1101", "1110",
+        "10", "10", "10", "-10",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "0", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "0",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "-10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "-100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+    }
+  }
+
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", ""};
+    std::vector<std::string_view> test_c{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "-10000", "100000",
+        "", ""};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+    }
+  }
+
+
+
+
+
+
+/*
+  WHEN("Fewer than 12 fields are provided.") {
+    std::vector<std::string_view> test_a{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_b{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_c{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+    std::vector<std::string_view> test_d{
+        "101", "110", "1101", "1110",
+        "10", "0", "0", "0",
+        "10000", "100000",
+        "CCCCAAAATT", "CCCCAAAATT"};
+
+    THEN("`exceptions::ParsingError` is thrown.") {
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+                      exceptions::ParsingError);
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+                      exceptions::ParsingError);
+    }
+  }
+  */
 }
 
 } // namespace
