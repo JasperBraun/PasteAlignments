@@ -52,14 +52,13 @@ class Alignment {
   ///  are ignored.
   ///
   /// @exceptions Strong guarantee. Throws `exceptions::ParsingError` if
-  ///  * Fewer than 12 fields were provided
-  ///  * One of the fields, except the last two cannot be converted to integer
-  ///  * Query start is larger than query end coordinate
-  ///  * Query or subject start or end coordinates are negative
-  ///  * Number of identities, mismatches, gap openings, or total gaps is
-  ///    negative
-  ///  * Query or subject length is non-positive
-  ///  * Aligned part of query or subject sequence is empty. 
+  ///  * Fewer than 12 fields are provided
+  ///  * One of the fields, except qseq and sseq cannot be converted to integer
+  ///  * qstart is larger than qend coordinate
+  ///  * One of qstart, qend, sstart, or send is negative
+  ///  * One of nident, mismatch, gapopen, or gaps is negative
+  ///  * One of qlen, or slen is non-positive
+  ///  * One of qseq, or sseq is empty
   ///
   static Alignment FromStringFields(int id,
                                     std::vector<std::string_view> fields);

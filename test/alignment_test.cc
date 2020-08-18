@@ -155,7 +155,8 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("One of the first 10 fields cannot be converted to an integer.") {
+  WHEN("One of the fields, except qseq and sseq cannot be converted to"
+       " integer.") {
     std::vector<std::string_view> test_a{
         "a", "110", "abc", "1110",
         "10", "0", "0", "0",
@@ -231,7 +232,7 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("Fewer than 12 fields are provided.") {
+  WHEN("qstart is larger than qend coordinate.") {
     std::vector<std::string_view> test_a{
         "110", "101", "1101", "1110",
         "10", "0", "0", "0",
@@ -251,7 +252,7 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("Fewer than 12 fields are provided.") {
+  WHEN("One of qstart, qend, sstart, or send is negative.") {
     std::vector<std::string_view> test_a{
         "-101", "110", "1101", "1110",
         "10", "0", "0", "0",
@@ -285,7 +286,7 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("Fewer than 12 fields are provided.") {
+  WHEN("One of nident, mismatch, gapopen, or gaps is negative.") {
     std::vector<std::string_view> test_a{
         "101", "110", "1101", "1110",
         "-10", "10", "10", "10",
@@ -319,7 +320,7 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("Fewer than 12 fields are provided.") {
+  WHEN("One of qlen, or slen is non-positive.") {
     std::vector<std::string_view> test_a{
         "101", "110", "1101", "1110",
         "10", "0", "0", "0",
@@ -353,7 +354,7 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     }
   }
 
-  WHEN("Fewer than 12 fields are provided.") {
+  WHEN("One of qseq, or sseq is empty.") {
     std::vector<std::string_view> test_a{
         "101", "110", "1101", "1110",
         "10", "0", "0", "0",
@@ -379,47 +380,6 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
                       exceptions::ParsingError);
     }
   }
-
-
-
-
-
-
-/*
-  WHEN("Fewer than 12 fields are provided.") {
-    std::vector<std::string_view> test_a{
-        "101", "110", "1101", "1110",
-        "10", "0", "0", "0",
-        "10000", "100000",
-        "CCCCAAAATT", "CCCCAAAATT"};
-    std::vector<std::string_view> test_b{
-        "101", "110", "1101", "1110",
-        "10", "0", "0", "0",
-        "10000", "100000",
-        "CCCCAAAATT", "CCCCAAAATT"};
-    std::vector<std::string_view> test_c{
-        "101", "110", "1101", "1110",
-        "10", "0", "0", "0",
-        "10000", "100000",
-        "CCCCAAAATT", "CCCCAAAATT"};
-    std::vector<std::string_view> test_d{
-        "101", "110", "1101", "1110",
-        "10", "0", "0", "0",
-        "10000", "100000",
-        "CCCCAAAATT", "CCCCAAAATT"};
-
-    THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
-                      exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
-                      exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
-                      exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
-                      exceptions::ParsingError);
-    }
-  }
-  */
 }
 
 } // namespace
