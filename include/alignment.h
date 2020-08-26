@@ -21,11 +21,8 @@
 #ifndef PASTE_ALIGNMENTS_ALIGNMENT_H_
 #define PASTE_ALIGNMENTS_ALIGNMENT_H_
 
-#include <sstream>
 #include <string>
 #include <vector>
-
-
 
 namespace paste_alignments {
 
@@ -68,11 +65,11 @@ class Alignment {
   ///
   /// @{
   
-  /// @brief Copy constructor (defaulted).
+  /// @brief Copy constructor.
   ///
   Alignment(const Alignment& other) = default;
 
-  /// @brief Move constructor (defaulted).
+  /// @brief Move constructor.
   ///
   Alignment(Alignment&& other) = default;
   /// @}
@@ -81,11 +78,11 @@ class Alignment {
   ///
   /// @{
   
-  /// @brief Copy assignment (defaulted).
+  /// @brief Copy assignment.
   ///
   Alignment& operator=(const Alignment& other) = default;
 
-  /// @brief Move assignment (defaulted).
+  /// @brief Move assignment.
   ///
   Alignment& operator=(Alignment&& other) = default;
   /// @}
@@ -96,59 +93,102 @@ class Alignment {
 
   /// @brief Object's id.
   ///
-  inline int id() const {return id_;}
+  /// @exceptions Strong guarantee.
+  ///
+  inline int Id() const {return id_;}
 
   /// @brief Query starting coordinate.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline int qstart() const {return qstart_;}
 
   /// @brief Query ending coordinate.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline int qend() const {return qend_;}
 
   /// @brief Subject starting coordinate.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline int sstart() const {return sstart_;}
 
   /// @brief Subject ending coordinate.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline int send() const {return send_;}
 
   /// @brief Indicates if alignment is on plus strand of subject.
   ///
-  inline bool plus_strand() const {return plus_strand_;}
+  /// @exceptions Strong guarantee.
+  ///
+  inline bool PlusStrand() const {return plus_strand_;}
 
   /// @brief Number of identical matches.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline int nident() const {return nident_;}
 
   /// @brief Number of mismatches.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline int mismatch() const {return mismatch_;}
 
   /// @brief Number of gap openings.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline int gapopen() const {return gapopen_;}
 
   /// @brief Total number of gaps.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline int gaps() const {return gaps_;}
 
   /// @brief Length of query sequence.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline int qlen() const {return qlen_;}
 
   /// @brief Length of subject sequence.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline int slen() const {return slen_;}
 
   /// @brief Query part of the sequence alignment.
+  ///
+  /// @exceptions Strong guarantee.
   ///
   inline const std::string& qseq() const {return qseq_;}
 
   /// @brief Subject part of the sequence alignment.
   ///
+  /// @exceptions Strong guarantee.
+  ///
   inline const std::string& sseq() const {return sseq_;}
+
+  /// @brief Length of the alignment.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline int length() const {return qseq_.length();}
+
+  /// @brief Returns the alignment's percent identity.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline float pident() const {
+    return (static_cast<float>(nident_) / static_cast<float>(qseq_.length())
+            * 100.0f);
+  }
   /// @}
 
   /// @name Other:
@@ -157,43 +197,15 @@ class Alignment {
 
   /// @brief Compares the object to `other`.
   ///
-  inline bool operator==(const Alignment& other) const {
-    return (other.qstart_ == qstart_
-            && other.qend_ == qend_
-            && other.sstart_ == sstart_
-            && other.send_ == send_
-            && other.plus_strand_ == plus_strand_
-            && other.nident_ == nident_
-            && other.mismatch_ == mismatch_
-            && other.gapopen_ == gapopen_
-            && other.gaps_ == gaps_
-            && other.qlen_ == qlen_
-            && other.slen_ == slen_
-            && other.qseq_ == qseq_
-            && other.sseq_ == sseq_);
-  }
+  /// @exceptions Strong guarantee.
+  ///
+  bool operator==(const Alignment& other) const;
 
   /// @brief Returns a descriptive string of the object.
   ///
-  inline std::string DebugString() const {
-    std::stringstream  ss;
-    ss << std::boolalpha << "(id=" << id_
-       << ", qstart=" << qstart_
-       << ", qend=" << qend_
-       << ", sstart=" << sstart_
-       << ", send=" << send_
-       << ", plus_strand=" << plus_strand_
-       << ", nident=" << nident_
-       << ", mismatch=" << mismatch_
-       << ", gapopen=" << gapopen_
-       << ", gaps=" << gaps_
-       << ", qlen=" << qlen_
-       << ", slen=" << slen_
-       << ", qseq='" << qseq_
-       << "', sseq='" << sseq_
-       << "')";
-    return ss.str();
-  }
+  /// @exceptions Strong guarantee.
+  ///
+  std::string DebugString() const;
   /// @}
 
  private:

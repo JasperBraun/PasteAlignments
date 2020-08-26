@@ -41,6 +41,25 @@ struct ParsingError final : public BaseException {
   using BaseException::BaseException;
 };
 
+/// @brief Thrown when a value doesn't fall in a prescribed range.
+///
+struct OutOfRange final : public BaseException {
+  using BaseException::BaseException;
+};
+
+/// @brief Thrown when an empty string is used where a nonempty string was
+///  required.
+///
+struct UnexpectedEmptyString final : public BaseException {
+  using BaseException::BaseException;
+};
+
+/// @brief Thrown when error related to alignment score calculation occurs.
+///
+struct ScoringError final : public BaseException {
+  using BaseException::BaseException;
+};
+
 } // namespace exceptions
 
 } // namespace paste_alignments

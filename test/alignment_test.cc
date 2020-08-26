@@ -28,7 +28,7 @@
 
 #include "exceptions.h"
 
-// AlignmentBatch tests
+// Alignment tests
 //
 // Test correctness for:
 // * FromStringFields
@@ -63,7 +63,7 @@ bool Equals(const Alignment& alignment,
           && alignment.qend() == std::stoi(fields.at(1))
           && alignment.sstart() == std::min(sstart, send)
           && alignment.send() == std::max(sstart, send)
-          && alignment.plus_strand() == (sstart <= send)
+          && alignment.PlusStrand() == (sstart <= send)
           && alignment.nident() == std::stoi(fields.at(4))
           && alignment.mismatch() == std::stoi(fields.at(5))
           && alignment.gapopen() == std::stoi(fields.at(6))
@@ -110,13 +110,13 @@ SCENARIO("Test correctness of Alignment::FromStringFields.",
 
       THEN("Alignments are created as expected.") {
         CHECK(Equals(alignment_a, a));
-        CHECK(alignment_a.id() == 0);
+        CHECK(alignment_a.Id() == 0);
         CHECK(Equals(alignment_b, b));
-        CHECK(alignment_b.id() == 2020);
+        CHECK(alignment_b.Id() == 2020);
         CHECK(Equals(alignment_c, c));
-        CHECK(alignment_c.id() == -2020);
+        CHECK(alignment_c.Id() == -2020);
         CHECK(Equals(alignment_d, d));
-        CHECK(alignment_d.id() == 0);
+        CHECK(alignment_d.Id() == 0);
       }
     }
   }

@@ -20,46 +20,12 @@
 
 #include "alignment.h"
 
-#include <charconv>
 #include <sstream>
-#include <system_error>
 
 #include "exceptions.h"
+#include "helpers.h"
 
 namespace paste_alignments {
-
-// Alignment::FromStringFields helper.
-//
-namespace {
-
-int StringViewToInteger(const std::string_view& s_view) {
-  int result;
-  std::stringstream error_message;
-
-  if (!s_view.empty()) {
-    std::string_view::const_iterator it{s_view.cbegin()};
-    while (it != s_view.cend()) {
-      if (!std::isdigit(*it)) {
-        error_message << "Unable to convert field to integer: '" << s_view
-                      << "'.";
-        throw exceptions::ParsingError(error_message.str());
-      }
-      ++it;
-    }
-  }
-
-  std::from_chars_result conversion_result = std::from_chars(
-      s_view.data(), s_view.data() + s_view.size(), result);
-  if (conversion_result.ec == std::errc::invalid_argument
-      || conversion_result.ec == std::errc::result_out_of_range) {
-    error_message << "Unable to convert field to integer: '" << s_view << "'.";
-    throw exceptions::ParsingError(error_message.str());
-  }
-
-  return result;
-}
-
-} // namespace
 
 // Alignment::FromStringFields.
 //
@@ -76,8 +42,8 @@ Alignment Alignment::FromStringFields(int id,
   Alignment result{id};
 
   // Query coordinates.
-  result.qstart_ = StringViewToInteger(fields.at(0));
-  result.qend_ = StringViewToInteger(fields.at(1));
+  result.qstart_ = helpers::StringViewToInteger(fields.at(0));
+  result.qend_ = helpers::StringViewToInteger(fields.at(1));
   if (result.qstart_ > result.qend_
       || result.qstart_ < 0
       || result.qend_ < 0) {
@@ -88,8 +54,8 @@ Alignment Alignment::FromStringFields(int id,
   }
 
   // Subject coordinates.
-  result.sstart_ = StringViewToInteger(fields.at(2));
-  result.send_ = StringViewToInteger(fields.at(3));
+  result.sstart_ = helpers::StringViewToInteger(fields.at(2));
+  result.send_ = helpers::StringViewToInteger(fields.at(3));
   if (result.sstart_ < 0 || result.send_ < 0) {
     error_message << "Invalid subject start and end coordinates provide to"
                   << " create `Alignment` object: (sstart: " << result.sstart_
@@ -104,10 +70,10 @@ Alignment Alignment::FromStringFields(int id,
   }
 
   // Identities, mismatches, gap openings and gap extensions.
-  result.nident_ = StringViewToInteger(fields.at(4));
-  result.mismatch_ = StringViewToInteger(fields.at(5));
-  result.gapopen_ = StringViewToInteger(fields.at(6));
-  result.gaps_ = StringViewToInteger(fields.at(7));
+  result.nident_ = helpers::StringViewToInteger(fields.at(4));
+  result.mismatch_ = helpers::StringViewToInteger(fields.at(5));
+  result.gapopen_ = helpers::StringViewToInteger(fields.at(6));
+  result.gaps_ = helpers::StringViewToInteger(fields.at(7));
   if (result.nident_ < 0 || result.mismatch_ < 0
       || result.gapopen_ < 0 || result.gaps_ < 0) {
     error_message << "Invalid field value. Fields must not be negative:"
@@ -118,8 +84,8 @@ Alignment Alignment::FromStringFields(int id,
   }
 
   // Sequence lengths.
-  result.qlen_ = StringViewToInteger(fields.at(8));
-  result.slen_ = StringViewToInteger(fields.at(9));
+  result.qlen_ = helpers::StringViewToInteger(fields.at(8));
+  result.slen_ = helpers::StringViewToInteger(fields.at(9));
   if (result.qlen_ <= 0 || result.slen_ <= 0) {
     error_message << "Invalid sequence length. Aligned sequences must have"
                   << " positive length: (qlen: " << result.qlen_ << ", slen: "
@@ -137,6 +103,46 @@ Alignment Alignment::FromStringFields(int id,
   }
 
   return result;
+}
+
+// Alignment::operator==
+//
+bool Alignment::operator==(const Alignment& other) const {
+  return (other.qstart_ == qstart_
+          && other.qend_ == qend_
+          && other.sstart_ == sstart_
+          && other.send_ == send_
+          && other.plus_strand_ == plus_strand_
+          && other.nident_ == nident_
+          && other.mismatch_ == mismatch_
+          && other.gapopen_ == gapopen_
+          && other.gaps_ == gaps_
+          && other.qlen_ == qlen_
+          && other.slen_ == slen_
+          && other.qseq_ == qseq_
+          && other.sseq_ == sseq_);
+}
+
+// Alignment::DebugString
+//
+std::string Alignment::DebugString() const {
+  std::stringstream  ss;
+  ss << std::boolalpha << "(id=" << id_
+     << ", qstart=" << qstart_
+     << ", qend=" << qend_
+     << ", sstart=" << sstart_
+     << ", send=" << send_
+     << ", plus_strand=" << plus_strand_
+     << ", nident=" << nident_
+     << ", mismatch=" << mismatch_
+     << ", gapopen=" << gapopen_
+     << ", gaps=" << gaps_
+     << ", qlen=" << qlen_
+     << ", slen=" << slen_
+     << ", qseq='" << qseq_
+     << "', sseq='" << sseq_
+     << "')";
+  return ss.str();
 }
 
 } // namespace paste_alignments

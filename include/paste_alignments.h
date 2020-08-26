@@ -18,23 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "stats_collector.h"
+#ifndef PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
+#define PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
 
-#define CATCH_CONFIG_MAIN
-#define CATCH_CONFIG_COLOUR_NONE
-#define CATCH_CONFIG_FAST_COMPILE
-#include "catch.h"
+#include "alignment.h"
+#include "exceptions.h"
+#include "helpers.h"
+#include "scoring_system.h"
 
-namespace link_alignments {
+/// @defgroup PasteAlignments-Reference
+///
+/// @{
 
-namespace test {
+/// @brief Library namespace.
+///
+/// @details All types and functions defined by the library reside inside this
+///  namespace.
+///
+namespace paste_alignments {}
 
-namespace {
+/// @brief Contains library-specific exceptions.
+///
+/// @details All non-STL exceptions thrown by library functions are derived
+///  from `BaseError`.
+///
+namespace paste_alignments::exceptions {}
 
+/// @brief Contains various helper functions.
+///
+namespace paste_alignments::helpers {}
+/// @}
 
-
-} // namespace
-
-} // namespace test
-
-} // namespace link_alignments
+#endif // PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_

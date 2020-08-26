@@ -25,14 +25,21 @@
 
 #include <sstream>
 
-#include "alignment.h"
+#include "paste_alignments.h"
 
 namespace Catch {
 
 template<>
 struct StringMaker<paste_alignments::Alignment> {
-  static std::string convert(const paste_alignments::Alignment& alignment) {
-    return alignment.DebugString();
+  static std::string convert(const paste_alignments::Alignment& a) {
+    return a.DebugString();
+  }
+};
+
+template<>
+struct StringMaker<paste_alignments::ScoringSystem> {
+  static std::string convert(const paste_alignments::ScoringSystem& s) {
+    return s.DebugString();
   }
 };
 
