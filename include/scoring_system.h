@@ -25,9 +25,9 @@
 #include <string>
 #include <sstream>
 
-#include "alignment.h"
 #include "exceptions.h"
 #include "helpers.h"
+#include "paste_parameters.h"
 
 namespace paste_alignments {
 
@@ -246,45 +246,44 @@ class ScoringSystem {
   ///
   /// @{
   
-  /// @brief Returns the match reward parameter value used by the object.
+  /// @brief Match reward parameter value used by the object.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int Reward() const {return reward_;}
+  inline float Reward() const {return reward_;}
 
-  /// @brief Returns the mismatch penalty parameter value used by the object.
+  /// @brief Mismatch penalty parameter value used by the object.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int Penalty() const {return penalty_;}
+  inline float Penalty() const {return penalty_;}
 
-  /// @brief Returns the gap open cost parameter value used by the object.
+  /// @brief Gap open cost parameter value used by the object.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int OpenCost() const {return open_cost_;}
+  inline float OpenCost() const {return open_cost_;}
 
-  /// @brief Returns the gap extension cost parameter value used by the object.
+  /// @brief Gap extension cost parameter value used by the object.
   ///
   /// @exceptions Strong guarantee.
   ///
   inline float ExtendCost() const {return extend_cost_;}
 
-  /// @brief Returns the lambda value corresponding to the used scoring
-  ///  parameter values.
+  /// @brief Lambda value corresponding to the used scoring parameter values.
   ///
   /// @exceptions Strong guarantee.
   ///
   inline float Lambda() const {return lambda_;}
 
-  /// @brief Returns the value for the constant `k` corresponding to the used
-  ///  scoring parameter values.
+  /// @brief Value of the constant `k` corresponding to the used scoring
+  ///  parameter values.
   ///
   /// @exceptions Strong guarantee.
   ///
   inline float K() const {return k_;}
 
-  /// @brief Returns the database size associated with the object.
+  /// @brief Database size associated with the object.
   ///
   /// @exceptions Strong guarantee.
   ///
@@ -294,12 +293,33 @@ class ScoringSystem {
   /// @name Alignment statistics computation:
   ///
   /// @{
-  
-  /// @brief Computes the alignment's bitscore.
+
+  /// @brief Computes alignment's raw score.
   ///
-  /// @parameter alignment The alignment whose bitscore is calculated.
-  /// @parameter epsilon Maximum distance to the nearest even number for a raw
-  ///  score to be considered even.
+  /// @parameter nident Number of identically matching residue pairs in
+  ///  alignment.
+  /// @parameter mismatch Number of mismatching residue pairs in alignment.
+  /// @parameter gapopen Number of consecutive runs of gap characters on either
+  ///  side of the alignment.
+  /// @parameter gaps Number of residue pairs aligned with gap characters in the
+  ///  alignment.
+  ///
+  /// @details The raw alignment score is defined by the expression
+  ///  `reward * nident - penalty * mismatch - open_cost * gapopen - extend_cost * gaps`.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline float RawScore(int nident, int mismatch, int gapopen, int gaps) const {
+    return (reward_ * nident
+            - penalty_ * mismatch
+            - open_cost_ * gapopen
+            - extend_cost_ * gaps);
+  }
+  
+  /// @brief Computes alignment's bitscore.
+  ///
+  /// @parameter raw_score Alignment's raw score.
+  /// @parameter parameters Additional arguments to deal with floating points.
   ///
   /// @details The bitscore is defined by the expression
   ///  `(lambda * score - ln(k)) / ln(2)`. (Reward, penalty) value pairs (2,3),
@@ -307,13 +327,13 @@ class ScoringSystem {
   ///
   /// @exceptions Strong guarantee.
   ///
-  float Bitscore(const Alignment& a, float epsilon = 0.05f) const;
+  float Bitscore(float raw_score, const PasteParameters& parameters) const;
 
-  /// @brief Computes the alignment's evalue corresponding.
+  /// @brief Computes alignment's evalue.
   ///
-  /// @parameter alignment The alignment whose evalue is calculated.
-  /// @parameter epsilon Maximum distance to the nearest even number for a raw
-  ///  score to be considered even.
+  /// @parameter raw_score Alignment's raw score.
+  /// @parameter qlen Length of query sequence.
+  /// @parameter parameters Additional arguments to deal with floating points.
   ///
   /// @details The evalue is defined by the expression
   ///  `k * qlen * db_size * (e ^ (-lambda * score))`. (Reward, penalty) value
@@ -322,33 +342,20 @@ class ScoringSystem {
   ///
   /// @exceptions Strong guarantee.
   ///  
-  double Evalue(const Alignment& a, float epsilon = 0.05f) const;
-
-  /// @brief Computes the alignment's raw alignment score.
-  ///
-  /// @details The raw alignment score is defined by the expression
-  ///  `reward * nident - penalty * mismatch - open_cost * gapopen - extend_cost * gaps`.
-  ///
-  /// @exceptions Strong guarantee.
-  ///
-  inline float RawScore(const Alignment& a) const {
-    return ((static_cast<float>(reward_) * static_cast<float>(a.nident()))
-            - (static_cast<float>(penalty_) * static_cast<float>(a.mismatch()))
-            - (static_cast<float>(open_cost_) * static_cast<float>(a.gapopen()))
-            - (extend_cost_ * static_cast<float>(a.gaps())));
-  }
+  double Evalue(float raw_score, int qlen,
+                const PasteParameters& parameters) const;
   /// @}
 
   /// @name Other:
   ///
   /// @{
-  
+/*
   /// @brief Compares the object to `other`.
   ///
   /// @exceptions Strong guarantee.
   ///
   bool operator==(const ScoringSystem& other) const;
-
+*/
   /// @brief Returns a descriptive string of the object.
   ///
   /// @exceptions Strong guarantee.
@@ -361,9 +368,9 @@ class ScoringSystem {
   ///
   ScoringSystem() = default;
 
-  int reward_{1};
-  int penalty_{2};
-  int open_cost_{0};
+  float reward_{1.0f};
+  float penalty_{2.0f};
+  float open_cost_{0.0f};
   float extend_cost_{2.5f};
   float lambda_{1.28f};
   float k_{0.46f};

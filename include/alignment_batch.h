@@ -21,10 +21,48 @@
 #ifndef PASTE_ALIGNMENTS_ALIGNMENT_BATCH_H_
 #define PASTE_ALIGNMENTS_ALIGNMENT_BATCH_H_
 
+#include <string>
+#include <vector>
+
+#include "alignment.h"
 #include "helpers.h"
+#include "scoring_system.h"
 
 namespace paste_alignments {
 
+/// @brief Container for alignments between a query and a subject sequence.
+///
+/// @details Alignments can be accessed directly, or sorted by one of:
+///  * (score, pident) lexicographically descending. This is done using the
+///    following `Compare` function together with `std::sort`:
+///    ```cpp
+///    bool Compare(int a, int b, scoring_system, epsilon) {
+///      if (helpers::FuzzyFloatEquals(
+///              scoring_system.RawScore(Alignments().at(a)),
+///              scoring_system.RawScore(Alignments().at(b)),
+///              epsilon)) {
+///        if (helpers::FuzzyFloatEquals(Alignments().at(a).pident(),
+///                                      Alignments().at(b).pident(),
+///                                      epsilon
+///            || Alignments().at(a).pident() > Alignments.at(b).pident()) {
+///          return true;
+///        }
+///      } else if (first_score > second_score) {
+///        return true;
+///      }
+///      return false;
+///    }
+///    ```
+///  * left end-point difference ascending.
+///  * right end-point difference ascending.
+///
+/// @invariant The collections ScoreSorted, SstartSorted, and SendSorted each
+///  consist precisely of the set of integers `{0, 1, ..., Size() - 1}` and are
+///  ordered by (`score`, `pident`) lexicographically descending, `sstart`
+///  ascending, and `send` ascending, where the attributes `score, `pident`,
+///  `sstart`, and `send` refer to the respective members of the alignments at
+///  the corresponding positions in `Alignments`.
+///
 class AlignmentBatch {
  public:
   using size_type = std::vector<Alignment>::size_type;
@@ -37,13 +75,13 @@ class AlignmentBatch {
   ///
   /// @parameter qseqid A string-identifier for the query sequence.
   /// @parameter sseqid A string-identifier for the subject sequence.
-  /// @parameter qlen The length of the query sequence.
-  /// @parameter slen The length of the subject sequence.
   ///
-  AlignmentBatch(std::string qseqid, std::string qsseqid, int qlen, int slen)
-      : qseqid_{std::move(helpers::TestNonEmpty(qseqid))},
-        sseqid_{std::move(helpers::TestNonEmpty(sseqid))},
-        qlen_{helpers::TestPositive(qlen)}, slen_{helpers::TestPositive(slen)}
+  /// @exceptions Throws `exceptions::UnexpectedEmptyString` if `qseqid` or
+  ///  `sseqid` is empty.
+  ///
+  AlignmentBatch(std::string_view qseqid, std::string_view sseqid)
+      : qseqid_{helpers::TestNonEmpty(qseqid)},
+        sseqid_{helpers::TestNonEmpty(sseqid)}
         {}
   
   /// @brief Copy constructor.
@@ -52,7 +90,7 @@ class AlignmentBatch {
 
   /// @brief Move constructor.
   ///
-  AlignmentBatch(AlignmentBatch&& other) = default;
+  AlignmentBatch(AlignmentBatch&& other) noexcept = default;
   /// @}
   
   /// @name Assignment:
@@ -65,7 +103,7 @@ class AlignmentBatch {
 
   /// @brief Move assignment.
   ///
-  AlignmentBatch& operator=(AlignmentBatch&& other) = default;
+  AlignmentBatch& operator=(AlignmentBatch&& other) noexcept = default;
   /// @}
 
   /// @name Accessors:
@@ -76,13 +114,13 @@ class AlignmentBatch {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline size_type size() const {return alignments_.size();}
+  inline size_type Size() const {return alignments_.size();}
   
   /// @brief Alignments stored in the object.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<Alignment>& alignments() const {return alignments_;}
+  inline const std::vector<Alignment>& Alignments() const {return alignments_;}
 
   /// @brief Indices of stored alignments sorted by score.
   ///
@@ -91,72 +129,85 @@ class AlignmentBatch {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& score_sorted() const {return score_sorted_;}
+  inline const std::vector<int>& ScoreSorted() const {return score_sorted_;}
 
-  /// @brief Indices of stored alignments sorted by subject start.
+  /// @brief Indices of stored alignments sorted by start coordinate difference.
   ///
   /// @details Indices refer to positions in vector returned by
   ///  `AlignmentBatch::alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& sstart_sorted() const {return sstart_sorted_;}
-
-  /// @brief Indices of stored alignments sorted by subject end.
+  inline const std::vector<int>& LeftDiffSorted() const {
+    return left_diff_sorted_;
+  }
+/*
+  /// @brief Indices of stored alignments sorted by end coordinate difference.
   ///
   /// @details Indices refer to positions in vector returned by
   ///  `AlignmentBatch::alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& send_sorted() const {return send_sorted_;}
-
+  inline const std::vector<int>& RightDiffSorted() const {
+    return right_diff_sorted_;
+  }
+*/
   /// @brief String-identifier of the aligned query sequence.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::string& qseqid() const {return qseqid_;}
+  inline const std::string& Qseqid() const {return qseqid_;}
 
   /// @brief String-identifier of the aligned subject sequence.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::string& sseqid() const {return sseqid_;}
-
-  /// @brief Length of the aligned query sequence.
-  ///
-  /// @exceptions Strong guarantee.
-  ///
-  inline int qlen() const {return qlen_;}
-
-  /// @brief Length of the aligned subject sequence.
-  ///
-  /// @exception Strong guarantee.
-  ///
-  inline int slen() const {return slen_;}
+  inline const std::string& Sseqid() const {return sseqid_;}
   /// @}
 
   /// @name Mutators:
   ///
   /// @{
+
+  /// @brief Sets the query sequence string-identifier of the object to `id`.
+  ///
+  /// @parameter qseqid The new query sequence string-identifier.
+  ///
+  /// @exceptions Throws `exceptions::UnexpectedEmptyString` if `id` is
+  ///  empty.
+  ///
+  inline void Qseqid(std::string_view id) {qseqid_ = helpers::TestNonEmpty(id);}
+
+  /// @brief Sets the subject sequence string-identifier of the object to `id`.
+  ///
+  /// @parameter qseqid The new subject sequence string-identifier.
+  ///
+  /// @exceptions Throws `exceptions::UnexpectedEmptyString` if `id` is
+  ///  empty.
+  ///
+  inline void Sseqid(std::string_view id) {sseqid_ = helpers::TestNonEmpty(id);}
   
   /// @brief Replaces stored alignments with contents of `alignments`.
   ///
   /// @parameter alignments The new contents of the object.
-  /// @parameter scoring_system The scoring system by which to sort alignments.
+  /// @parameter parameters Additional arguments to handle floating points.
   ///
   /// @exception Strong guarantee.
   ///
   void ResetAlignments(std::vector<Alignment> alignments,
-                       const ScoringSystem& scoring_system);
-
-  void PasteAlignments();
+                       const PasteParameters& parameters);
+/*
+  /// @brief
+  ///
+  void PasteAlignments(const PasteParameters& parameters,
+                       const ScoringSystem& scoring_system);*/
   /// @}
 
   /// @name Other:
   ///
   /// @{
-  
+
   /// @brief Compares the object to `other`.
   ///
   /// @exceptions Strong guarantee.
@@ -172,12 +223,10 @@ class AlignmentBatch {
  private:
   std::string qseqid_;
   std::string sseqid_;
-  int qlen_;
-  int slen_;
   std::vector<Alignment> alignments_;
   std::vector<int> score_sorted_;
-  std::vector<int> sstart_sorted_;
-  std::vector<int> send_sorted_;
+  std::vector<int> left_diff_sorted_;
+  //std::vector<int> right_diff_sorted_;
 };
 
 } // namespace paste_alignments

@@ -29,13 +29,13 @@ namespace {
 
 // If `x` is odd, returns the next lower even number; else, does nothng.
 // Distance to the nearest even number for `x` to be considered even must not
-// exceed `epsilon`.
+// exceed `epsilon` times magnitude of the smaller non-zero.
 //
 float NextLowerEven(float x, float epsilon = 0.05f) {
   float result;
   float modulo{std::abs(std::fmod(x, 2.0f))};
-  if (std::abs(modulo - 0.0f) > epsilon
-      && std::abs(modulo - 2.0f) > epsilon) {
+  if (!helpers::FuzzyFloatEquals(0.0f, modulo, epsilon)
+      && !helpers::FuzzyFloatEquals(2.0f, modulo, epsilon)) {
     result = 2.0f * (std::floorf(x / 2.0f));
   } else {
     result = x;
@@ -65,9 +65,9 @@ void ScoringSystem::SetScoringParameters(int reward, int penalty, int open_cost,
         && parameters.penalty == penalty
         && parameters.open_cost == open_cost
         && parameters.extend_cost == extend_cost) {
-      reward_ = reward;
-      penalty_ = penalty;
-      open_cost_ = open_cost;
+      reward_ = static_cast<float>(reward);
+      penalty_ = static_cast<float>(penalty);
+      open_cost_ = static_cast<float>(open_cost);
       if (open_cost == 0 && extend_cost == 0) {
         extend_cost_ = (reward / 2.0f) + penalty;
       } else {
@@ -78,7 +78,7 @@ void ScoringSystem::SetScoringParameters(int reward, int penalty, int open_cost,
       return;
     }
   }
-  error_message << "Scoring systems defined by"
+  error_message << "Scoring system defined by"
                 << " (match-reward = " << reward
                 << ", mismatch-penalty = " << penalty
                 << ", gap-open-cost = " << open_cost
@@ -89,30 +89,35 @@ void ScoringSystem::SetScoringParameters(int reward, int penalty, int open_cost,
 
 // ScoringSystem::Bitscore
 //
-float ScoringSystem::Bitscore(const Alignment& a, float epsilon) const {
-  float score;
+float ScoringSystem::Bitscore(float raw_score,
+                              const PasteParameters& parameters) const {
   if (reward_ == 2 && (penalty_ == 3 || penalty_ == 5 || penalty_ == 7)) {
-    score = NextLowerEven(RawScore(a), epsilon);
+    return ((lambda_ * NextLowerEven(raw_score, parameters.float_epsilon)
+             - std::log(k_))
+            / std::log(2.0f));
   } else {
-    score = RawScore(a);
+    return ((lambda_ * raw_score - std::log(k_)) / std::log(2.0f));
   }
-  return ((lambda_ * score) - std::log(k_)) / std::log(2.0f);
 }
 
 // ScoringSystem::Evalue
 //
-double ScoringSystem::Evalue(const Alignment& a, float epsilon) const {
-  float score;
+double ScoringSystem::Evalue(float raw_score, int qlen,
+                             const PasteParameters& parameters) const {
+  double score;
   if (reward_ == 2 && (penalty_ == 3 || penalty_ == 5 || penalty_ == 7)) {
-    score = NextLowerEven(RawScore(a), epsilon);
+    score = static_cast<double>(NextLowerEven(raw_score,
+                                              parameters.float_epsilon));
   } else {
-    score = RawScore(a);
+    score = static_cast<double>(raw_score);
   }
-  return static_cast<double>(k_) * static_cast<double>(a.qlen())
-         * static_cast<double>(db_size_) * std::exp((-1.0)
-         * static_cast<double>(lambda_) * static_cast<double>(score));
+  return (static_cast<double>(k_)
+          * static_cast<double>(qlen)
+          * static_cast<double>(db_size_)
+          * std::exp((-1.0) * static_cast<double>(lambda_) * score));
 }
 
+/*
 // ScoringSystem::operator==
 //
 bool ScoringSystem::operator==(const ScoringSystem& other) const {
@@ -124,6 +129,7 @@ bool ScoringSystem::operator==(const ScoringSystem& other) const {
          && helpers::FuzzyFloatEquals(k_, other.k_)
          && db_size_ == other.db_size_);
 }
+*/
 
 // ScoringSystem::DebugString()
 //

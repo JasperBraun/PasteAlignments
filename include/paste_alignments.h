@@ -22,9 +22,10 @@
 #define PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
 
 #include "alignment.h"
+//#include "alignment_batch.h"
+#include "alignment_reader.h"
 #include "exceptions.h"
 #include "helpers.h"
-#include "scoring_system.h"
 
 /// @defgroup PasteAlignments-Reference
 ///

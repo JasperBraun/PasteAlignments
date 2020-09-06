@@ -43,6 +43,20 @@ struct StringMaker<paste_alignments::ScoringSystem> {
   }
 };
 
+template<>
+struct StringMaker<paste_alignments::AlignmentBatch> {
+  static std::string convert(const paste_alignments::AlignmentBatch& batch) {
+    return batch.DebugString();
+  }
+};
+
+template<>
+struct StringMaker<paste_alignments::AlignmentReader> {
+  static std::string convert(const paste_alignments::AlignmentReader& reader) {
+    return reader.DebugString();
+  }
+};
+
 } // namespace Catch
 
 #endif // PASTE_ALIGNMENTS_TEST_STRING_CONVERSIONS_H_

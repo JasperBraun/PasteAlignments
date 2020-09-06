@@ -21,6 +21,7 @@
 
 #include <charconv>
 #include <cmath>
+#include <cstring>
 #include <sstream>
 #include <string>
 #include <system_error>
@@ -31,7 +32,7 @@ namespace paste_alignments {
 
 namespace helpers {
 
-/// @addtogroup ArgParseConvert-Reference
+/// @addtogroup PasteAlignments-Reference
 ///
 /// @{
 
@@ -86,6 +87,38 @@ inline long TestPositive(long i) {
   return i;
 }
 
+/// @brief Tests whether `i` is non-negative.
+///
+/// @parameter i Number to be tested.
+///
+/// @exceptions Strong guarantee. Throws `exceptions::OutOfRange` if `i` is
+///  negative.
+///
+inline int TestNonNegative(int i) {
+  std::stringstream error_message;
+  if (i < 0) {
+    error_message << "Expected non-negative value, but was given: " << i << '.';
+    throw exceptions::OutOfRange(error_message.str());
+  }
+  return i;
+}
+
+/// @brief Tests whether `i` is non-negative.
+///
+/// @parameter i Number to be tested.
+///
+/// @exceptions Strong guarantee. Throws `exceptions::OutOfRange` if `i` is
+///  negative.
+///
+inline long TestNonNegative(long i) {
+  std::stringstream error_message;
+  if (i < 0) {
+    error_message << "Expected non-negative value, but was given: " << i << '.';
+    throw exceptions::OutOfRange(error_message.str());
+  }
+  return i;
+}
+
 /// @brief Tests whether the string `s` is non-empty.
 ///
 /// @parameter s String to be tested.
@@ -99,6 +132,21 @@ inline std::string TestNonEmpty(std::string& s) {
                                             " non-empty string expected.");
   }
   return s;
+}
+
+/// @brief Tests whether the string_view `s_view` is non-empty.
+///
+/// @parameter s_view String view to be tested.
+///
+/// @exceptions Strong guarantee. Throws `exceptions::UnexpectedEmptyString` if
+///  `s_view` is the empty string.
+///
+inline std::string_view TestNonEmpty(std::string_view& s_view) {
+  if (s_view.empty()) {
+    throw exceptions::UnexpectedEmptyString("Empty string view given, where"
+                                            " non-empty string view expected.");
+  }
+  return s_view;
 }
 
 /// @brief Interprets `s_view` as non-negative integer.
@@ -138,7 +186,7 @@ inline bool FuzzyFloatEquals(float first, float second, float epsilon = 0.01f) {
   return (std::abs(first - second) <= max_distance);
 }
 
-/// @brief Return `true` if the two numbers are at most `epsilon` times the
+/// @brief Returns `true` if the two numbers are at most `epsilon` times the
 ///  magnitude of the smaller apart, and `false` otherwise.
 ///
 /// @parameter first First double to be compared.
@@ -167,6 +215,32 @@ inline bool FuzzyDoubleEquals(double first, double second,
   return (std::abs(first - second) <= max_distance);
 }
 
+/// @brief Returns `true` if `first` is more than `epsilon` times the smaller
+///  non-zero magnitude of the two less than `second`.
+///
+/// @parameter first First float to be compared.
+/// @parameter second Second double to be compared.
+/// @parameter epsilon The factor multiplying the smaller non-zero magnitude of
+///  the two floats to determine maximum distance.
+///
+/// @details If both are 0.0f, then the function returns `false`.
+///
+/// @exceptions Strong guarantee.
+///
+inline bool FuzzyFloatLess(float first, float second, float epsilon = 0.01f) {
+  float max_distance;
+  if (first == 0.0f && second == 0.0f) {
+    return false;
+  } else if (first == 0.0f) {
+    max_distance = epsilon * (std::abs(second));
+  } else if (second == 0.0f) {
+    max_distance = epsilon * (std::abs(first));
+  } else {
+    max_distance = epsilon * std::min(std::abs(first), std::abs(second));
+  }
+  return (first < second - max_distance);
+}
+
 /// @brief Returns the gap extension cost used by Megablast for provided reward
 ///  and penalty values.
 ///
@@ -183,6 +257,37 @@ inline float MegablastExtendCost(int reward, int penalty) {
   TestPositive(reward);
   TestPositive(penalty);
   return (reward / 2.0f) + penalty;
+}
+
+/// @brief Returns a string_view of same length as field nearfront of `text`.
+///
+/// @parameter field The field to be moved or emptied.
+/// @parameter text Reference text.
+/// @parameter suffix_start Start position of suffix in text in which `field`
+///  must be contained to be retained.
+/// @parameter end_of_last_field Position toward which `field` should be moved.
+///
+/// @details Behavior is undefined if `field` doesn't view a substring of the
+///  string viewed by `text`. `field` is emptied if it is not contained in the
+///  suffix of `text` starting at position `suffix_start`. `end_of_last_field`
+///  is advanced to the position after `field` if `field` is successfully moved.
+///
+/// @exceptions Basic guarantee. Throws `exceptions::OutOfRange` if
+///  * `suffix_start` is not in the range `[0, text.length())`.
+///  * `end_of_last_field` is not in the range
+///    `[0, text.length() - field.length())`.
+///  
+inline std::string_view MoveFieldToFront(const std::string_view& field,
+    std::string_view text, long suffix_start,
+    std::string_view::size_type& end_of_last_field) {
+  TestInRange(0l, text.length() - 1l, suffix_start);
+  TestInRange(0l, text.length() - field.length(), end_of_last_field);
+  std::string_view result;
+  if (!field.empty() && field.data() - text.data() >= suffix_start) {
+    result = std::string_view(text.data() + end_of_last_field, field.length());
+    end_of_last_field += result.length();
+  }
+  return result;
 }
 
 /// @}

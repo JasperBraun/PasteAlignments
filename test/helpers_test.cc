@@ -39,7 +39,10 @@
 // * TestInRange
 // * TestPositive(int)
 // * TestPositive(long)
-// * TestNonEmpty
+// * TestNonNegative(int)
+// * TestNonNegative(long)
+// * TestNonEmpty(string)
+// * TestNonEmpty(string_view)
 // * StringViewToInteger
 // * FuzzyFloatEquals
 // * MegablastExtendCost
@@ -50,7 +53,10 @@
 // * TestInRange
 // * TestPositive(int)
 // * TestPositive(long)
-// * TestNonEmpty
+// * TestNonNegative(int)
+// * TestNonNegative(long)
+// * TestNonEmpty(string)
+// * TestNonEmpty(string)
 // * StringViewToInteger
 
 namespace paste_alignments {
@@ -113,7 +119,7 @@ SCENARIO("Test correctness of helpers::TestPositive(int).",
 
   WHEN("Query integer is positive.") {
     int x, query;
-    x = GENERATE(take(10, random(0, std::numeric_limits<int>::max())));
+    x = GENERATE(take(10, random(1, std::numeric_limits<int>::max())));
     query = x;
 
     THEN("Query is returned.") {
@@ -126,9 +132,7 @@ SCENARIO("Test exceptions thrown by helpers::TestPositive(int).",
          "[helpers][TestPositive(int)][exceptions]") {
 
   THEN("Zero query causes exception.") {
-    int x{0};
-
-    CHECK_THROWS_AS(helpers::TestPositive(x), exceptions::OutOfRange);
+    CHECK_THROWS_AS(helpers::TestPositive(0), exceptions::OutOfRange);
   }
 
   THEN("Negative query causes exception.") {
@@ -144,7 +148,7 @@ SCENARIO("Test correctness of helpers::TestPositive(long).",
 
   WHEN("Query integer is positive.") {
     long x, query;
-    x = GENERATE(take(10, random(0l, std::numeric_limits<long>::max())));
+    x = GENERATE(take(10, random(1l, std::numeric_limits<long>::max())));
     query = x;
 
     THEN("Query is returned.") {
@@ -157,9 +161,7 @@ SCENARIO("Test exceptions thrown by helpers::TestPositive(long).",
          "[helpers][TestPositive(long)][exceptions]") {
 
   THEN("Zero query causes exception.") {
-    long x{0};
-
-    CHECK_THROWS_AS(helpers::TestPositive(x), exceptions::OutOfRange);
+    CHECK_THROWS_AS(helpers::TestPositive(0l), exceptions::OutOfRange);
   }
 
   THEN("Negative query causes exception.") {
@@ -170,8 +172,66 @@ SCENARIO("Test exceptions thrown by helpers::TestPositive(long).",
   }
 }
 
-SCENARIO("Test correctness of helpers::TestNonEmpty.",
-         "[helpers][TestNonEmpty][correctness]") {
+SCENARIO("Test correctness of helpers::TestNonNegative(int).",
+         "[helpers][TestNonNegative(int)][correctness]") {
+
+  THEN("Zero query is returned.") {
+    CHECK(helpers::TestNonNegative(0) == 0);
+  }
+
+  WHEN("Query integer is positive.") {
+    int x, query;
+    x = GENERATE(take(10, random(1, std::numeric_limits<int>::max())));
+    query = x;
+
+    THEN("Query is returned.") {
+      CHECK(helpers::TestNonNegative(x) == query);
+    }
+  }
+}
+
+SCENARIO("Test exceptions thrown by helpers::TestNonNegative(int).",
+         "[helpers][TestNonNegative(int)][exceptions]") {
+
+  THEN("Negative query causes exception.") {
+    int x;
+    x = GENERATE(take(10, random(std::numeric_limits<int>::min(), -1)));
+
+    CHECK_THROWS_AS(helpers::TestNonNegative(x), exceptions::OutOfRange);
+  }
+}
+
+SCENARIO("Test correctness of helpers::TestNonNegative(long).",
+         "[helpers][TestNonNegative(long)][correctness]") {
+
+  THEN("Zero query is returned.") {
+    CHECK(helpers::TestNonNegative(0l) == 0l);
+  }
+
+  WHEN("Query integer is positive.") {
+    long x, query;
+    x = GENERATE(take(10, random(1l, std::numeric_limits<long>::max())));
+    query = x;
+
+    THEN("Query is returned.") {
+      CHECK(helpers::TestNonNegative(x) == query);
+    }
+  }
+}
+
+SCENARIO("Test exceptions thrown by helpers::TestNonNegative(long).",
+         "[helpers][TestNonNegative(long)][exceptions]") {
+
+  THEN("Negative query causes exception.") {
+    long x;
+    x = GENERATE(take(10, random(std::numeric_limits<long>::min(), -1l)));
+
+    CHECK_THROWS_AS(helpers::TestNonNegative(x), exceptions::OutOfRange);
+  }
+}
+
+SCENARIO("Test correctness of helpers::TestNonEmpty(string).",
+         "[helpers][TestNonEmpty(string)][correctness]") {
 
   GIVEN("Some character.") {
     char c = GENERATE(take(10, random(std::numeric_limits<char>::min(),
@@ -195,12 +255,47 @@ SCENARIO("Test correctness of helpers::TestNonEmpty.",
   }
 }
 
-SCENARIO("Test exceptions thrown by helpers::TestNonEmpty.",
-         "[helpers][TestNonEmpty][exceptions]") {
+SCENARIO("Test exceptions thrown by helpers::TestNonEmpty(string).",
+         "[helpers][TestNonEmpty(string)][exceptions]") {
 
   THEN("An empty string causes an exception.") {
     std::string s;
     CHECK_THROWS_AS(helpers::TestNonEmpty(s),
+                    exceptions::UnexpectedEmptyString);
+  }
+}
+
+SCENARIO("Test correctness of helpers::TestNonEmpty(string_view).",
+         "[helpers][TestNonEmpty(string_view)][correctness]") {
+
+  GIVEN("Some character.") {
+    char c = GENERATE(take(10, random(std::numeric_limits<char>::min(),
+                                      std::numeric_limits<char>::max())));
+
+    THEN("A query string consisting of that character only is returned.") {
+      std::string s{c};
+      std::string_view s_view{s}, query{s};
+      CHECK(helpers::TestNonEmpty(s_view) == query);
+    }
+
+    WHEN("Concatenations of various counts of the character are queried.") {
+      int count = GENERATE(take(10, random(1, 64)));
+      std::string s(count, c);
+      std::string_view s_view{s}, query{s};
+
+      THEN("Query strings are returned.") {
+        CHECK(helpers::TestNonEmpty(s_view) == query);
+      }
+    }
+  }
+}
+
+SCENARIO("Test exceptions thrown by helpers::TestNonEmpty(string_view).",
+         "[helpers][TestNonEmpty(string_view)][exceptions]") {
+
+  THEN("An empty string causes an exception.") {
+    std::string_view s_view;
+    CHECK_THROWS_AS(helpers::TestNonEmpty(s_view),
                     exceptions::UnexpectedEmptyString);
   }
 }
@@ -388,9 +483,9 @@ SCENARIO("Test correctness of helpers::FuzzyDoubleEquals.",
       second += double_step_size;
     }
     distance = std::abs(first - second);
-    if (first == 0.0f) {
+    if (first == 0.0) {
       min_magnitude = std::abs(second);
-    } else if (second == 0.0f) {
+    } else if (second == 0.0) {
       min_magnitude = std::abs(first);
     } else {
       min_magnitude = std::min(std::abs(first), std::abs(second));
@@ -398,12 +493,12 @@ SCENARIO("Test correctness of helpers::FuzzyDoubleEquals.",
 
     THEN("If max allowed distance is too small, function returns false.") {
       CHECK_FALSE(helpers::FuzzyDoubleEquals(
-          first, second, distance / min_magnitude - 10.0f * double_step_size));
+          first, second, distance / min_magnitude - 1000.0 * double_step_size));
     }
 
     THEN("If max allowed distance is large enough, function returns true.") {
       CHECK(helpers::FuzzyDoubleEquals(
-          first, second, distance / min_magnitude + 10.0f * double_step_size));
+          first, second, distance / min_magnitude + 1000.0 * double_step_size));
     }
   }
 }

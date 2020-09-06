@@ -24,14 +24,19 @@
 #include <string>
 #include <vector>
 
+#include "helpers.h"
+#include "paste_parameters.h"
+#include "scoring_system.h"
+
 namespace paste_alignments {
 
 /// @brief Contains data relevant for a sequence alignment.
 ///
 /// @invariant All integral data members are non-negative.
-/// @invariant `qstart <= qend`, and `sstart <= send`.
-/// @invariant `qlen` and `slen` are positive.
-/// @invariant `qseq` and `sseq` are non-empty.
+/// @invariant `Qstart <= Qend`, and `Sstart <= Send`.
+/// @invariant `Qlen` and `Slen` are positive.
+/// @invariant `Qseq` and `Sseq` are non-empty.
+/// @invariant `PastedIdentifiers` contains `Id`.
 ///
 class Alignment {
  public:
@@ -41,8 +46,14 @@ class Alignment {
   
   /// @brief Creates an `Alignment` from string representations of field values.
   ///
-  /// @details Object is assigned provided `id`. `fields` values are interpreted
-  ///  in the order:
+  /// @parameter id Identifier assigned to the object.
+  /// @parameter fields String fields containing the alignment data.
+  /// @parameter scoring_system Scoring system used to compute score, bitscore,
+  ///  and evalue.
+  /// @parameter parameters Additional arguments used for handling floating
+  ///  points.
+  ///
+  /// @details `fields` values are interpreted in the order:
   ///  qstart qend sstart send nident mismatch gapopen gaps qlen slen qseq sseq.
   ///  The object is considered to be on the minus strand if it's subject end
   ///  coordinate precedes its subject start coordinate. Fields in excess of 12
@@ -58,7 +69,9 @@ class Alignment {
   ///  * One of qseq, or sseq is empty
   ///
   static Alignment FromStringFields(int id,
-                                    std::vector<std::string_view> fields);
+                                    std::vector<std::string_view> fields,
+                                    const ScoringSystem& scoring_system,
+                                    const PasteParameters& parameters);
   /// @}
 
   /// @name Constructors:
@@ -71,7 +84,7 @@ class Alignment {
 
   /// @brief Move constructor.
   ///
-  Alignment(Alignment&& other) = default;
+  Alignment(Alignment&& other) noexcept = default;
   /// @}
   
   /// @name Assignment:
@@ -84,7 +97,7 @@ class Alignment {
 
   /// @brief Move assignment.
   ///
-  Alignment& operator=(Alignment&& other) = default;
+  Alignment& operator=(Alignment&& other) noexcept = default;
   /// @}
 
   /// @name Accessors:
@@ -95,31 +108,39 @@ class Alignment {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int Id() const {return id_;}
+  inline int Id() const {return pasted_identifiers_.at(0);}
+
+  /// @brief Identifiers of alignments that pasted together to make this object.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline const std::vector<int>& PastedIdentifiers() const {
+    return pasted_identifiers_;
+  }
 
   /// @brief Query starting coordinate.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int qstart() const {return qstart_;}
+  inline int Qstart() const {return qstart_;}
 
   /// @brief Query ending coordinate.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int qend() const {return qend_;}
+  inline int Qend() const {return qend_;}
 
   /// @brief Subject starting coordinate.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int sstart() const {return sstart_;}
+  inline int Sstart() const {return sstart_;}
 
   /// @brief Subject ending coordinate.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int send() const {return send_;}
+  inline int Send() const {return send_;}
 
   /// @brief Indicates if alignment is on plus strand of subject.
   ///
@@ -131,64 +152,153 @@ class Alignment {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int nident() const {return nident_;}
+  inline int Nident() const {return nident_;}
 
   /// @brief Number of mismatches.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int mismatch() const {return mismatch_;}
+  inline int Mismatch() const {return mismatch_;}
 
   /// @brief Number of gap openings.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int gapopen() const {return gapopen_;}
+  inline int Gapopen() const {return gapopen_;}
 
   /// @brief Total number of gaps.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int gaps() const {return gaps_;}
+  inline int Gaps() const {return gaps_;}
 
   /// @brief Length of query sequence.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int qlen() const {return qlen_;}
+  inline int Qlen() const {return qlen_;}
 
   /// @brief Length of subject sequence.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int slen() const {return slen_;}
+  inline int Slen() const {return slen_;}
 
   /// @brief Query part of the sequence alignment.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::string& qseq() const {return qseq_;}
+  inline const std::string& Qseq() const {return qseq_;}
 
   /// @brief Subject part of the sequence alignment.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::string& sseq() const {return sseq_;}
+  inline const std::string& Sseq() const {return sseq_;}
 
   /// @brief Length of the alignment.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int length() const {return qseq_.length();}
+  inline int Length() const {return length_;}
 
-  /// @brief Returns the alignment's percent identity.
+  /// @brief Alignment's percent identity.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline float pident() const {
-    return (static_cast<float>(nident_) / static_cast<float>(qseq_.length())
-            * 100.0f);
+  inline float Pident() const {
+    return pident_;
   }
+
+  /// @brief Alignment's score.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline float RawScore() const {
+    return raw_score_;
+  }
+
+  /// @brief Alignment's bitscore.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline float Bitscore() const {return bitscore_;}
+
+  /// @brief Alignment's evalue.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline double Evalue() const {return evalue_;}
+
+  /// @brief Indicates whether alignment is flagged to be included in output.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline bool IncludeInOutput() const {return include_in_output_;}
+
+  /// @brief Position of first aligned pair of maximal ungapped suffix.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline int UngappedSuffixBegin() const {return ungapped_suffix_begin_;}
+
+  /// @brief Position one-past-the-last aligned pair of maximal ungapped prefix.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline int UngappedPrefixEnd() const {return ungapped_prefix_end_;}
+
+  /// @brief Indicates whether alignment satisfies both quality thesholds.
+  ///
+  /// @parameter pident_threshold Minimum percent identity alignment must have.
+  /// @parameter score_threshold Minimum raw score alignment must have.
+  /// @parameter parameters Additional arguments used for handling floating
+  ///  points.
+  ///
+  /// @details Returns true if for both thresholds, the alignment's value is at
+  ///  least as big as the thresholds minus `epsilon` times the magnitude of the
+  ///  smaller non-zero value of the two (alignment's actual value, and
+  ///  threshold).
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline bool SatisfiesThresholds(float pident_threshold, float score_threshold,
+                                  const PasteParameters& parameters) const {
+    if (helpers::FuzzyFloatLess(pident_, pident_threshold,
+                                parameters.float_epsilon)
+        || helpers::FuzzyFloatLess(raw_score_, score_threshold,
+                                   parameters.float_epsilon)) {
+      return false;
+    }
+    return true;
+  }
+
+  /// @brief Difference of start coordinates.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline int LeftDiff() const {return (qstart_ - sstart_);}
+
+  /// @brief Difference of end coordinates.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline int RightDiff() const {return (qend_ - send_);}
+  /// @}
+
+  /// @name Mutators:
+  ///
+  /// @{
+  
+  /// @brief Sets flag for alignment to be included in output.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline void IncludeInOutput(bool value = true) {include_in_output_ = value;}
+
+  void PasteRight(const Alignment& other);
+
+  void PasteLeft(const Alignment& other);
   /// @}
 
   /// @name Other:
@@ -211,9 +321,9 @@ class Alignment {
  private:
   /// @brief Private constructor to force creation by factory.
   ///
-  Alignment(int id) : id_{id} {}
+  Alignment(int id) : pasted_identifiers_{id} {}
 
-  int id_;
+  std::vector<int> pasted_identifiers_;
   int qstart_;
   int qend_;
   int sstart_;
@@ -227,6 +337,14 @@ class Alignment {
   int slen_;
   std::string qseq_;
   std::string sseq_;
+  int length_;
+  float pident_;
+  float raw_score_;
+  float bitscore_;
+  double evalue_;
+  bool include_in_output_{false};
+  int ungapped_suffix_begin_;
+  int ungapped_prefix_end_;
 };
 
 } // namespace paste_alignments

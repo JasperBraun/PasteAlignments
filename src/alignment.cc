@@ -30,7 +30,9 @@ namespace paste_alignments {
 // Alignment::FromStringFields.
 //
 Alignment Alignment::FromStringFields(int id,
-                                      std::vector<std::string_view> fields) {
+                                      std::vector<std::string_view> fields,
+                                      const ScoringSystem& scoring_system,
+                                      const PasteParameters& parameters) {
   std::stringstream error_message;
   if (fields.size() < 12) {
     error_message << "Not enough fields provided to create `Alignment` object."
@@ -61,12 +63,6 @@ Alignment Alignment::FromStringFields(int id,
                   << " create `Alignment` object: (sstart: " << result.sstart_
                   << ", send: " << result.send_ << "). (id: " << id << ").";
     throw exceptions::ParsingError(error_message.str());
-  }
-  if (result.sstart_ <= result.send_) {
-    result.plus_strand_ = true;
-  } else {
-    std::swap(result.sstart_, result.send_);
-    result.plus_strand_ = false;
   }
 
   // Identities, mismatches, gap openings and gap extensions.
@@ -102,13 +98,31 @@ Alignment Alignment::FromStringFields(int id,
     throw exceptions::ParsingError(error_message.str());
   }
 
+  // Derived values.
+  if (result.sstart_ <= result.send_) {
+    result.plus_strand_ = true;
+  } else {
+    std::swap(result.sstart_, result.send_);
+    result.plus_strand_ = false;
+  }
+  result.length_ = result.qseq_.length();
+  result.pident_ = 100.0f * static_cast<float>(result.nident_)
+                   / static_cast<float>(result.length_);
+  result.raw_score_ = scoring_system.RawScore(result.nident_, result.mismatch_,
+                                              result.gapopen_, result.gaps_);
+  result.bitscore_ = scoring_system.Bitscore(result.raw_score_, parameters);
+  result.evalue_ = scoring_system.Evalue(result.raw_score_, result.qlen_,
+                                         parameters);
+  result.ungapped_suffix_begin_ = 0;
+  result.ungapped_prefix_end_ = result.qseq_.length();
   return result;
 }
 
 // Alignment::operator==
 //
 bool Alignment::operator==(const Alignment& other) const {
-  return (other.qstart_ == qstart_
+  return (other.pasted_identifiers_ == pasted_identifiers_
+          && other.qstart_ == qstart_
           && other.qend_ == qend_
           && other.sstart_ == sstart_
           && other.send_ == send_
@@ -120,14 +134,22 @@ bool Alignment::operator==(const Alignment& other) const {
           && other.qlen_ == qlen_
           && other.slen_ == slen_
           && other.qseq_ == qseq_
-          && other.sseq_ == sseq_);
+          && other.sseq_ == sseq_
+          && other.length_ == length_
+          && helpers::FuzzyFloatEquals(other.pident_, pident_)
+          && helpers::FuzzyFloatEquals(other.raw_score_, raw_score_)
+          && helpers::FuzzyFloatEquals(other.bitscore_, bitscore_)
+          && helpers::FuzzyDoubleEquals(other.evalue_, evalue_)
+          && other.include_in_output_ == include_in_output_
+          && other.ungapped_suffix_begin_ == ungapped_suffix_begin_
+          && other.ungapped_prefix_end_ == ungapped_prefix_end_);
 }
 
 // Alignment::DebugString
 //
 std::string Alignment::DebugString() const {
   std::stringstream  ss;
-  ss << std::boolalpha << "(id=" << id_
+  ss << std::boolalpha << "(id=" << Id()
      << ", qstart=" << qstart_
      << ", qend=" << qend_
      << ", sstart=" << sstart_
@@ -141,7 +163,11 @@ std::string Alignment::DebugString() const {
      << ", slen=" << slen_
      << ", qseq='" << qseq_
      << "', sseq='" << sseq_
-     << "')";
+     << "', pasted_identifiers=[" << pasted_identifiers_.at(0);
+  for (int i = 1; i < pasted_identifiers_.size(); ++i) {
+    ss << ',' << pasted_identifiers_.at(i);
+  }
+  ss << "])";
   return ss.str();
 }
 

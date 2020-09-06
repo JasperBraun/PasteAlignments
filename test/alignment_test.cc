@@ -27,13 +27,13 @@
 #include "string_conversions.h" // include after catch.h
 
 #include "exceptions.h"
+#include "paste_parameters.h"
+#include "scoring_system.h"
 
 // Alignment tests
 //
 // Test correctness for:
 // * FromStringFields
-// 
-// Test invariants for:
 //
 // Test exceptions for:
 // * FromStringFields // ensures invariants
@@ -59,25 +59,27 @@ bool Equals(const Alignment& alignment,
   assert(fields.size() == 12);
   int sstart{std::stoi(fields.at(2))};
   int send{std::stoi(fields.at(3))};
-  return (alignment.qstart() == std::stoi(fields.at(0))
-          && alignment.qend() == std::stoi(fields.at(1))
-          && alignment.sstart() == std::min(sstart, send)
-          && alignment.send() == std::max(sstart, send)
+  return (alignment.Qstart() == std::stoi(fields.at(0))
+          && alignment.Qend() == std::stoi(fields.at(1))
+          && alignment.Sstart() == std::min(sstart, send)
+          && alignment.Send() == std::max(sstart, send)
           && alignment.PlusStrand() == (sstart <= send)
-          && alignment.nident() == std::stoi(fields.at(4))
-          && alignment.mismatch() == std::stoi(fields.at(5))
-          && alignment.gapopen() == std::stoi(fields.at(6))
-          && alignment.gaps() == std::stoi(fields.at(7))
-          && alignment.qlen() == std::stoi(fields.at(8))
-          && alignment.slen() == std::stoi(fields.at(9))
-          && alignment.qseq() == fields.at(10)
-          && alignment.sseq() == fields.at(11));
+          && alignment.Nident() == std::stoi(fields.at(4))
+          && alignment.Mismatch() == std::stoi(fields.at(5))
+          && alignment.Gapopen() == std::stoi(fields.at(6))
+          && alignment.Gaps() == std::stoi(fields.at(7))
+          && alignment.Qlen() == std::stoi(fields.at(8))
+          && alignment.Slen() == std::stoi(fields.at(9))
+          && alignment.Qseq() == fields.at(10)
+          && alignment.Sseq() == fields.at(11));
 }
 
 namespace {
 
 SCENARIO("Test correctness of Alignment::FromStringFields.",
          "[Alignment][FromStringFields][correctness]") {
+  ScoringSystem scoring_system{ScoringSystem::Create(100000l, 1, 2, 1, 1)};
+  PasteParameters paste_parameters;
 
   GIVEN("Valid string representations of fields.") {
     std::vector<std::string_view> a_views, b_views, c_views, d_views;
@@ -103,20 +105,32 @@ SCENARIO("Test correctness of Alignment::FromStringFields.",
     d_views.insert(d_views.begin(), d.cbegin(), d.cend());
 
     WHEN("Converting the fields.") {
-      Alignment alignment_a{Alignment::FromStringFields(0, a_views)};
-      Alignment alignment_b{Alignment::FromStringFields(2020, b_views)};
-      Alignment alignment_c{Alignment::FromStringFields(-2020, c_views)};
-      Alignment alignment_d{Alignment::FromStringFields(0, d_views)};
+      Alignment alignment_a{Alignment::FromStringFields(1, a_views,
+                                                        scoring_system,
+                                                        paste_parameters)};
+      Alignment alignment_b{Alignment::FromStringFields(2020, b_views,
+                                                        scoring_system,
+                                                        paste_parameters)};
+      Alignment alignment_c{Alignment::FromStringFields(-2020, c_views,
+                                                        scoring_system,
+                                                        paste_parameters)};
+      Alignment alignment_d{Alignment::FromStringFields(0, d_views,
+                                                        scoring_system,
+                                                        paste_parameters)};
 
       THEN("Alignments are created as expected.") {
         CHECK(Equals(alignment_a, a));
-        CHECK(alignment_a.Id() == 0);
+        CHECK(alignment_a.Id() == 1);
+        CHECK(alignment_a.PastedIdentifiers() == std::vector<int>{1});
         CHECK(Equals(alignment_b, b));
         CHECK(alignment_b.Id() == 2020);
+        CHECK(alignment_b.PastedIdentifiers() == std::vector<int>{2020});
         CHECK(Equals(alignment_c, c));
         CHECK(alignment_c.Id() == -2020);
+        CHECK(alignment_c.PastedIdentifiers() == std::vector<int>{-2020});
         CHECK(Equals(alignment_d, d));
         CHECK(alignment_d.Id() == 0);
+        CHECK(alignment_d.PastedIdentifiers() == std::vector<int>{0});
       }
     }
   }
@@ -124,6 +138,8 @@ SCENARIO("Test correctness of Alignment::FromStringFields.",
 
 SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
          "[Alignment][FromStringFields][exceptions]") {
+  ScoringSystem scoring_system{ScoringSystem::Create(100000l, 1, 2, 1, 1)};
+  PasteParameters paste_parameters;
 
   WHEN("Fewer than 12 fields are provided.") {
     std::vector<std::string_view> test_a{
@@ -144,13 +160,17 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
     std::vector<std::string_view> test_d{};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -209,25 +229,35 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_e),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_e, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_f),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_f, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_g),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_g, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_h),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_h, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_i),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_i, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_j),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_j, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -245,9 +275,11 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -275,13 +307,17 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -309,13 +345,17 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -343,13 +383,17 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_d, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
@@ -372,11 +416,14 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "", ""};
 
     THEN("`exceptions::ParsingError` is thrown.") {
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_a, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_b, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
-      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c),
+      CHECK_THROWS_AS(Alignment::FromStringFields(0, test_c, scoring_system,
+                                                  paste_parameters),
                       exceptions::ParsingError);
     }
   }
