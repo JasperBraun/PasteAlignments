@@ -196,12 +196,12 @@ class AlignmentBatch {
   /// @exception Strong guarantee.
   ///
   void ResetAlignments(std::vector<Alignment> alignments,
-                       const PasteParameters& parameters);
-/*
+                       const PasteParameters& paste_parameters);
+
   /// @brief
   ///
-  void PasteAlignments(const PasteParameters& parameters,
-                       const ScoringSystem& scoring_system);*/
+  void PasteAlignments(const ScoringSystem& scoring_system,
+                       const PasteParameters& paste_parameters);
   /// @}
 
   /// @name Other:

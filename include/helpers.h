@@ -153,10 +153,26 @@ inline std::string_view TestNonEmpty(std::string_view& s_view) {
 ///
 /// @parameter s_view A non-empty string of digits.
 ///
-/// @exceptions Strong guarantee. Throws exceptions::ParsingError if conversion
-///  failed.
+/// @exceptions Strong guarantee. Throws `exceptions::ParsingError` if
+///  conversion failed.
 ///
 int StringViewToInteger(const std::string_view& s_view);
+
+/// @brief Computes fraction as a percentage.
+///
+/// @parameter nident Numerator of fraction.
+/// @parameter denominator Denominator of fraction.
+///
+/// @exception Strong guarantee. Throws `exceptions::OutOfRange` if
+///  `denominator` is 0.
+///
+inline float Percentage(int numerator, int denominator) {
+  if (denominator == 0.0f) {
+    throw exceptions::OutOfRange("Division by 0.");
+  }
+  return (100.0f * static_cast<float>(numerator)
+                 / static_cast<float>(denominator));
+}
 
 /// @brief Return `true` if the two numbers are at most `epsilon` times the
 ///  magnitude of the smaller apart, and `false` otherwise.
@@ -239,6 +255,28 @@ inline bool FuzzyFloatLess(float first, float second, float epsilon = 0.01f) {
     max_distance = epsilon * std::min(std::abs(first), std::abs(second));
   }
   return (first < second - max_distance);
+}
+
+/// @brief Indicates whether score and percent identity satisfy respective
+///  thresholds.
+///
+/// @parameter pident Percent identity tested.
+/// @parameter score Score tested.
+/// @parameter pident_threshold Minimum value for `pident`.
+/// @parameter score_threshold Minimum value for `score`.
+/// @parameter epsilon Factor multiplying the smaller of two float magnitudes to
+///  determine maximum distance between them to be considered equal.
+///
+/// @exception Strong guarantee.
+///
+inline bool SatisfiesThresholds(float pident, float score,
+                                float pident_threshold, float score_threshold,
+                                float epsilon) {
+  if (FuzzyFloatLess(pident, pident_threshold, epsilon)
+      || FuzzyFloatLess(score, score_threshold, epsilon)) {
+    return false;
+  }
+  return true;
 }
 
 /// @brief Returns the gap extension cost used by Megablast for provided reward

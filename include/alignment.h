@@ -326,13 +326,9 @@ class Alignment {
   ///
   inline bool SatisfiesThresholds(float pident_threshold, float score_threshold,
                                   const PasteParameters& parameters) const {
-    if (helpers::FuzzyFloatLess(pident_, pident_threshold,
-                                parameters.float_epsilon)
-        || helpers::FuzzyFloatLess(raw_score_, score_threshold,
-                                   parameters.float_epsilon)) {
-      return false;
-    }
-    return true;
+    return helpers::SatisfiesThresholds(pident_, raw_score_,
+                                        pident_threshold, score_threshold,
+                                        parameters.float_epsilon);
   }
 
   /// @brief Difference of start coordinates.
@@ -389,8 +385,7 @@ class Alignment {
   inline void UpdateSimilarityMeasures(
       const ScoringSystem& scoring_system,
       const PasteParameters& paste_parameters) {
-    pident_ = 100.0f * static_cast<float>(nident_)
-              / static_cast<float>(qseq_.length());
+    pident_ = helpers::Percentage(nident_, Length());
     raw_score_ = scoring_system.RawScore(nident_, mismatch_, gapopen_, gaps_);
     bitscore_ = scoring_system.Bitscore(raw_score_, paste_parameters);
     evalue_ = scoring_system.Evalue(raw_score_, qlen_, paste_parameters);
