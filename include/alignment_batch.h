@@ -125,34 +125,34 @@ class AlignmentBatch {
   /// @brief Indices of stored alignments sorted by score.
   ///
   /// @details Indices refer to positions in vector returned by
-  ///  `AlignmentBatch::alignments`.
+  ///  `AlignmentBatch::Alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
   inline const std::vector<int>& ScoreSorted() const {return score_sorted_;}
 
-  /// @brief Indices of stored alignments sorted by start coordinate difference.
+  /// @brief Indices of stored alignments sorted by query start coordinate.
   ///
   /// @details Indices refer to positions in vector returned by
-  ///  `AlignmentBatch::alignments`.
+  ///  `AlignmentBatch::Alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& LeftDiffSorted() const {
-    return left_diff_sorted_;
+  inline const std::vector<int>& QstartSorted() const {
+    return qstart_sorted_;
   }
-/*
-  /// @brief Indices of stored alignments sorted by end coordinate difference.
+
+  /// @brief Indices of stored alignments sorted by query end coordinate.
   ///
   /// @details Indices refer to positions in vector returned by
-  ///  `AlignmentBatch::alignments`.
+  ///  `AlignmentBatch::Alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& RightDiffSorted() const {
-    return right_diff_sorted_;
+  inline const std::vector<int>& QendSorted() const {
+    return qend_sorted_;
   }
-*/
+
   /// @brief String-identifier of the aligned query sequence.
   ///
   /// @exceptions Strong guarantee.
@@ -225,8 +225,8 @@ class AlignmentBatch {
   std::string sseqid_;
   std::vector<Alignment> alignments_;
   std::vector<int> score_sorted_;
-  std::vector<int> left_diff_sorted_;
-  //std::vector<int> right_diff_sorted_;
+  std::vector<int> qstart_sorted_;
+  std::vector<int> qend_sorted_;
 };
 
 } // namespace paste_alignments

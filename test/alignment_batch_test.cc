@@ -52,6 +52,7 @@ namespace paste_alignments {
 namespace test {
 
 bool ScoreComp(const Alignment& first, const Alignment& second,
+               int first_pos, int second_pos,
                float epsilon = 0.05f) {
   float first_score, second_score, first_pident, second_pident;
   first_score = first.RawScore();
@@ -61,8 +62,9 @@ bool ScoreComp(const Alignment& first, const Alignment& second,
   if (helpers::FuzzyFloatEquals(
           first_score, second_score, epsilon)) {
     if (helpers::FuzzyFloatEquals(
-            first_pident, second_pident, epsilon)
-        || first_pident > second_pident) {
+            first_pident, second_pident, epsilon)) {
+      return first_pos < second_pos;
+    } else if (first_pident > second_pident) {
       return true;
     }
   } else if (first_score > second_score) {
@@ -375,8 +377,11 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
         CHECK(std::unordered_set<int>{alignment_batch.ScoreSorted().begin(),
                                       alignment_batch.ScoreSorted().end()}
               == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.LeftDiffSorted().begin(),
-                                      alignment_batch.LeftDiffSorted().end()}
+        CHECK(std::unordered_set<int>{alignment_batch.QstartSorted().begin(),
+                                      alignment_batch.QstartSorted().end()}
+              == alignment_positions);
+        CHECK(std::unordered_set<int>{alignment_batch.QendSorted().begin(),
+                                      alignment_batch.QendSorted().end()}
               == alignment_positions);
       }
 
@@ -386,16 +391,26 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j + 1)),
+                          j, j + 1,
                           paste_parameters.float_epsilon));
         }
       }
 
-      THEN("Sorting by left diff works as expected.") {
-        for (int j = 0; j < alignment_batch.LeftDiffSorted().size() - 1; ++j) {
+      THEN("Sorting by qstart works as expected.") {
+        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.LeftDiffSorted().at(j)).LeftDiff()
+                    .at(alignment_batch.QstartSorted().at(j)).Qstart()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.LeftDiffSorted().at(j + 1)).LeftDiff());
+                      .at(alignment_batch.QstartSorted().at(j + 1)).Qstart());
+        }
+      }
+
+      THEN("Sorting by qend works as expected.") {
+        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+          CHECK(alignment_batch.Alignments()
+                    .at(alignment_batch.QendSorted().at(j)).Qend()
+                <= alignment_batch.Alignments()
+                      .at(alignment_batch.QendSorted().at(j + 1)).Qend());
         }
       }
     }
@@ -486,12 +501,15 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
         alignment_positions.insert(i);
       }
 
-      THEN("Sorted lists contains precisely the alignment positions.") {
+      THEN("Sorted lists contain precisely the alignment positions.") {
         CHECK(std::unordered_set<int>{alignment_batch.ScoreSorted().begin(),
                                       alignment_batch.ScoreSorted().end()}
               == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.LeftDiffSorted().begin(),
-                                      alignment_batch.LeftDiffSorted().end()}
+        CHECK(std::unordered_set<int>{alignment_batch.QstartSorted().begin(),
+                                      alignment_batch.QstartSorted().end()}
+              == alignment_positions);
+        CHECK(std::unordered_set<int>{alignment_batch.QendSorted().begin(),
+                                      alignment_batch.QendSorted().end()}
               == alignment_positions);
       }
 
@@ -501,16 +519,26 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j + 1)),
+                          j, j + 1,
                           paste_parameters.float_epsilon));
         }
       }
 
-      THEN("Sorting by left diff works as expected.") {
-        for (int j = 0; j < alignment_batch.LeftDiffSorted().size() - 1; ++j) {
+      THEN("Sorting by qstart works as expected.") {
+        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.LeftDiffSorted().at(j)).LeftDiff()
+                    .at(alignment_batch.QstartSorted().at(j)).Qstart()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.LeftDiffSorted().at(j + 1)).LeftDiff());
+                      .at(alignment_batch.QstartSorted().at(j + 1)).Qstart());
+        }
+      }
+
+      THEN("Sorting by qend works as expected.") {
+        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+          CHECK(alignment_batch.Alignments()
+                    .at(alignment_batch.QendSorted().at(j)).Qend()
+                <= alignment_batch.Alignments()
+                      .at(alignment_batch.QendSorted().at(j + 1)).Qend());
         }
       }
     }

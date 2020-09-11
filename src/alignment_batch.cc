@@ -30,21 +30,21 @@ namespace paste_alignments {
 //
 void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
                                      const PasteParameters& parameters) {
-  std::vector<int> score_sorted, left_diff_sorted;//, right_diff_sorted;
+  std::vector<int> score_sorted, qstart_sorted, qend_sorted;
   score_sorted.reserve(alignments.size());
-  left_diff_sorted.reserve(alignments.size());
-  //right_diff_sorted.reserve(alignments.size());
+  qstart_sorted.reserve(alignments.size());
+  qend_sorted.reserve(alignments.size());
 
   for (int i = 0; i < alignments.size(); ++i) {
     score_sorted.push_back(i);
-    left_diff_sorted.push_back(i);
-    //right_diff_sorted.push_back(i);
+    qstart_sorted.push_back(i);
+    qend_sorted.push_back(i);
   }
 
   std::sort(score_sorted.begin(), score_sorted.end(),
-            // Sort by lexicographic key (raw score, pident), both descending.
-            // Consider two floats equal according to helpers::FuzzyFloatEquals.
-            // Return true in case of tie.
+            // Sort by lexicographic key (raw score, pident, id), both
+            // descending. Consider two floats equal according to
+            // helpers::FuzzyFloatEquals.
             [&alignments = std::as_const(alignments),
              &epsilon = std::as_const(parameters.float_epsilon)](int first,
                                                                  int second) {
@@ -56,8 +56,9 @@ void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
               if (helpers::FuzzyFloatEquals(
                       first_score, second_score, epsilon)) {
                 if (helpers::FuzzyFloatEquals(
-                        first_pident, second_pident, epsilon)
-                    || first_pident > second_pident) {
+                        first_pident, second_pident, epsilon)) {
+                  return first < second;
+                } else if (first_pident > second_pident) {
                   return true;
                 }
               } else if (first_score > second_score) {
@@ -65,22 +66,21 @@ void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
               }
               return false;
             });
-  std::sort(left_diff_sorted.begin(), left_diff_sorted.end(),
+  std::sort(qstart_sorted.begin(), qstart_sorted.end(),
             [&alignments = std::as_const(alignments)](int first, int second) {
-              return (alignments.at(first).LeftDiff()
-                      <= alignments.at(second).LeftDiff());
+              return (alignments.at(first).Qstart()
+                      < alignments.at(second).Qstart());
             });
-/*
-  std::sort(right_diff_sorted.begin(), right_diff_sorted.end(),
+  std::sort(qend_sorted.begin(), qend_sorted.end(),
             [alignments](int first, int second) {
-              return (alignments.at(first).RightDiff()
-                      <= alignments.at(second).RightDiff());
+              return (alignments.at(first).Qend()
+                      < alignments.at(second).Qend());
             });
-*/
+
   alignments_ = std::move(alignments);
   score_sorted_ = std::move(score_sorted);
-  left_diff_sorted_ = std::move(left_diff_sorted);
-  //right_diff_sorted_ = std::move(right_diff_sorted);
+  qstart_sorted_ = std::move(qstart_sorted);
+  qend_sorted_ = std::move(qend_sorted);
 }
 /*
 // AlignmentBatch::PasteAlignments
@@ -162,7 +162,8 @@ bool AlignmentBatch::operator==(const AlignmentBatch& other) const {
           && other.sseqid_ == sseqid_
           && other.alignments_ == alignments_
           && other.score_sorted_ == score_sorted_
-          && other.left_diff_sorted_ == left_diff_sorted_);
+          && other.qstart_sorted_ == qstart_sorted_
+          && other.qend_sorted_ == qend_sorted_);
 }
 
 // AlignmentBatch::DebugString.
@@ -184,22 +185,22 @@ std::string AlignmentBatch::DebugString() const {
       ss << ", " << score_sorted_.at(i);
     }
   }
-  ss << "], left_diff_sorted: [";
-  if (!left_diff_sorted_.empty()) {
-    ss << left_diff_sorted_.at(0);
-    for (int i = 1; i < left_diff_sorted_.size(); ++i) {
-      ss << ", " << left_diff_sorted_.at(i);
+  ss << "], qstart_sorted_: [";
+  if (!qstart_sorted_.empty()) {
+    ss << qstart_sorted_.at(0);
+    for (int i = 1; i < qstart_sorted_.size(); ++i) {
+      ss << ", " << qstart_sorted_.at(i);
     }
   }
-/*
-  ss << "], right_diff_sorted: [";
-  if (!right_diff_sorted_.empty()) {
-    ss << right_diff_sorted_.at(0);
-    for (int i = 1; i < right_diff_sorted_.size(); ++i) {
-      ss << ", " << right_diff_sorted_.at(i);
+
+  ss << "], qend_sorted_: [";
+  if (!qend_sorted_.empty()) {
+    ss << qend_sorted_.at(0);
+    for (int i = 1; i < qend_sorted_.size(); ++i) {
+      ss << ", " << qend_sorted_.at(i);
     }
   }
-*/
+
   ss << "]}";
   return ss.str();
 }
