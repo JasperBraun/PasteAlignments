@@ -35,7 +35,7 @@ namespace helpers {
 /// @addtogroup PasteAlignments-Reference
 ///
 /// @{
-
+/*
 /// @brief Tests whether `i` is in the range [`first`, `last`].
 ///
 /// @parameter first First coordinate of tested range.
@@ -53,7 +53,7 @@ inline int TestInRange(int first, int last, int i) {
     throw exceptions::OutOfRange(error_message.str());
   }
   return i;
-}
+}*/
 
 /// @brief Tests whether `i` is positive.
 ///
@@ -258,7 +258,7 @@ inline float MegablastExtendCost(int reward, int penalty) {
   TestPositive(penalty);
   return (reward / 2.0f) + penalty;
 }
-
+/*
 /// @brief Returns a string_view of same length as field nearfront of `text`.
 ///
 /// @parameter field The field to be moved or emptied.
@@ -288,7 +288,7 @@ inline std::string_view MoveFieldToFront(const std::string_view& field,
     end_of_last_field += result.length();
   }
   return result;
-}
+}*/
 
 /// @}
 

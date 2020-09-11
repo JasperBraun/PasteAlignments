@@ -72,6 +72,12 @@ struct ReadError final : public BaseException {
   using BaseException::BaseException;
 };
 
+/// @brief Thrown when error occurred while pasting alignments.
+///
+struct PastingError final : public BaseException {
+  using BaseException::BaseException;
+};
+
 } // namespace exceptions
 
 } // namespace paste_alignments

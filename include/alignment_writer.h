@@ -38,14 +38,14 @@ class AlignmentWriter {
   ///
   /// @parameter file_name The name of the file the object is associated with.
   ///
-  /// @exceptions Basic guarantee. Attempts to create/open file named
-  ///  `file_name`. Throws `exceptions::InvalidInput` if unable to open or
+  /// @exceptions Basic guarantee. Attempts to create/open and truncate file
+  ///  named `file_name`. Throws `exceptions::InvalidInput` if unable to open or
   ///  create file.
   ///
   inline static AlignmentWriter FromFile(std::string file_name) {
     AlignmentWriter result;
 
-    result.ofs_.open(file_name);
+    result.ofs_.open(file_name, std::ofstream::trunc);
     if (result.ofs_.fail()) {
       std::stringstream error_message;
       error_message << "Unable to open file: '" << file_name << "'.";

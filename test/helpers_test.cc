@@ -36,7 +36,6 @@
 // helpers tests
 //
 // Test correctness for:
-// * TestInRange
 // * TestPositive(int)
 // * TestPositive(long)
 // * TestNonNegative(int)
@@ -45,12 +44,13 @@
 // * TestNonEmpty(string_view)
 // * StringViewToInteger
 // * FuzzyFloatEquals
+// * FuzzyDoubleEquals
+// * FuzzyFloatLess
 // * MegablastExtendCost
 // 
 // Test invariants for:
 //
 // Test exceptions for:
-// * TestInRange
 // * TestPositive(int)
 // * TestPositive(long)
 // * TestNonNegative(int)
@@ -64,7 +64,7 @@ namespace paste_alignments {
 namespace test {
 
 namespace {
-
+/*
 SCENARIO("Test correctness of helpers::TestInRange.",
          "[helpers][TestInRange][correctness]") {
 
@@ -112,7 +112,7 @@ SCENARIO("Test exceptions thrown by helpers::TestInRange.",
                       exceptions::OutOfRange);
     }
   }
-}
+}*/
 
 SCENARIO("Test correctness of helpers::TestPositive(int).",
          "[helpers][TestPositive(int)][correctness]") {
@@ -499,6 +499,54 @@ SCENARIO("Test correctness of helpers::FuzzyDoubleEquals.",
     THEN("If max allowed distance is large enough, function returns true.") {
       CHECK(helpers::FuzzyDoubleEquals(
           first, second, distance / min_magnitude + 1000.0 * double_step_size));
+    }
+  }
+}
+
+SCENARIO("Test correctness of helpers::FuzzyFloatLess.",
+         "[helpers][FuzzyFloatLess][correctness]") {
+
+  GIVEN("A variety of floats.") {
+    float float_step_size, first, second, distance, min_magnitude;
+    float left, right;
+    float_step_size = std::numeric_limits<float>::epsilon();
+    first = GENERATE(take(5, random(std::numeric_limits<float>::min()
+                                    + std::numeric_limits<float>::epsilon(),
+                                    std::numeric_limits<float>::max()
+                                    - std::numeric_limits<float>::epsilon())));
+    second = GENERATE(take(5, random(std::numeric_limits<float>::min()
+                                    + std::numeric_limits<float>::epsilon(),
+                                    std::numeric_limits<float>::max()
+                                    - std::numeric_limits<float>::epsilon())));
+    if (first == second) {
+      second += float_step_size;
+    }
+    left = std::min(first, second);
+    right = std::max(first, second);
+    distance = std::abs(left - right);
+    if (left == 0.0f) {
+      min_magnitude = std::abs(right);
+    } else if (right == 0.0f) {
+      min_magnitude = std::abs(left);
+    } else {
+      min_magnitude = std::min(std::abs(left), std::abs(right));
+    }
+
+    THEN("If max allowed distance is small enough, function returns true.") {
+      CHECK(helpers::FuzzyFloatLess(
+          left, right, distance / min_magnitude - 100.0f * float_step_size));
+    }
+
+    THEN("If max allowed distance is too large, function returns false.") {
+      CHECK_FALSE(helpers::FuzzyFloatLess(
+          left, right, distance / min_magnitude + 100.0f * float_step_size));
+    }
+
+    THEN("Regardless of allowed distance, function returns false if greater.") {
+      CHECK_FALSE(helpers::FuzzyFloatLess(
+          right, left, distance / min_magnitude - 100.0f * float_step_size));
+      CHECK_FALSE(helpers::FuzzyFloatLess(
+          right, left, distance / min_magnitude + 100.0f * float_step_size));
     }
   }
 }

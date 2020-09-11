@@ -30,12 +30,67 @@
 
 namespace paste_alignments {
 
+/// @brief Describes the relative positions of two alignments.
+///
+/// @details Assumes that neither aligned query nor aligned subject region of
+///  one is contained in the other and that
+///
+struct AlignmentConfiguration {
+
+  /// @brief Offset between aligned query regions.
+  ///
+  int query_offset;
+
+  /// @brief Amount of overlap between aligned query regions.
+  ///
+  int query_overlap;
+
+  /// @brief Distance between aligned query regions.
+  ///
+  int query_distance;
+
+  /// @brief Offset between aligned subject regions.
+  ///
+  int subject_offset;
+
+  /// @brief Amount of overlap between aligned subject regions.
+  ///
+  int subject_overlap;
+
+  /// @brief Distance between aligned subject regions.
+  ///
+  int subject_distance;
+
+  /// @brief Shift between the query and subject offsets.
+  ///
+  int shift;
+
+  /// @brief Length of left alignment.
+  ///
+  int left_length;
+
+  /// @brief Length of right alignment.
+  ///
+  int right_length;
+
+  /// @brief Length of pasted alignment.
+  ///
+  int pasted_length;
+
+  /// @brief Returns a descriptive string of the object.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  std::string DebugString() const;
+};
+
 /// @brief Contains data relevant for a sequence alignment.
 ///
 /// @invariant All integral data members are non-negative.
 /// @invariant `Qstart <= Qend`, and `Sstart <= Send`.
 /// @invariant `Qlen` and `Slen` are positive.
 /// @invariant `Qseq` and `Sseq` are non-empty.
+/// @invariatn `Qseq` and `Sseq` have the same length.
 /// @invariant `PastedIdentifiers` contains `Id`.
 ///
 class Alignment {
@@ -50,8 +105,8 @@ class Alignment {
   /// @parameter fields String fields containing the alignment data.
   /// @parameter scoring_system Scoring system used to compute score, bitscore,
   ///  and evalue.
-  /// @parameter parameters Additional arguments used for handling floating
-  ///  points.
+  /// @parameter paste_parameters Additional arguments used for handling
+  ///  floating points.
   ///
   /// @details `fields` values are interpreted in the order:
   ///  qstart qend sstart send nident mismatch gapopen gaps qlen slen qseq sseq.
@@ -60,18 +115,19 @@ class Alignment {
   ///  are ignored.
   ///
   /// @exceptions Strong guarantee. Throws `exceptions::ParsingError` if
-  ///  * Fewer than 12 fields are provided
-  ///  * One of the fields, except qseq and sseq cannot be converted to integer
-  ///  * qstart is larger than qend coordinate
-  ///  * One of qstart, qend, sstart, or send is negative
-  ///  * One of nident, mismatch, gapopen, or gaps is negative
-  ///  * One of qlen, or slen is non-positive
-  ///  * One of qseq, or sseq is empty
+  ///  * Fewer than 12 fields are provided.
+  ///  * One of the fields, except qseq and sseq cannot be converted to integer.
+  ///  * qstart is larger than qend coordinate.
+  ///  * One of qstart, qend, sstart, or send is negative.
+  ///  * One of nident, mismatch, gapopen, or gaps is negative.
+  ///  * One of qlen, or slen is non-positive.
+  ///  * One of qseq, or sseq is empty.
+  ///  * Length of qseq is not the same as length of sseq.
   ///
   static Alignment FromStringFields(int id,
                                     std::vector<std::string_view> fields,
                                     const ScoringSystem& scoring_system,
-                                    const PasteParameters& parameters);
+                                    const PasteParameters& paste_parameters);
   /// @}
 
   /// @name Constructors:
@@ -200,7 +256,7 @@ class Alignment {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int Length() const {return length_;}
+  inline int Length() const {return qseq_.length();}
 
   /// @brief Alignment's percent identity.
   ///
@@ -236,17 +292,23 @@ class Alignment {
   ///
   inline bool IncludeInOutput() const {return include_in_output_;}
 
-  /// @brief Position of first aligned pair of maximal ungapped suffix.
-  ///
-  /// @exception Strong guarantee.
-  ///
-  inline int UngappedSuffixBegin() const {return ungapped_suffix_begin_;}
-
   /// @brief Position one-past-the-last aligned pair of maximal ungapped prefix.
+  ///
+  /// @details Prefix in query corresponds to suffix in subject if object is
+  ///  negatively oriented.
   ///
   /// @exception Strong guarantee.
   ///
   inline int UngappedPrefixEnd() const {return ungapped_prefix_end_;}
+
+  /// @brief Position of first aligned pair of maximal ungapped suffix.
+  ///
+  /// @details Suffix in query corresponds to prefix in subject if object is
+  ///  negatively oriented.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline int UngappedSuffixBegin() const {return ungapped_suffix_begin_;}
 
   /// @brief Indicates whether alignment satisfies both quality thesholds.
   ///
@@ -289,16 +351,98 @@ class Alignment {
   /// @name Mutators:
   ///
   /// @{
-  
-  /// @brief Sets flag for alignment to be included in output.
+
+  /// @brief Sets position one-past-the-last aligned pair of maximal ungapped
+  ///  prefix.
+  ///
+  /// @details Prefix in query corresponds to suffix in subject if object is
+  ///  negatively oriented.
   ///
   /// @exception Strong guarantee.
   ///
-  inline void IncludeInOutput(bool value = true) {include_in_output_ = value;}
+  inline void UngappedPrefixEnd(int value) {ungapped_prefix_end_ = value;}
 
-  void PasteRight(const Alignment& other);
+  /// @brief Sets position of first aligned pair of maximal ungapped suffix.
+  ///
+  /// @details Suffix in query corresponds to prefix in subject if object is
+  ///  negatively oriented.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline void UngappedSuffixBegin(int value) {ungapped_suffix_begin_ = value;}
+  
+  /// @brief Sets flag for alignment to be included in output.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline void IncludeInOutput(bool value) {include_in_output_ = value;}
 
-  void PasteLeft(const Alignment& other);
+  /// @brief (Re-)computes percent identity, raw score, bitscore, and evalue.
+  ///
+  /// @parameter scoring_system Scoring system used to compute score, bitscore,
+  ///  and evalue.
+  /// @parameter paste_parameters Additional arguments used for handling
+  ///  floating points.
+  ///
+  /// @exceptions Basic guarantee.
+  ///
+  inline void UpdateSimilarityMeasures(
+      const ScoringSystem& scoring_system,
+      const PasteParameters& paste_parameters) {
+    pident_ = 100.0f * static_cast<float>(nident_)
+              / static_cast<float>(qseq_.length());
+    raw_score_ = scoring_system.RawScore(nident_, mismatch_, gapopen_, gaps_);
+    bitscore_ = scoring_system.Bitscore(raw_score_, paste_parameters);
+    evalue_ = scoring_system.Evalue(raw_score_, qlen_, paste_parameters);
+  }
+
+  /// @brief Pastes another alignment onto the right of the object.
+  ///
+  /// @parameter other The alignment to paste onto the right.
+  /// @parameter config The configuration describing the relative position of
+  ///  the two alignments.
+  /// @parameter scoring_system Scoring system used to compute score, bitscore,
+  ///  and evalue.
+  /// @parameter paste_parameters Additional arguments used for handling
+  ///  floating points.
+  ///
+  /// @exceptions Basic guarantee. Throws `exceptions::PastingError` if
+  ///  * The two alignments are not on the same strand.
+  ///  * One of the two alignments' query or subject regions is contained in the
+  ///    other's.
+  ///  * `other` does not start after (or end after) this object in query.
+  ///  * `other` does not start after (or end after) this object in subject and
+  ///    the two alignments are on the plus strand.
+  ///  * `other` does not start before (or end before) this object in subject
+  ///    and the two alignments are on the minus strand.
+  ///
+  void PasteRight(const Alignment& other, const AlignmentConfiguration& config,
+                  const ScoringSystem& scoring_system,
+                  const PasteParameters& paste_parameters);
+
+  /// @brief Pastes another alignment onto the left (in query) of the object.
+  ///
+  /// @parameter other The alignment to paste onto the left.
+  /// @parameter config The configuration describing the relative position of
+  ///  the two alignments.
+  /// @parameter scoring_system Scoring system used to compute score, bitscore,
+  ///  and evalue.
+  /// @parameter paste_parameters Additional arguments used for handling
+  ///  floating points.
+  ///
+  /// @exceptions Basic guarantee. Throws `exceptions::PastingError` if
+  ///  * The two alignments are not on the same strand.
+  ///  * One of the two alignments' query or subject regions is contained in the
+  ///    other's.
+  ///  * `other` does not start before (or end before) this object in query.
+  ///  * `other` does not start before (or end before) this object in subject
+  ///    and the two alignments are on the plus strand.
+  ///  * `other does not start after (or end after) this object in subject and
+  ///    the two alignments are on the minus strand.
+  ///
+  void PasteLeft(const Alignment& other, const AlignmentConfiguration& config,
+                 const ScoringSystem& scoring_system,
+                 const PasteParameters& paste_parameters);
   /// @}
 
   /// @name Other:
@@ -337,14 +481,13 @@ class Alignment {
   int slen_;
   std::string qseq_;
   std::string sseq_;
-  int length_;
   float pident_;
   float raw_score_;
   float bitscore_;
   double evalue_;
   bool include_in_output_{false};
-  int ungapped_suffix_begin_;
   int ungapped_prefix_end_;
+  int ungapped_suffix_begin_;
 };
 
 } // namespace paste_alignments

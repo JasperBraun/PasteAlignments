@@ -85,7 +85,7 @@ class StatsCollector {
   inline static StatsCollector FromFile(std::string file_name) {
     StatsCollector result;
 
-    result.ofs_.open(file_name);
+    result.ofs_.open(file_name, std::ofstream::trunc);
     if (result.ofs_.fail()) {
       std::stringstream error_message;
       error_message << "Unable to open file: '" << file_name << "'.";
