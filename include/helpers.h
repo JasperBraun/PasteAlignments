@@ -32,29 +32,6 @@ namespace paste_alignments {
 
 namespace helpers {
 
-/// @addtogroup PasteAlignments-Reference
-///
-/// @{
-/*
-/// @brief Tests whether `i` is in the range [`first`, `last`].
-///
-/// @parameter first First coordinate of tested range.
-/// @parameter last Last coordinate of tested range.
-/// @parameter i Value to be tested.
-///
-/// @exceptions Strong guarantee. Throws `exceptions::OutOfRange` if `i` is not
-///  in the range [`first`, `last`].
-///
-inline int TestInRange(int first, int last, int i) {
-  std::stringstream error_message;
-  if (i < first || last < i) {
-    error_message << "Expected value in range: [" << first << ", " << last
-                  << "], but was given: " << i << '.';
-    throw exceptions::OutOfRange(error_message.str());
-  }
-  return i;
-}*/
-
 /// @brief Tests whether `i` is positive.
 ///
 /// @parameter i Number to be tested.
@@ -158,7 +135,7 @@ inline std::string_view TestNonEmpty(std::string_view& s_view) {
 ///
 int StringViewToInteger(const std::string_view& s_view);
 
-/// @brief Computes fraction as a percentage.
+/// @brief Computes fraction of absolute values as a percentage.
 ///
 /// @parameter nident Numerator of fraction.
 /// @parameter denominator Denominator of fraction.
@@ -170,8 +147,8 @@ inline float Percentage(int numerator, int denominator) {
   if (denominator == 0.0f) {
     throw exceptions::OutOfRange("Division by 0.");
   }
-  return (100.0f * static_cast<float>(numerator)
-                 / static_cast<float>(denominator));
+  return (100.0f * static_cast<float>(std::abs(numerator))
+                 / static_cast<float>(std::abs(denominator)));
 }
 
 /// @brief Return `true` if the two numbers are at most `epsilon` times the
@@ -296,39 +273,6 @@ inline float MegablastExtendCost(int reward, int penalty) {
   TestPositive(penalty);
   return (reward / 2.0f) + penalty;
 }
-/*
-/// @brief Returns a string_view of same length as field nearfront of `text`.
-///
-/// @parameter field The field to be moved or emptied.
-/// @parameter text Reference text.
-/// @parameter suffix_start Start position of suffix in text in which `field`
-///  must be contained to be retained.
-/// @parameter end_of_last_field Position toward which `field` should be moved.
-///
-/// @details Behavior is undefined if `field` doesn't view a substring of the
-///  string viewed by `text`. `field` is emptied if it is not contained in the
-///  suffix of `text` starting at position `suffix_start`. `end_of_last_field`
-///  is advanced to the position after `field` if `field` is successfully moved.
-///
-/// @exceptions Basic guarantee. Throws `exceptions::OutOfRange` if
-///  * `suffix_start` is not in the range `[0, text.length())`.
-///  * `end_of_last_field` is not in the range
-///    `[0, text.length() - field.length())`.
-///  
-inline std::string_view MoveFieldToFront(const std::string_view& field,
-    std::string_view text, long suffix_start,
-    std::string_view::size_type& end_of_last_field) {
-  TestInRange(0l, text.length() - 1l, suffix_start);
-  TestInRange(0l, text.length() - field.length(), end_of_last_field);
-  std::string_view result;
-  if (!field.empty() && field.data() - text.data() >= suffix_start) {
-    result = std::string_view(text.data() + end_of_last_field, field.length());
-    end_of_last_field += result.length();
-  }
-  return result;
-}*/
-
-/// @}
 
 } // namespace helpers
 

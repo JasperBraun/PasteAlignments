@@ -27,15 +27,15 @@ namespace paste_alignments {
 std::string PasteStats::DebugString() const {
   std::stringstream ss;
   ss << '('
-     << "qseqid=" << gap_tolerance
-     << ", sseqid=" << intermediate_pident_threshold
-     << ", num_alignments=" << intermediate_score_threshold
+     << "qseqid=" << qseqid
+     << ", sseqid=" << sseqid
+     << ", num_alignments=" << num_alignments
      << ", num_pastings=" << num_pastings
-     << ", average_length=" << intermediate_bitscore_threshold
-     << ", average_pident=" << intermediate_evalue_threshold
-     << ", average_score=" << final_pident_threshold
-     << ", average_bitscore=" << final_bitscore_threshold
-     << ", average_evalue=" << final_bitscore_threshold
+     << ", average_length=" << average_length
+     << ", average_pident=" << average_pident
+     << ", average_score=" << average_score
+     << ", average_bitscore=" << average_bitscore
+     << ", average_evalue=" << average_evalue
      << ')';
   return ss.str();
 }
@@ -54,7 +54,7 @@ void StatsCollector::CollectStats(const AlignmentBatch& batch) {
       stats.average_length += a.Length();
       stats.average_pident += a.Pident();
       stats.average_score += a.RawScore();
-      stats.average_bitscore += a.BitScore();
+      stats.average_bitscore += a.Bitscore();
       stats.average_evalue += a.Evalue();
     }
     stats.average_length /= f_num_alignments;
@@ -110,7 +110,7 @@ PasteStats StatsCollector::WriteData() {
 
 // StatsCollector::DebugString
 //
-std::string StatsCollectorDebugString() const {
+std::string StatsCollector::DebugString() const {
   std::stringstream ss;
   ss << '{'
      << "ofs.is_open(): " << std::boolalpha << ofs_.is_open()

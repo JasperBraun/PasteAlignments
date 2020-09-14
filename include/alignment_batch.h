@@ -30,38 +30,21 @@
 
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
 /// @brief Container for alignments between a query and a subject sequence.
 ///
 /// @details Alignments can be accessed directly, or sorted by one of:
-///  * (score, pident) lexicographically descending. This is done using the
-///    following `Compare` function together with `std::sort`:
-///    ```cpp
-///    bool Compare(int a, int b, scoring_system, epsilon) {
-///      if (helpers::FuzzyFloatEquals(
-///              scoring_system.RawScore(Alignments().at(a)),
-///              scoring_system.RawScore(Alignments().at(b)),
-///              epsilon)) {
-///        if (helpers::FuzzyFloatEquals(Alignments().at(a).pident(),
-///                                      Alignments().at(b).pident(),
-///                                      epsilon
-///            || Alignments().at(a).pident() > Alignments.at(b).pident()) {
-///          return true;
-///        }
-///      } else if (first_score > second_score) {
-///        return true;
-///      }
-///      return false;
-///    }
-///    ```
-///  * left end-point difference ascending.
-///  * right end-point difference ascending.
+///  * (raw score, pident) lexicographically descending. This is done using
+///    `helpers::FuzzyFloatLess` for comparison of floating points. Ties are
+///    broken arbitrarily by the positions of the alignments in `Alignments()`.
+///  * Query start coordinate ascending.
+///  * Query end coordinate ascending.
 ///
-/// @invariant The collections ScoreSorted, SstartSorted, and SendSorted each
-///  consist precisely of the set of integers `{0, 1, ..., Size() - 1}` and are
-///  ordered by (`score`, `pident`) lexicographically descending, `sstart`
-///  ascending, and `send` ascending, where the attributes `score, `pident`,
-///  `sstart`, and `send` refer to the respective members of the alignments at
-///  the corresponding positions in `Alignments`.
+/// @invariant The collections ScoreSorted, QstartSorted, and QendSorted each
+///  consist precisely of the set of integers `{0, 1, ..., Size() - 1}`.
 ///
 class AlignmentBatch {
  public:
@@ -198,7 +181,22 @@ class AlignmentBatch {
   void ResetAlignments(std::vector<Alignment> alignments,
                        const PasteParameters& paste_parameters);
 
-  /// @brief
+  /// @brief Pastes alignments in pastable configuration together.
+  ///
+  /// @parameter scoring_system Used to compute raw score, bitscore, and evalue
+  ///  for pasted alignments.
+  /// @parameter paste_parameters Contains thresholds which define what
+  ///  alignment pairs count as 'pastable'.
+  ///
+  /// @details Attempts to extend each alignment to the left and right via
+  ///  pasting. Alignments are processed in `ScoreSorted` order. Alignments
+  ///  pasted onto others are not processed/pasted again. Alignments which after
+  ///  pasting satisfy final thresholds are marked using the
+  ///  `Alignment::IncludeInOutput` function member.
+  ///
+  /// @exceptions Basic guarantee. Position of pasted alignments in
+  ///  `ScoreSorted`, `QstartSorted` and `QendSorted` may not agree with the
+  ///  corresponding orders after execution of this function.
   ///
   void PasteAlignments(const ScoringSystem& scoring_system,
                        const PasteParameters& paste_parameters);
@@ -228,6 +226,7 @@ class AlignmentBatch {
   std::vector<int> qstart_sorted_;
   std::vector<int> qend_sorted_;
 };
+/// @}
 
 } // namespace paste_alignments
 

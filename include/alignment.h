@@ -30,6 +30,10 @@
 
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
 /// @brief Describes the relative positions of two alignments.
 ///
 /// @details Assumes that neither aligned query nor aligned subject region of
@@ -484,6 +488,7 @@ class Alignment {
   int ungapped_prefix_end_;
   int ungapped_suffix_begin_;
 };
+/// @}
 
 } // namespace paste_alignments
 

@@ -21,8 +21,22 @@
 #ifndef PASTE_ALIGNMENTS_STATS_COLLECTOR_H_
 #define PASTE_ALIGNMENTS_STATS_COLLECTOR_H_
 
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "alignment_batch.h"
+#include "exceptions.h"
+
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
+/// @brief Collects several descriptive statistics related to alignment pasting.
+///
 struct PasteStats {
 
   /// @brief Query sequence identifier.
@@ -100,6 +114,10 @@ class StatsCollector {
   ///
   /// @{
 
+  /// @brief Default constructor.
+  ///
+  StatsCollector() = default;
+
   StatsCollector(const StatsCollector& other) = delete;
 
   /// @brief Move constructor.
@@ -157,9 +175,10 @@ class StatsCollector {
   std::string DebugString() const;
   /// @}
  private:
-  std::unique_ptr<std::ofstream> ofs_;
+  std::ofstream ofs_;
   std::vector<PasteStats> batch_stats_;
 };
+/// @}
 
 } // namespace paste_alignments
 

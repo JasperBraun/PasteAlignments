@@ -1,4 +1,4 @@
-add_executable(helpers_test
+#[[add_executable(helpers_test
         "${PROJECT_SOURCE_DIR}/test/helpers_test.cc"
         "${PROJECT_SOURCE_DIR}/src/helpers.cc")
 target_include_directories(helpers_test PUBLIC
@@ -27,7 +27,7 @@ target_include_directories(scoring_system_test PUBLIC
         "${PROJECT_SOURCE_DIR}/test"
         "${PROJECT_SOURCE_DIR}/include"
         "${PROJECT_SOURCE_DIR}/lib/catch/include")
-add_test(NAME scoring_system_test COMMAND scoring_system_test)
+add_test(NAME scoring_system_test COMMAND scoring_system_test)]]
 
 add_executable(alignment_batch_test
         "${PROJECT_SOURCE_DIR}/test/alignment_batch_test.cc"
@@ -40,7 +40,7 @@ target_include_directories(alignment_batch_test PUBLIC
         "${PROJECT_SOURCE_DIR}/include"
         "${PROJECT_SOURCE_DIR}/lib/catch/include")
 add_test(NAME alignment_batch_test COMMAND alignment_batch_test)
-
+#[[
 file(COPY "${PROJECT_SOURCE_DIR}/test/test_data/valid_alignment_file.tsv"
      DESTINATION "${PROJECT_BINARY_DIR}/test/test_data"
      FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
@@ -82,4 +82,4 @@ target_include_directories(alignment_reader_test PUBLIC
         "${PROJECT_SOURCE_DIR}/test"
         "${PROJECT_SOURCE_DIR}/include"
         "${PROJECT_SOURCE_DIR}/lib/catch/include")
-add_test(NAME alignment_reader_test COMMAND alignment_reader_test)
+add_test(NAME alignment_reader_test COMMAND alignment_reader_test)]]

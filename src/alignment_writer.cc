@@ -24,7 +24,8 @@ namespace paste_alignments {
 
 // AlignmentWriter::WriteBatch
 //
-void WriteBatch(AlignmentBatch batch, const PasteParameters& parameters) {
+void AlignmentWriter::WriteBatch(AlignmentBatch batch,
+                                 const PasteParameters& parameters) {
   std::stringstream ss;
   if (line_break_) {
     ss << '\n';

@@ -21,7 +21,18 @@
 #ifndef PASTE_ALIGNMENTS_ALIGNMENT_WRITER_H_
 #define PASTE_ALIGNMENTS_ALIGNMENT_WRITER_H_
 
+#include <fstream>
+#include <sstream>
+#include <string>
+
+#include "alignment_batch.h"
+#include "exceptions.h"
+
 namespace paste_alignments {
+
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
 
 /// @brief Class for writing alignment data into data file.
 ///
@@ -100,9 +111,14 @@ class AlignmentWriter {
   std::string DebugString() const;
   /// @}
  private:
+  /// @brief Private constructor to force creation by factory.
+  ///
+  AlignmentWriter() = default;
+
   std::ofstream ofs_;
   bool line_break_{false};
 };
+/// @}
 
 } // namespace paste_alignments
 

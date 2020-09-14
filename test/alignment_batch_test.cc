@@ -73,6 +73,34 @@ bool ScoreComp(const Alignment& first, const Alignment& second,
   return false;
 }
 
+// Obtains `AlignmentConfiguration` object for `left` and `right`.
+//
+AlignmentConfiguration GetConfiguration(const Alignment& left,
+                                        const Alignment& right) {
+  assert(left.PlusStrand() == right.PlusStrand());
+  AlignmentConfiguration config;
+
+  config.query_offset = right.Qstart() - left.Qend() - 1;
+  if (left.PlusStrand()) {
+    config.subject_offset = right.Sstart() - left.Send() - 1;
+  } else {
+    config.subject_offset = left.Sstart() - right.Send() - 1;
+  }
+
+  config.query_overlap = std::abs(std::min(0, config.query_offset));
+  config.query_distance = std::max(0, config.query_offset);
+
+  config.subject_overlap = std::abs(std::min(0, config.subject_offset));
+  config.subject_distance = std::max(0, config.subject_offset);
+
+  config.shift = std::abs(config.query_offset - config.subject_offset);
+  config.left_length = left.Length();
+  config.right_length = right.Length();
+  config.pasted_length = config.left_length + config.right_length
+                         + std::max(config.query_offset, config.subject_offset);
+  return config;
+}
+
 namespace {
 
 SCENARIO("Test correctness of AlignmentBatch::ResetAlignments.",
@@ -592,6 +620,53 @@ SCENARIO("Test exceptions thrown by AlignmentBatch::sseqid(string_view).",
   THEN("A nonempty identifier does not cause an exception.") {
     AlignmentBatch alignment_batch{"qseqid", "sseqid"};
     CHECK_NOTHROW(alignment_batch.Sseqid("new_sseqid"));
+  }
+}
+
+SCENARIO("Test correctness of AlignmentBatch::PasteAlignments.",
+         "[AlignmentBatch][PasteAlignments][correctness]") {
+  PasteParameters paste_parameters;
+  AlignmentBatch alignment_batch{"qseqid", "sseqid"};
+  ScoringSystem scoring_system{ScoringSystem::Create(100000l, 1, 2, 1, 1)};
+
+  GIVEN("A1, A2, A3 (+), ungapped, all pastable, 0 paste gaps, 0 thresholds.") {
+    std::vector<Alignment> alignments{
+        Alignment::FromStringFields(0, {"101", "110", "1001", "1010",
+                                        "10", "0", "0", "0",
+                                        "10000", "100000",
+                                        "AAAAAAAAAA",
+                                        "AAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(1, {"111", "130", "1011", "1030",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000",
+                                        "CCCCCCCCCCCCCCCCCCCC",
+                                        "CCCCCCCCCCCCCCCCCCCC"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(2, {"131", "145", "1031", "1045",
+                                        "15", "0", "0", "0",
+                                        "10000", "100000",
+                                        "GGGGGGGGGGGGGGG",
+                                        "GGGGGGGGGGGGGGG"},
+                                       scoring_system, paste_parameters)};
+    std::vector<Alignment> original{alignments};
+    alignment_batch.ResetAlignments(std::move(alignments), paste_parameters);
+    alignment_batch.PasteAlignments(scoring_system, paste_parameters);
+
+    THEN("All are pasted into one and that one is marked final.") {
+      original.at(1).PasteRight(original.at(2),
+                                GetConfiguration(original.at(1),
+                                                 original.at(2)),
+                                scoring_system, paste_parameters);
+      original.at(1).PasteLeft(original.at(0),
+                               GetConfiguration(original.at(0),
+                                                original.at(1)),
+                               scoring_system, paste_parameters);
+      original.at(1).IncludeInOutput(true);
+      CHECK(original.at(0) == alignment_batch.Alignments().at(0));
+      CHECK(original.at(1) == alignment_batch.Alignments().at(1));
+      CHECK(original.at(2) == alignment_batch.Alignments().at(2));
+    }
   }
 }
 

@@ -23,6 +23,12 @@
 
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
+/// @brief Collects all parameter values relevant for the program.
+///
 struct PasteParameters {
 
   /// @name Pasting parameters:
@@ -31,23 +37,23 @@ struct PasteParameters {
   
   /// @brief Maximum gap size introduced via pasting.
   ///
-  int gap_tolerance;
+  int gap_tolerance{10};
 
   /// @brief Minimum percent identity for intermediate pasted alignments.
   ///
-  float intermediate_pident_threshold;
+  float intermediate_pident_threshold{0.0f};
 
   /// @brief Minimum score for intermediate pasted alignments.
   ///
-  float intermediate_score_threshold;
+  float intermediate_score_threshold{0.0f};
 
   /// @brief Minimum percent identity for returned pasted alignments.
   ///
-  float final_pident_threshold;
+  float final_pident_threshold{0.0f};
 
   /// @brief Minimum score for returned pasted alignments.
   ///
-  float final_score_threshold;
+  float final_score_threshold{0.0f};
   /// @}
 
   /// @name Scoring parameters:
@@ -59,28 +65,28 @@ struct PasteParameters {
   /// @details Positive value. Added to the score for each identical pair of
   ///  of residues in an alignment.
   ///
-  int reward;
+  int reward{1};
 
   /// @brief Mismatch penalty used to compute score, bitscore and evalue.
   ///
   /// @details Positive value. Subtracted from the score for each pair of
   ///  non-identical residues in an alignment.
   ///
-  int penalty;
+  int penalty{2};
 
   /// @brief Gap opening cost used to compute score, bitscore and evalue.
   ///
   /// @details Positive value. Subtracted from the score for each consecutive
   ///  run of gap characters (`-`) on either side of an alignment.
   ///
-  int open_cost;
+  int open_cost{0};
 
   /// @brief Gap extension cost used to compute score, bitscore and evalue.
   ///
   /// @details Positive value. Subtracted from the score for each pair
   ///  consisting of a residue and a gap character (`-`) in an alignment.
   ///
-  int extend_cost;
+  int extend_cost{0};
 
   /// @brief Size of the database of the input data.
   ///
@@ -117,7 +123,7 @@ struct PasteParameters {
   
   /// @brief Maximum size of the chunks of input data read.
   ///
-  long batch_size;
+  long batch_size{256l * 1000l * 1000l};
 
   /// @brief Parameter that determines how far apart two floating points may be
   ///  to be considered equal.
@@ -164,6 +170,7 @@ struct PasteParameters {
     return ss.str();
   }
 };
+/// @}
 
 } // namespace paste_alignments
 

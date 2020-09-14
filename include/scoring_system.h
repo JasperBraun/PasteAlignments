@@ -31,6 +31,10 @@
 
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
 /// @brief Describes a set of scoring parameter values.
 ///
 struct ScoringParameters {
@@ -376,6 +380,7 @@ class ScoringSystem {
   float k_{0.46f};
   long int db_size_{0};
 };
+/// @}
 
 } // namespace paste_alignments
 

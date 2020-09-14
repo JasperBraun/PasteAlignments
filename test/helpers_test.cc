@@ -46,6 +46,7 @@
 // * FuzzyFloatEquals
 // * FuzzyDoubleEquals
 // * FuzzyFloatLess
+// * SatisfiesThresholds
 // * MegablastExtendCost
 // 
 // Test invariants for:
@@ -58,6 +59,7 @@
 // * TestNonEmpty(string)
 // * TestNonEmpty(string)
 // * StringViewToInteger
+// * Percentage
 
 namespace paste_alignments {
 
@@ -427,6 +429,13 @@ SCENARIO("Test exceptions thrown by helpers::StringViewToInteger.",
   }
 }
 
+SCENARIO("Test exceptions thrown by helpers::Percentage.",
+         "[helpers][Percentage][exceptions]") {
+  float numerator = GENERATE(take(10, random(
+      std::numeric_limits<float>::min(), std::numeric_limits<float>::max())));
+  CHECK_THROWS_AS(helpers::Percentage(numerator, 0.0f), exceptions::OutOfRange);
+}
+
 SCENARIO("Test correctness of helpers::FuzzyFloatEquals.",
          "[helpers][FuzzyFloatEquals][correctness]") {
 
@@ -547,6 +556,107 @@ SCENARIO("Test correctness of helpers::FuzzyFloatLess.",
           right, left, distance / min_magnitude - 100.0f * float_step_size));
       CHECK_FALSE(helpers::FuzzyFloatLess(
           right, left, distance / min_magnitude + 100.0f * float_step_size));
+    }
+  }
+}
+
+SCENARIO("Test correctness of helpers::SatisfiesThresholds.",
+         "[helpers][SatisfiesThresholds][correctness]") {
+
+  GIVEN("A variety of scores, pidents, and thresholds.") {
+    float float_step_size, min_distance, max_distance,
+          min_min_magnitude, max_min_magnitude;
+    float pident_first, pident_second, pident_distance, pident_min_magnitude,
+          pident, pident_threshold;
+    float score_first, score_second, score_distance, score_min_magnitude,
+          score, score_threshold;
+    float_step_size = std::numeric_limits<float>::epsilon();
+    pident_first = GENERATE(
+        take(3, random(std::numeric_limits<float>::min()
+                           + std::numeric_limits<float>::epsilon(),
+                       std::numeric_limits<float>::max()
+                           - std::numeric_limits<float>::epsilon())));
+    pident_second = GENERATE(
+        take(3, random(std::numeric_limits<float>::min()
+                           + std::numeric_limits<float>::epsilon(),
+                       std::numeric_limits<float>::max()
+                           - std::numeric_limits<float>::epsilon())));
+    score_first = GENERATE(
+        take(3, random(std::numeric_limits<float>::min()
+                           + std::numeric_limits<float>::epsilon(),
+                       std::numeric_limits<float>::max()
+                           - std::numeric_limits<float>::epsilon())));
+    score_second = GENERATE(
+        take(3, random(std::numeric_limits<float>::min()
+                           + std::numeric_limits<float>::epsilon(),
+                       std::numeric_limits<float>::max()
+                           - std::numeric_limits<float>::epsilon())));
+
+    if (pident_first == pident_second) {
+      pident_second += float_step_size;
+    }
+    if (score_first == score_second) {
+      score_second += float_step_size;
+    }
+
+    pident = std::min(pident_first, pident_second);
+    pident_threshold = std::max(pident_first, pident_second);
+    pident_distance = std::abs(pident - pident_threshold);
+    if (pident == 0.0f) {
+      pident_min_magnitude = std::abs(pident_threshold);
+    } else if (pident_threshold == 0.0f) {
+      pident_min_magnitude = std::abs(pident);
+    } else {
+      pident_min_magnitude = std::min(std::abs(pident),
+                                      std::abs(pident_threshold));
+    }
+
+    score = std::min(score_first, score_second);
+    score_threshold = std::max(score_first, score_second);
+    score_distance = std::abs(score - score_threshold);
+    if (score == 0.0f) {
+      score_min_magnitude = std::abs(score_threshold);
+    } else if (score_threshold == 0.0f) {
+      score_min_magnitude = std::abs(score);
+    } else {
+      score_min_magnitude = std::min(std::abs(score),
+                                     std::abs(score_threshold));
+    }
+
+    min_distance = std::min(pident_distance, score_distance);
+    max_distance = std::max(pident_distance, score_distance);
+    max_min_magnitude = std::max(pident_min_magnitude, score_min_magnitude);
+    min_min_magnitude = std::min(pident_min_magnitude, score_min_magnitude);
+
+    THEN("False, if max allowed distance too small for either threshold.") {
+      // left, right, distance / min_magnitude - 100.0f * float_step_size));
+      CHECK_FALSE(helpers::SatisfiesThresholds(
+          pident, score, pident_threshold, score_threshold,
+          pident_distance / pident_min_magnitude - 100.0f * float_step_size));
+      CHECK_FALSE(helpers::SatisfiesThresholds(
+          pident, score, pident_threshold, score_threshold,
+          score_distance / score_min_magnitude - 100.0f * float_step_size));
+    }
+
+    THEN("True, if max allowed distance large enough for either threshold.") {
+      CHECK(helpers::SatisfiesThresholds(
+          pident, score, pident_threshold, score_threshold,
+          max_distance / min_min_magnitude + 100.0f * float_step_size));
+    }
+
+    THEN("Returns true if score or pident is not less than threshold.") {
+      CHECK(helpers::SatisfiesThresholds(
+          pident, score_threshold, pident_threshold, score,
+          pident_distance / pident_min_magnitude + 100.0f * float_step_size));
+      CHECK(helpers::SatisfiesThresholds(
+          pident_threshold, score, pident, score_threshold,
+          score_distance / score_min_magnitude + 100.0f * float_step_size));
+      CHECK(helpers::SatisfiesThresholds(
+          pident_threshold, score_threshold, pident, score,
+          min_distance / max_min_magnitude - 100.0f * float_step_size));
+      CHECK(helpers::SatisfiesThresholds(
+          pident_threshold, score_threshold, pident, score,
+          max_distance / min_min_magnitude + 100.0f * float_step_size));
     }
   }
 }

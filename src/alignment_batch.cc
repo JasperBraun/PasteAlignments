@@ -139,7 +139,7 @@ struct MatchCounts {
 //
 int FindFirstLessQend(int qend, const std::vector<int>& qend_sorted,
                       const std::vector<Alignment>& alignments) {
-  assert(qend_sorted.empty());
+  assert(!qend_sorted.empty());
   if (qend_sorted.size() == 1) {
     assert(alignments.at(qend_sorted.at(0)).Qend() == qend);
     return -1;
@@ -167,7 +167,7 @@ int FindFirstLessQend(int qend, const std::vector<int>& qend_sorted,
 //
 int FindFirstGreaterQstart(int qstart, const std::vector<int>& qstart_sorted,
                            const std::vector<Alignment>& alignments) {
-  assert(qstart_sorted.empty());
+  assert(!qstart_sorted.empty());
   if (qstart_sorted.size() == 1) {
     assert(alignments.at(qstart_sorted.at(0)).Qstart() == qstart);
     return -1;
@@ -224,6 +224,8 @@ bool BetterCandidate(const PasteCandidate& first,
   return false;
 }
 
+// Obtains `AlignmentConfiguration` object for `left` and `right`.
+//
 AlignmentConfiguration GetConfiguration(const Alignment& left,
                                         const Alignment& right) {
   assert(left.PlusStrand() == right.PlusStrand());
@@ -250,6 +252,9 @@ AlignmentConfiguration GetConfiguration(const Alignment& left,
   return config;
 }
 
+// Gets correct nident, mismatch, gapopen, and gaps counts for the alignment
+// otained by pasting `first` and `second`.
+//
 MatchCounts GetCounts(const Alignment& first, const Alignment& second,
                       const AlignmentConfiguration& config) {
   MatchCounts result;
@@ -267,6 +272,8 @@ MatchCounts GetCounts(const Alignment& first, const Alignment& second,
   return result;
 }
 
+// Searches for next pastable alignment to the left of `alignment `in query.
+//
 PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
                                  const Alignment& alignment,
                                  int distance_bound,
@@ -323,6 +330,8 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
   return result;
 }
 
+// Searches for next pastable alignment to the right of `alignment `in query.
+//
 PasteCandidate FindRightCandidate(int candidate_sorted_pos,
                                   const Alignment& alignment,
                                   int distance_bound,
@@ -388,6 +397,11 @@ PasteCandidate FindRightCandidate(int candidate_sorted_pos,
 //
 void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
                                      const PasteParameters& paste_parameters) {
+  assert(alignments_.size() == Size());
+  assert(score_sorted_.size() == Size());
+  assert(qstart_sorted_.size() == Size());
+  assert(qend_sorted_.size() == Size());
+
   if (alignments_.empty()) {return;}
   std::unordered_set<int> used, temp_used;
   PasteCandidate left_candidate, right_candidate;
@@ -444,7 +458,6 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
                                                paste_parameters);
         }
       }
-
       alignments_.at(i).IncludeInOutput(alignments_.at(i).SatisfiesThresholds(
           paste_parameters.final_pident_threshold,
           paste_parameters.final_score_threshold,

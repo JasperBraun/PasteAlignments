@@ -31,6 +31,10 @@
 
 namespace paste_alignments {
 
+/// @addtogroup PasteAlignments-Reference
+///
+/// @{
+
 /// @brief Class for reading data in a tab-delimited file into `AlignmentBatch`
 ///  objects.
 ///
@@ -261,6 +265,7 @@ class AlignmentReader {
   std::string next_sseqid_;
   int next_alignment_id_{0};
 };
+/// @}
 
 } // namespace paste_alignments
 

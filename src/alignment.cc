@@ -530,7 +530,11 @@ std::string AlignmentConfiguration::DebugString() const {
 std::string Alignment::DebugString() const {
   std::stringstream  ss;
   ss << std::boolalpha << "(id=" << Id()
-     << ", qstart=" << qstart_
+     << ", pasted_identifiers=[" << pasted_identifiers_.at(0);
+  for (int i = 1; i < pasted_identifiers_.size(); ++i) {
+    ss << ',' << pasted_identifiers_.at(i);
+  }
+  ss << "]), qstart=" << qstart_
      << ", qend=" << qend_
      << ", sstart=" << sstart_
      << ", send=" << send_
@@ -543,11 +547,14 @@ std::string Alignment::DebugString() const {
      << ", slen=" << slen_
      << ", qseq='" << qseq_
      << "', sseq='" << sseq_
-     << "', pasted_identifiers=[" << pasted_identifiers_.at(0);
-  for (int i = 1; i < pasted_identifiers_.size(); ++i) {
-    ss << ',' << pasted_identifiers_.at(i);
-  }
-  ss << "])";
+     << "', pident=" << pident_
+     << ", raw_score=" << raw_score_
+     << ", bitscore=" << bitscore_
+     << ", evalue=" << evalue_
+     << ", include_in_output=" << include_in_output_
+     << ", ungapped_prefix_end=" << ungapped_prefix_end_
+     << ", ungapped_suffix_begin=" << ungapped_suffix_begin_
+     << ')';
   return ss.str();
 }
 
