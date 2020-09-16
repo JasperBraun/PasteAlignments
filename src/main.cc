@@ -30,7 +30,7 @@
 namespace {
 
 const char* kUsageMessage{
-    "\nusage: paste_alignments [options] INPUT_FILE OUTPUT_FILE --db_size INTEGER\n"};
+    "\nusage: paste_alignments [options] INPUT_FILE [OUTPUT_FILE] --db_size INTEGER\n"};
 
 const char* kVersionMessage{
     "\nPasteAlignments v1.0.0"
@@ -276,7 +276,6 @@ void PasteAlignments(
   while (!reader.EndOfData()) {
     paste_alignments::AlignmentBatch batch = reader.ReadBatch(scoring_system,
                                                               paste_parameters);
-    std::clog << "\n\nPasting batch:\n" << batch.DebugString() << std::endl;
     batch.PasteAlignments(scoring_system, paste_parameters);
     if (!paste_parameters.stats_filename.empty()) {
       stats_collector.CollectStats(batch);
