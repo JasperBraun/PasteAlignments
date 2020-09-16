@@ -1,0 +1,28 @@
+td, .dt, .dd, p, .mdescRight, .grouheader {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.el {
+  font-family: "Lucida Console", Courier, monospace;
+  font-weight: bold;
+  font-style: normal;
+}
+
+em {
+  color: green;
+  font-family: "Lucida Console", Courier, monospace;
+  font-weight: bold;
+}
+
+code {
+  color: #602020;
+  font-family: "Lucida Console", Courier, monospace;
+  font-weight: bold;
+}
+
+.paramname em {
+  color: #602020;
+  font-family: "Lucida Console", Courier, monospace;
+  font-style: normal;
+  font-weight: bold;
+}
