@@ -153,7 +153,7 @@ int FindFirstLessQend(int qend, const std::vector<int>& qend_sorted,
       right = median;
     } else if (alignments.at(qend_sorted.at(median)).Qend() < qend) {
       assert(median < qend_sorted.size() - 1); // may fail if qend not in qend_sorted
-      left = median;
+      left = median + 1;
     }
   } while (alignments.at(qend_sorted.at(median)).Qend() != qend);
   while (median > 0 && alignments.at(qend_sorted.at(median)).Qend() == qend) {
@@ -182,7 +182,7 @@ int FindFirstGreaterQstart(int qstart, const std::vector<int>& qstart_sorted,
       right = median;
     } else if (alignments.at(qstart_sorted.at(median)).Qstart() < qstart) {
       assert(median < qstart_sorted.size() - 1); // may fail if qstart not in qstart_sorted
-      left = median;
+      left = median + 1;
     }
   } while (alignments.at(qstart_sorted.at(median)).Qstart() != qstart);
   while (median < qstart_sorted.size()
