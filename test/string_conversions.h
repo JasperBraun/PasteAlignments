@@ -23,8 +23,6 @@
 
 #include "catch.h"
 
-#include <sstream>
-
 #include "paste_alignments.h"
 
 namespace Catch {
@@ -54,6 +52,20 @@ template<>
 struct StringMaker<paste_alignments::AlignmentReader> {
   static std::string convert(const paste_alignments::AlignmentReader& reader) {
     return reader.DebugString();
+  }
+};
+
+template<>
+struct StringMaker<paste_alignments::PasteParameters> {
+  static std::string convert(const paste_alignments::PasteParameters& p) {
+    return p.DebugString();
+  }
+};
+
+template<>
+struct StringMaker<paste_alignments::StatsCollector> {
+  static std::string convert(const paste_alignments::StatsCollector& s) {
+    return s.DebugString();
   }
 };
 

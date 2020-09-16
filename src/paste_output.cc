@@ -18,36 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "alignment_writer.h"
+#include "paste_output.h"
 
 namespace paste_alignments {
 
-// AlignmentWriter::WriteBatch
+// WriteBatch
 //
-void AlignmentWriter::WriteBatch(AlignmentBatch batch,
-                                 const PasteParameters& parameters) {
-  std::stringstream ss;
-  if (line_break_) {
-    ss << '\n';
-  } else {
-    line_break_ = true;
-  }
+void WriteBatch(AlignmentBatch batch, std::ostream& os) {
+  if (batch.Size() == 0) {return;}
   for (const Alignment& a : batch.Alignments()) {
-    if (a.SatisfiesThresholds(parameters.final_pident_threshold,
-                              parameters.final_score_threshold,
-                              parameters)) {
-      ss << batch.Qseqid()
+    if (a.IncludeInOutput()) {
+      os << batch.Qseqid()
          << '\t' << batch.Sseqid()
          << '\t' << a.Qstart()
          << '\t' << a.Qend();
       if (a.PlusStrand()) {
-        ss << '\t' << a.Sstart()
+        os << '\t' << a.Sstart()
            << '\t' << a.Send();
       } else {
-        ss << '\t' << a.Send()
+        os << '\t' << a.Send()
            << '\t' << a.Sstart();
       }
-      ss << '\t' << a.Nident()
+      os << '\t' << a.Nident()
          << '\t' << a.Mismatch()
          << '\t' << a.Gapopen()
          << '\t' << a.Gaps()
@@ -61,21 +53,11 @@ void AlignmentWriter::WriteBatch(AlignmentBatch batch,
          << '\t' << a.Evalue()
          << '\t' << a.PastedIdentifiers().at(0);
       for (int i = 1; i < a.PastedIdentifiers().size(); ++i) {
-        ss << ',' << a.PastedIdentifiers().at(i);
+        os << ',' << a.PastedIdentifiers().at(i);
       }
+      os << '\n';
     }
   }
-  if (ss.str().size() > 1) {
-    ofs_.write(ss.str().data(), ss.str().size());
-  }
-}
-
-// AlignmentWriter::DebugString
-//
-std::string AlignmentWriter::DebugString() const {
-  std::stringstream ss;
-  ss << "{ofs.is_open: " << std::boolalpha << ofs_.is_open() << '}';
-  return ss.str();
 }
 
 } // namespace paste_alignments

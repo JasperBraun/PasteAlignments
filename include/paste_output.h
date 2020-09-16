@@ -18,40 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
-#define PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
+#ifndef PASTE_ALIGNMENTS_PASTE_OUTPUT_H_
+#define PASTE_ALIGNMENTS_PASTE_OUTPUT_H_
 
-#include "alignment.h"
+#include <iostream>
+#include <string>
+
 #include "alignment_batch.h"
-#include "alignment_reader.h"
-#include "exceptions.h"
-#include "helpers.h"
-#include "paste_output.h"
-#include "paste_parameters.h"
-#include "scoring_system.h"
-#include "stats_collector.h"
 
-/// @defgroup PasteAlignments-Reference
+namespace paste_alignments {
+
+/// @addtogroup PasteAlignments-Reference
 ///
 /// @{
 
-/// @brief Library namespace.
+/// @name paste_output
 ///
-/// @details All types and functions defined by the library reside inside this
-///  namespace.
-///
-namespace paste_alignments {}
+/// @{
 
-/// @brief Contains library-specific exceptions.
+/// @brief Writes tab-separated alignment data from batch into data file.
 ///
-/// @details All non-STL exceptions thrown by library functions are derived
-///  from `BaseError`.
+/// @parameter batch The alignment batch to write.
+/// @parameter os The stream to write the data into.
 ///
-namespace paste_alignments::exceptions {}
-
-/// @brief Contains various helper functions.
+/// @details Column order: qseqid, sseqid, qstart, qend, sstart, send, nident,
+///  gapopen, qlen, qseq, pident, score, bitscore, evalue, identifiers. Only
+///  writes alignments which are marked as final.
 ///
-namespace paste_alignments::helpers {}
+void WriteBatch(AlignmentBatch batch, std::ostream& os = std::cout);
 /// @}
 
-#endif // PASTE_ALIGNMENTS_PASTE_ALIGNMENTS_H_
+/// @}
+
+} // namespace paste_alignments
+
+#endif // PASTE_ALIGNMENTS_PASTE_OUTPUT_H_

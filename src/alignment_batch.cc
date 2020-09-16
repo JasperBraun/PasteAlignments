@@ -145,17 +145,18 @@ int FindFirstLessQend(int qend, const std::vector<int>& qend_sorted,
     return -1;
   }
 
-  int median{static_cast<int>(qend_sorted.size()) / 2};
-  while (alignments.at(median).Qend() != qend) {
-    if (alignments.at(median).Qend() > qend) {
-      assert(median > 0);
-      median /= 2;
-    } else {
-      assert(median < qend_sorted.size() - 1);
-      median += (qend_sorted.size() - median) / 2;
+  int left{0}, right{static_cast<int>(qend_sorted.size())}, median;
+  do {
+    median = left + (right - left) / 2;
+    if (alignments.at(qend_sorted.at(median)).Qend() > qend) {
+      assert(median > 0); // may fail if qend not in qend_sorted
+      right = median;
+    } else if (alignments.at(qend_sorted.at(median)).Qend() < qend) {
+      assert(median < qend_sorted.size() - 1); // may fail if qend not in qend_sorted
+      left = median;
     }
-  }
-  while (median > 0 && alignments.at(median).Qend() == qend) {
+  } while (alignments.at(qend_sorted.at(median)).Qend() != qend);
+  while (median > 0 && alignments.at(qend_sorted.at(median)).Qend() == qend) {
     --median;
   }
   return median;
@@ -173,18 +174,19 @@ int FindFirstGreaterQstart(int qstart, const std::vector<int>& qstart_sorted,
     return -1;
   }
 
-  int median{static_cast<int>(qstart_sorted.size()) / 2};
-  while (alignments.at(median).Qstart() != qstart) {
-    if (alignments.at(median).Qstart() > qstart) {
-      assert(median > 0);
-      median /= 2;
-    } else {
-      assert(median < qstart_sorted.size() - 1);
-      median += (qstart_sorted.size() - median) / 2;
+  int left{0}, right{static_cast<int>(qstart_sorted.size())}, median;
+  do {
+    median = left + (right - left) / 2;
+    if (alignments.at(qstart_sorted.at(median)).Qstart() > qstart) {
+      assert(median > 0); // may fail if qstart not in qstart_sorted
+      right = median;
+    } else if (alignments.at(qstart_sorted.at(median)).Qstart() < qstart) {
+      assert(median < qstart_sorted.size() - 1); // may fail if qstart not in qstart_sorted
+      left = median;
     }
-  }
+  } while (alignments.at(qstart_sorted.at(median)).Qstart() != qstart);
   while (median < qstart_sorted.size()
-         && alignments.at(median).Qstart() == qstart) {
+         && alignments.at(qstart_sorted.at(median)).Qstart() == qstart) {
     ++median;
   }
   if (median == qstart_sorted.size()) {
@@ -208,12 +210,27 @@ int GetDistanceBound(const Alignment& alignment,
 //
 bool BetterCandidate(const PasteCandidate& first,
                      const PasteCandidate& second,
-                     float epsilon) {
+                     const PasteParameters& parameters) {
   assert(first.sorted_pos != -1 || second.sorted_pos != -1);
   if (first.sorted_pos == -1) {return false;}
   if (second.sorted_pos == -1) {return true;}
-  if (helpers::FuzzyFloatEquals(first.score, second.score, epsilon)) {
-    if (helpers::FuzzyFloatEquals(first.pident, second.pident, epsilon)) {
+  bool first_final, second_final;
+  first_final = helpers::SatisfiesThresholds(
+      first.pident, first.score,
+      parameters.final_pident_threshold, parameters.final_score_threshold,
+      parameters.float_epsilon);
+  second_final = helpers::SatisfiesThresholds(
+      second.pident, second.score,
+      parameters.final_pident_threshold, parameters.final_score_threshold,
+      parameters.float_epsilon);
+  if (first_final && !second_final) {
+    return true;
+  } else if (second_final && !first_final) {
+    return false;
+  } else if (helpers::FuzzyFloatEquals(first.score, second.score,
+                                       parameters.float_epsilon)) {
+    if (helpers::FuzzyFloatEquals(first.pident, second.pident,
+                                  parameters.float_epsilon)) {
       return first.alignment_pos < second.alignment_pos;
     } else if (first.pident > second.pident) {
       return true;
@@ -273,6 +290,7 @@ MatchCounts GetCounts(const Alignment& first, const Alignment& second,
 }
 
 // Searches for next pastable alignment to the left of `alignment `in query.
+// Assumes that `candidate_sorted_pos` is in the range [-1, qend_sorted.size()).
 //
 PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
                                  const Alignment& alignment,
@@ -282,7 +300,9 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
                                  const std::unordered_set<int>& used,
                                  const ScoringSystem& scoring_system,
                                  const PasteParameters& paste_parameters) {
-  int result_distance, result_qstart;
+  assert(-1 <= candidate_sorted_pos);
+  assert(candidate_sorted_pos < static_cast<int>(qend_sorted.size()));
+  int result_distance, result_qstart, max_overlap;
   MatchCounts counts;
   bool result_plus_strand;
   PasteCandidate result;
@@ -307,7 +327,10 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
                && !used.count(result.alignment_pos)) {
       result.config = GetConfiguration(alignments.at(result.alignment_pos),
                                        alignment);
-      if (result.config.shift <= paste_parameters.gap_tolerance) {
+      max_overlap = std::max(result.config.query_overlap,
+                             result.config.subject_overlap);
+      if (result.config.shift <= paste_parameters.gap_tolerance
+          && max_overlap < alignment.UngappedPrefixEnd()) {
         counts = GetCounts(alignment, alignments.at(result.alignment_pos),
                            result.config);
         result.pident = helpers::Percentage(counts.nident,
@@ -331,6 +354,8 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
 }
 
 // Searches for next pastable alignment to the right of `alignment `in query.
+// Assumes that `candidate_sorted_pos` is in the range
+// [-1, qstart_sorted.size()).
 //
 PasteCandidate FindRightCandidate(int candidate_sorted_pos,
                                   const Alignment& alignment,
@@ -340,7 +365,9 @@ PasteCandidate FindRightCandidate(int candidate_sorted_pos,
                                   const std::unordered_set<int>& used,
                                   const ScoringSystem& scoring_system,
                                   const PasteParameters& paste_parameters) {
-  int result_distance, result_qend;
+  assert(-1 <= candidate_sorted_pos);
+  assert(candidate_sorted_pos < static_cast<int>(qstart_sorted.size()));
+  int result_distance, result_qend, max_overlap, alignment_suffix_length;
   MatchCounts counts;
   bool result_plus_strand;
   PasteCandidate result;
@@ -357,7 +384,6 @@ PasteCandidate FindRightCandidate(int candidate_sorted_pos,
                       - 1;
     result_qend = alignments.at(result.alignment_pos).Qend();
     result_plus_strand = alignments.at(result.alignment_pos).PlusStrand();
-
     if (result_distance > distance_bound) {
       result.sorted_pos = -1;
     } else if (alignment.PlusStrand() == result_plus_strand
@@ -365,7 +391,12 @@ PasteCandidate FindRightCandidate(int candidate_sorted_pos,
                && !used.count(result.alignment_pos)) {
       result.config = GetConfiguration(alignment,
                                        alignments.at(result.alignment_pos));
-      if (result.config.shift <= paste_parameters.gap_tolerance) {
+      max_overlap = std::max(result.config.query_overlap,
+                             result.config.subject_overlap);
+      alignment_suffix_length = alignment.Length()
+                                - alignment.UngappedSuffixBegin();
+      if (result.config.shift <= paste_parameters.gap_tolerance
+          && max_overlap < alignment_suffix_length) {
         counts = GetCounts(alignment, alignments.at(result.alignment_pos),
                            result.config);
         result.pident = helpers::Percentage(counts.nident,
@@ -409,6 +440,8 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
 
   for (int i : score_sorted_) {
     if (!used.count(i)) {
+
+      // Initialize search parameters.
       used.insert(i);
       temp_used.clear();
       Alignment current{alignments_.at(i)};
@@ -422,26 +455,39 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
                                            query_distance_bound, qstart_sorted_,
                                            alignments_, used, scoring_system,
                                            paste_parameters);
+
+      // Begin search left and right.
       while (left_candidate.sorted_pos != -1
              || right_candidate.sorted_pos != -1) {
+
+        // Prefer pasting more promising candidate.
         if (BetterCandidate(left_candidate, right_candidate,
-                            paste_parameters.float_epsilon)) {
+                            paste_parameters)) {
           current.PasteLeft(alignments_.at(left_candidate.alignment_pos),
                             left_candidate.config, scoring_system,
                             paste_parameters);
           temp_used.insert(left_candidate.alignment_pos);
+          left_candidate.sorted_pos -= 1;
         } else {
           current.PasteRight(alignments_.at(right_candidate.alignment_pos),
                              right_candidate.config, scoring_system,
                              paste_parameters);
           temp_used.insert(right_candidate.alignment_pos);
+          right_candidate.sorted_pos += 1;
+          if (right_candidate.sorted_pos == Size()) {
+            right_candidate.sorted_pos = -1;
+          }
         }
+
+        // Make accumulated temporary pastes permanent if final thresholds met.
         if (current.SatisfiesThresholds(paste_parameters.final_pident_threshold,
                                         paste_parameters.final_score_threshold,
                                         paste_parameters)) {
           alignments_.at(i) = current;
           used.merge(temp_used);
         }
+
+        // Adjust search parameters.
         query_distance_bound = GetDistanceBound(current, scoring_system,
                                                 paste_parameters);
         if (left_candidate.sorted_pos != -1) {
@@ -458,6 +504,8 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
                                                paste_parameters);
         }
       }
+
+      // Update whether or not alignment is to be included in output.
       alignments_.at(i).IncludeInOutput(alignments_.at(i).SatisfiesThresholds(
           paste_parameters.final_pident_threshold,
           paste_parameters.final_score_threshold,

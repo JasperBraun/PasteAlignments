@@ -534,7 +534,7 @@ std::string Alignment::DebugString() const {
   for (int i = 1; i < pasted_identifiers_.size(); ++i) {
     ss << ',' << pasted_identifiers_.at(i);
   }
-  ss << "]), qstart=" << qstart_
+  ss << "], qstart=" << qstart_
      << ", qend=" << qend_
      << ", sstart=" << sstart_
      << ", send=" << send_

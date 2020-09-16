@@ -44,19 +44,23 @@ std::string PasteStats::DebugString() const {
 //
 void StatsCollector::CollectStats(const AlignmentBatch& batch) {
   PasteStats stats;
-  stats.num_alignments = batch.Size();
-  if (stats.num_alignments > 0) {
-    stats.qseqid = batch.Qseqid();
-    stats.sseqid = batch.Sseqid();
-    float f_num_alignments{static_cast<float>(stats.num_alignments)};
-    for (const Alignment& a : batch.Alignments()) {
-      stats.num_pastings += a.PastedIdentifiers().size() - 1;
-      stats.average_length += a.Length();
+  stats.num_alignments = 0;
+  stats.qseqid = batch.Qseqid();
+  stats.sseqid = batch.Sseqid();
+  for (const Alignment& a : batch.Alignments()) {
+    if (a.IncludeInOutput()) {
+      stats.num_alignments += 1l;
+      stats.num_pastings += static_cast<long>(a.PastedIdentifiers().size())
+                            - 1l;
+      stats.average_length += static_cast<float>(a.Length());
       stats.average_pident += a.Pident();
       stats.average_score += a.RawScore();
       stats.average_bitscore += a.Bitscore();
       stats.average_evalue += a.Evalue();
     }
+  }
+  if (stats.num_alignments > 0) {
+    float f_num_alignments{static_cast<float>(stats.num_alignments)};
     stats.average_length /= f_num_alignments;
     stats.average_pident /= f_num_alignments;
     stats.average_score /= f_num_alignments;
@@ -68,42 +72,40 @@ void StatsCollector::CollectStats(const AlignmentBatch& batch) {
 
 // StatsCollector::WriteData
 //
-PasteStats StatsCollector::WriteData() {
+PasteStats StatsCollector::WriteData(std::ostream& os) {
   PasteStats global_stats;
-  bool first_row{true};
-  int num_batches = batch_stats_.size();
-  if (num_batches > 0) {
-    float f_num_batches{static_cast<float>(num_batches)};
+  if (!batch_stats_.empty()) {
     for (const PasteStats& s : batch_stats_) {
       global_stats.num_alignments += s.num_alignments;
       global_stats.num_pastings += s.num_pastings;
-      global_stats.average_length += s.average_length;
-      global_stats.average_pident += s.average_pident;
-      global_stats.average_score += s.average_score;
-      global_stats.average_bitscore += s.average_bitscore;
-      global_stats.average_evalue += s.average_evalue;
+      global_stats.average_length += s.average_length
+                                     * s.num_alignments;
+      global_stats.average_pident += s.average_pident
+                                     * s.num_alignments;
+      global_stats.average_score += s.average_score
+                                     * s.num_alignments;
+      global_stats.average_bitscore += s.average_bitscore
+                                     * s.num_alignments;
+      global_stats.average_evalue += s.average_evalue
+                                     * s.num_alignments;
 
-      if (first_row) {
-        first_row = false;
-      } else {
-        ofs_ << '\n';
-      }
-
-      ofs_ << s.qseqid
-           << '\t' << s.sseqid
-           << '\t' << s.num_alignments
-           << '\t' << s.num_pastings
-           << '\t' << s.average_length
-           << '\t' << s.average_pident
-           << '\t' << s.average_score
-           << '\t' << s.average_bitscore
-           << '\t' << s.average_evalue;
+      os << s.qseqid
+         << '\t' << s.sseqid
+         << '\t' << s.num_alignments
+         << '\t' << s.num_pastings
+         << '\t' << s.average_length
+         << '\t' << s.average_pident
+         << '\t' << s.average_score
+         << '\t' << s.average_bitscore
+         << '\t' << s.average_evalue
+         << '\n';
     }
-    global_stats.average_length /= f_num_batches;
-    global_stats.average_pident /= f_num_batches;
-    global_stats.average_score /= f_num_batches;
-    global_stats.average_bitscore /= f_num_batches;
-    global_stats.average_evalue /= static_cast<double>(num_batches);
+    float f_num_alignments{static_cast<float>(global_stats.num_alignments)};
+    global_stats.average_length /= f_num_alignments;
+    global_stats.average_pident /= f_num_alignments;
+    global_stats.average_score /= f_num_alignments;
+    global_stats.average_bitscore /= f_num_alignments;
+    global_stats.average_evalue /= static_cast<double>(f_num_alignments);
   }
   return global_stats;
 }
@@ -113,8 +115,7 @@ PasteStats StatsCollector::WriteData() {
 std::string StatsCollector::DebugString() const {
   std::stringstream ss;
   ss << '{'
-     << "ofs.is_open(): " << std::boolalpha << ofs_.is_open()
-     << ", batch_stats: [";
+     << "batch_stats: [";
   if (batch_stats_.size() > 0) {
     ss << batch_stats_.at(0).DebugString();
     for (int i = 1; i < batch_stats_.size(); ++i) {

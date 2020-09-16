@@ -50,7 +50,7 @@ arg_parse_convert::ParameterMap InitParameters() {
                (arg_parse_convert::Parameter<std::string>::Positional(
                     arg_parse_convert::converters::StringIdentity,
                     "output_file", 1)
-                .MinArgs(1).MaxArgs(1).Placeholder("OUTPUT_FILE")
+                .MinArgs(0).MaxArgs(1).Placeholder("OUTPUT_FILE")
                 .Description("Output file description."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
@@ -236,7 +236,9 @@ paste_alignments::PasteParameters GetPasteParameters(
 
   // Input/Output.
   result.input_filename = argument_map.GetValue<std::string>("input_file");
-  result.output_filename = argument_map.GetValue<std::string>("output_file");
+  if (argument_map.HasArgument("output_file")) {
+    result.output_filename = argument_map.GetValue<std::string>("output_file");
+  }
   if (argument_map.HasArgument("summary_file")) {
     result.summary_filename = argument_map.GetValue<std::string>("summary_file");
   }
@@ -260,19 +262,16 @@ void PasteAlignments(
   paste_alignments::AlignmentReader reader{
       paste_alignments::AlignmentReader::FromFile(
           paste_parameters.input_filename, 12, paste_parameters.batch_size)};
-  paste_alignments::AlignmentWriter writer{
-      paste_alignments::AlignmentWriter::FromFile(
-          paste_parameters.output_filename)};
-  paste_alignments::StatsCollector stats_collector;
-  if (!paste_parameters.stats_filename.empty()) {
-    stats_collector = paste_alignments::StatsCollector::FromFile(
-        paste_parameters.stats_filename);
-  }
   paste_alignments::ScoringSystem scoring_system{
       paste_alignments::ScoringSystem::Create(
           paste_parameters.db_size, paste_parameters.reward,
           paste_parameters.penalty, paste_parameters.open_cost,
           paste_parameters.extend_cost)};
+  paste_alignments::StatsCollector stats_collector;
+  std::ofstream alignments_ofs;
+  if (!paste_parameters.output_filename.empty()) {
+    alignments_ofs.open(paste_parameters.output_filename);
+  }
 
   while (!reader.EndOfData()) {
     paste_alignments::AlignmentBatch batch = reader.ReadBatch(scoring_system,
@@ -282,10 +281,21 @@ void PasteAlignments(
     if (!paste_parameters.stats_filename.empty()) {
       stats_collector.CollectStats(batch);
     }
-    writer.WriteBatch(std::move(batch), paste_parameters);
+    if (!paste_parameters.output_filename.empty()) {
+      paste_alignments::WriteBatch(std::move(batch), alignments_ofs);
+    } else {
+      paste_alignments::WriteBatch(std::move(batch), std::cout);
+    }
   }
+  if (!paste_parameters.output_filename.empty()) {
+    alignments_ofs.close();
+  }
+
+  // Print summary
   if (!paste_parameters.stats_filename.empty()) {
-    paste_alignments::PasteStats summary{stats_collector.WriteData()};
+    std::ofstream stats_ofs{paste_parameters.stats_filename};
+    paste_alignments::PasteStats summary{stats_collector.WriteData(stats_ofs)};
+    stats_ofs.close();
     if (!paste_parameters.summary_filename.empty()) {
       std::ofstream summary_ofs{paste_parameters.summary_filename};
       summary_ofs << '{'

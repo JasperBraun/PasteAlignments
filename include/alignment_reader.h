@@ -154,7 +154,6 @@ class AlignmentReader {
   ///  * Throws `exceptions::ReadError`, or `exceptions::OutOfRange` if a row
   ///    does not fit into object's internal data chunk.
   ///  * `ReadBatch::FromStringFields` may throw.
-  ///  * 
   ///
   AlignmentBatch ReadBatch(const ScoringSystem& scoring_system,
                            const PasteParameters& parameters);

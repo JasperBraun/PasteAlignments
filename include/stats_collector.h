@@ -22,6 +22,7 @@
 #define PASTE_ALIGNMENTS_STATS_COLLECTOR_H_
 
 #include <fstream>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -41,75 +42,55 @@ struct PasteStats {
 
   /// @brief Query sequence identifier.
   ///
-  std::string qseqid;
+  std::string qseqid{""};
 
   /// @brief Subject sequence identifier.
   ///
-  std::string sseqid;
+  std::string sseqid{""};
 
   /// @brief Number of alignments.
   ///
-  long num_alignments;
+  long num_alignments{0l};
 
   /// @brief Number of times alignments were pasted.
   ///
-  long num_pastings;
+  long num_pastings{0l};
 
   /// @brief Average alignment length.
   ///
-  float average_length;
+  float average_length{0.0f};
 
   /// @brief Average alignment percent identity.
   ///
-  float average_pident;
+  float average_pident{0.0f};
 
   /// @brief Average alignment score.
   ///
-  float average_score;
+  float average_score{0.0f};
 
   /// @brief Average alignment bitscore.
   ///
-  float average_bitscore;
+  float average_bitscore{0.0f};
 
   /// @brief Average alignment evalue.
   ///
-  double average_evalue;
+  double average_evalue{0.0};
+
+  /// @name Other:
+  ///
+  /// @{
 
   /// @brief Returns a descriptive string of the object.
   ///
   /// @exceptions Strong guarantee.
   ///
   std::string DebugString() const;
+  /// @}
 };
 
 class StatsCollector {
  public:
-  /// @name Factories:
-  ///
-  /// @{
-  
-  /// @brief Constructs object associating to it file named `file_name`.
-  ///
-  /// @parameter file_name The name of the file the object is associated with.
-  ///
-  /// @exceptions Basic guarantee. Attempts to create/open file named
-  ///  `file_name`. Throws `exceptions::InvalidInput` if unable to open or
-  ///  create file.
-  ///
-  inline static StatsCollector FromFile(std::string file_name) {
-    StatsCollector result;
 
-    result.ofs_.open(file_name, std::ofstream::trunc);
-    if (result.ofs_.fail()) {
-      std::stringstream error_message;
-      error_message << "Unable to open file: '" << file_name << "'.";
-      throw exceptions::InvalidInput(error_message.str());
-    }
-
-    return result;
-  }
-  /// @}
-  
   /// @name Constructors:
   ///
   /// @{
@@ -118,7 +99,9 @@ class StatsCollector {
   ///
   StatsCollector() = default;
 
-  StatsCollector(const StatsCollector& other) = delete;
+  /// @brief Copy constructor.
+  ///
+  StatsCollector(const StatsCollector& other) = default;
 
   /// @brief Move constructor.
   ///
@@ -129,11 +112,26 @@ class StatsCollector {
   ///
   /// @{
 
-  StatsCollector& operator=(const StatsCollector& other) = delete;
+  /// @brief Copy assignment.
+  ///
+  StatsCollector& operator=(const StatsCollector& other) = default;
 
   /// @brief Move assignment.
   ///
   StatsCollector& operator=(StatsCollector&& other) = default;
+  /// @}
+
+  /// @name Accessors:
+  ///
+  /// @{
+  
+  /// @brief Returns all stored `BatchStats` objects.
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline const std::vector<PasteStats>& BatchStats() const {
+    return batch_stats_;
+  }
   /// @}
 
   /// @name Stats computation:
@@ -158,10 +156,12 @@ class StatsCollector {
   /// @brief Writes all computed statistics into associated file and returns
   ///  overall statistics.
   ///
+  /// @parameter os Stream to write statistics into.
+  ///
   /// @details All averages and counts in return value are set to 0 if no stats
   ///  were computed.
   ///
-  PasteStats WriteData();
+  PasteStats WriteData(std::ostream& os);
   /// @}
 
   /// @name Other:
@@ -175,7 +175,6 @@ class StatsCollector {
   std::string DebugString() const;
   /// @}
  private:
-  std::ofstream ofs_;
   std::vector<PasteStats> batch_stats_;
 };
 /// @}
