@@ -402,15 +402,18 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
       }
 
       THEN("Sorted lists contains precisely the alignment positions.") {
+        std::unordered_set<int> qstart_sorted, qend_sorted;
+        for (std::pair<int,int> p : alignment_batch.QstartSorted()) {
+          qstart_sorted.insert(p.second);
+        }
+        for (std::pair<int,int> p : alignment_batch.QendSorted()) {
+          qend_sorted.insert(p.second);
+        }
         CHECK(std::unordered_set<int>{alignment_batch.ScoreSorted().begin(),
                                       alignment_batch.ScoreSorted().end()}
               == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.QstartSorted().begin(),
-                                      alignment_batch.QstartSorted().end()}
-              == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.QendSorted().begin(),
-                                      alignment_batch.QendSorted().end()}
-              == alignment_positions);
+        CHECK(qstart_sorted == alignment_positions);
+        CHECK(qend_sorted == alignment_positions);
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
@@ -427,18 +430,22 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
       THEN("Sorting by qstart works as expected.") {
         for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.QstartSorted().at(j)).Qstart()
+                    .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.QstartSorted().at(j + 1)).Qstart());
+                      .at(alignment_batch.QstartSorted().at(j + 1).second).Qstart());
+          CHECK(alignment_batch.QstartSorted().at(j).first
+                <= alignment_batch.QstartSorted().at(j + 1).first);
         }
       }
 
       THEN("Sorting by qend works as expected.") {
         for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.QendSorted().at(j)).Qend()
+                    .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.QendSorted().at(j + 1)).Qend());
+                      .at(alignment_batch.QendSorted().at(j + 1).second).Qend());
+          CHECK(alignment_batch.QendSorted().at(j).first
+                <= alignment_batch.QendSorted().at(j + 1).first);
         }
       }
     }
@@ -530,15 +537,18 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
       }
 
       THEN("Sorted lists contain precisely the alignment positions.") {
+        std::unordered_set<int> qstart_sorted, qend_sorted;
+        for (std::pair<int,int> p : alignment_batch.QstartSorted()) {
+          qstart_sorted.insert(p.second);
+        }
+        for (std::pair<int,int> p : alignment_batch.QendSorted()) {
+          qend_sorted.insert(p.second);
+        }
         CHECK(std::unordered_set<int>{alignment_batch.ScoreSorted().begin(),
                                       alignment_batch.ScoreSorted().end()}
               == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.QstartSorted().begin(),
-                                      alignment_batch.QstartSorted().end()}
-              == alignment_positions);
-        CHECK(std::unordered_set<int>{alignment_batch.QendSorted().begin(),
-                                      alignment_batch.QendSorted().end()}
-              == alignment_positions);
+        CHECK(qstart_sorted == alignment_positions);
+        CHECK(qend_sorted == alignment_positions);
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
@@ -555,18 +565,22 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments.",
       THEN("Sorting by qstart works as expected.") {
         for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.QstartSorted().at(j)).Qstart()
+                    .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.QstartSorted().at(j + 1)).Qstart());
+                      .at(alignment_batch.QstartSorted().at(j + 1).second).Qstart());
+          CHECK(alignment_batch.QstartSorted().at(j).first
+                <= alignment_batch.QstartSorted().at(j + 1).first);
         }
       }
 
       THEN("Sorting by qend works as expected.") {
         for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
           CHECK(alignment_batch.Alignments()
-                    .at(alignment_batch.QendSorted().at(j)).Qend()
+                    .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
-                      .at(alignment_batch.QendSorted().at(j + 1)).Qend());
+                      .at(alignment_batch.QendSorted().at(j + 1).second).Qend());
+          CHECK(alignment_batch.QendSorted().at(j).first
+                <= alignment_batch.QendSorted().at(j + 1).first);
         }
       }
     }

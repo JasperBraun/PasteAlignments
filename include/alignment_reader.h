@@ -21,13 +21,8 @@
 #ifndef PASTE_ALIGNMENTS_ALIGNMENT_READER_H_
 #define PASTE_ALIGNMENTS_ALIGNMENT_READER_H_
 
-#include <fstream>
-#include <string>
-#include <vector>
-
 #include "alignment.h"
 #include "alignment_batch.h"
-#include "scoring_system.h"
 
 namespace paste_alignments {
 
@@ -39,59 +34,41 @@ namespace paste_alignments {
 ///  objects.
 ///
 /// @details Data file must have query and subject identifiers in its first two
-///  columns, and at least as many additional columns as required by `Alignment`
-///  constructor. Those additional columns must also be in the order expected
-///  by `Alignment` constructor. Any columns in excess to the first two plus
-///  those required by `Alignment` constructor are ignored. Objects of this
-///  class read the file in chunks, storing each chunk internally. Rows must not
-///  be longer than what fits into the internal chunk.
-///
-/// @invariant `chunk_size_` is positive.
-/// @invariant `chunk_size_` is the same as `data_.capacity()`.
-/// @invariant `current_pos_` is a valid position in `current_chunk_`, or equal
-///  to `current_chunk_.length()` or `std::string_view::npos`.
-/// @invariant `current_chunk_` is a string view of a prefix of `data_`.
+///  columns, and at least as many additional columns as required by
+///  `AlignmentFromStringFields` (in the required order). Excess columns are
+///  ignored.
 ///
 class AlignmentReader {
  public:
   /// @name Factories:
   ///
   /// @{
-  
-  /// @brief Constructs object associating to it file named `file_name`.
+
+  /// @name Creates an `AlignmentReader` object with the input stream `is`
+  ///  associated to it.
   ///
-  /// @parameter file_name The name of the file the object is associated with.
-  /// @parameter num_fields The number of data fields `Alignment` objects are
-  ///  constructed from during certain read operations. Some read operations
-  ///  will skip fields in excess of this number (+2 for the sequence
-  ///  identifiers) per row.
-  /// @parameter chunk_size The size of the chunk of data stored in the object
-  ///  at any given time. ***This parameter must always be at least as large as
-  ///  the number of characters in the longest row of data in the input file.
-  ///  Otherwise, read operations will throw exceptions when encountering a row
-  ///  in the input file that is longer than the value of this parameter.***
+  /// @parameter is Input stream to be associated with the return object.
+  /// @parameter num_fields The number of fields per row expected to be read and
+  ///  passed to `Alignment::FromStringFields`.
   ///
-  /// @exceptions Basic guarantee. May partially read file named `file_name`.
-  ///  * Throws `exceptions::InvalidInput` if unable to open file, or if file is
-  ///    empty.
-  ///  * Throws `exceptions::OutOfRange` if `num_fields`, or `chunk_size` are
-  ///    not positive.
-  ///  * Throws `exceptions::ReadError` if `std::ifstream::read` operation
-  ///    signals a failure other than eof.
-  ///  * Throws `exceptions::ReadError`, or `exceptions::OutOfRange` if first
-  ///    two fields in first row do not fit into internal data chunk.
+  /// @exceptions Basic guarantee. Modifies `is`.
+  ///  * Throws `exceptions::OutOfRange` if `num_fields` is not positive.
+  ///  * Throws `exceptions::ParsingError` if
+  ///    - While extracting first line from `is`, `failbit` or `badbit` are set.
+  ///    - First line in `is` does not contain at least 2 '\t' characters.
+  ///    - One of the first two fields in the first line of `is` is empty.
+  ///  * `Alignment::FromStringFields` may throw.
   ///
-  static AlignmentReader FromFile(std::string file_name,
-                                  int num_fields = 12,
-                                  long chunk_size = 128l * 1000l * 1000l);
+  static AlignmentReader FromIStream(std::unique_ptr<std::istream> is,
+                                     int num_fields = 12);
   /// @}
-  
+
   /// @name Constructors:
   ///
   /// @{
-
+  
   AlignmentReader(const AlignmentReader& other) = delete;
-
+  
   /// @brief Move constructor.
   ///
   AlignmentReader(AlignmentReader&& other) = default;
@@ -100,69 +77,47 @@ class AlignmentReader {
   /// @name Assignment:
   ///
   /// @{
-
+  
   AlignmentReader& operator=(const AlignmentReader& other) = delete;
-
+  
   /// @brief Move assignment.
   ///
   AlignmentReader& operator=(AlignmentReader&& other) = default;
   /// @}
 
-  /// @name Accessors:
-  ///
-  /// @{
-  
-  /// @brief Size of the chunks read from file.
-  ///
-  /// @exceptions Strong guarantee.
-  ///
-  inline long ChunkSize() const {return chunk_size_;}
-
-  /// @brief Number of data fields `Alignment` objects are constructed from.
-  ///
-  /// @exceptions Strong guarantee.
-  ///
-  inline int NumFields() const {return num_fields_;}
-
-  /// @brief Indicates whether the entire input data was processed.
-  ///
-  /// @exceptions Strong guarantee.
-  ///
-  inline bool EndOfData() const {
-    return (!ifs_.is_open() && (current_pos_ == std::string_view::npos
-                                || current_pos_ >= current_chunk_.length()));
-  }
-  /// @}
-
   /// @name Read operations:
   ///
   /// @{
+  
+  /// @brief Indicates whether the end of data in the associated input stream
+  ///  was reached.
+  ///
+  /// @details End of data is reached when stream operations cause `eofbit`,
+  ///
+  /// @exceptions Strong guarantee.
+  ///
+  inline bool EndOfData() const {return end_of_data_;}
 
-  /// @brief Returns a batch of alignments.
+  /// @brief Returns the next batch of alignments read from the associated input
+  ///  stream.
   ///
   /// @parameter scoring_system The scoring system by which to sort alignments.
-  /// @parameter epsilon Parameter used by `helpers::FuzzyFloatEquals` to
-  ///  determine when two floats are "equal".
+  /// @parameter paste_parameters Used by `Alignment::FromStringFields` and
+  ///  `AlignmentBatch::ResetAlignments`.
   ///
-  /// @details `AlignmentBatch` object corresponds to the current row and the
-  ///  following run of rows with the same first two column values.
-  ///
-  /// @exceptions
-  ///  * Throws `exceptions::ReadError` if
-  ///    - Executed after end of data was already reached.
-  ///    - `std::ifstream::read` operation signals a failure other than eof.
-  ///  * Throws `exceptions::ReadError`, or `exceptions::OutOfRange` if a row
-  ///    does not fit into object's internal data chunk.
-  ///  * `ReadBatch::FromStringFields` may throw.
+  /// @exceptions Basic guarantee. Throws `exceptions::ParsingError` if
+  ///  * Function is called after end of data is was reached.
+  ///  * A row does not contain enough fields.
+  ///  * An extracted field is empty.
   ///
   AlignmentBatch ReadBatch(const ScoringSystem& scoring_system,
-                           const PasteParameters& parameters);
+                           const PasteParameters& paste_parameters);
   /// @}
 
   /// @name Other:
   ///
   /// @{
-
+  
   /// @brief Returns a descriptive string of the object.
   ///
   /// @exceptions Strong guarantee.
@@ -170,99 +125,17 @@ class AlignmentReader {
   std::string DebugString() const;
   /// @}
  private:
-  /// @brief Private constructor to force creation by factory.
+  /// @brief Private default constructor to force factory creation
   ///
   AlignmentReader() = default;
 
-  /// @brief Reads the next chunk of characters from input file, saving suffix
-  ///  at start of new chunk.
-  ///
-  /// @parameter suffix_start Size of the suffix of the current chunk to be
-  ///  saved by moving it to the beginning of the new chunk. If set to a number
-  ///  equal to or greater than the length of the current chunk, no suffix will
-  ///  be saved.
-  ///  
-  /// @details Resets current position to 0.
-  ///
-  /// @exceptions Basic guarantee.
-  ///  * Throws `exceptions::ReadError` if
-  ///    - `ifs_` is not open.
-  ///    - `std::ifstream::read` operation signals a failure other than eof.
-  ///
-  void ReadChunk(long suffix_start);
-
-  /// @brief Returns the next data field following `temp_pos`.
-  ///
-  /// @parameter delimiter A `char` reference in which the delimiter following
-  ///  the returned field is stored. If end of data is reached, its value is set
-  ///  to '\0'.
-  /// @parameter temp_pos The position in the current chunk at which the field
-  ///  starts.
-  ///
-  /// @details Advances `temp_pos` to one past the delimiter following the
-  ///  returned field, or to `std::string_view::npos` if end of data is reached.
-  ///  If the function must extract more data using `ReadChunk`, it saves the
-  ///  prefix starting at current position.
-  ///
-  /// @exceptions Basic guarantee.
-  ///  * Throws `exceptions::ReadError` if
-  ///    - Executed after end of data was already reached.
-  ///    - `std::ifstream::read` operation signals a failure other than eof.
-  ///  * Throws `exceptions::ReadError`, or `exceptions::OutOfRange` if current
-  ///    row does not fit into internal data chunk.
-  ///
-  std::string_view GetField(char& delimiter,
-                            std::string_view::size_type& temp_pos);
-
-  /// @brief Returns a list of `num_fields_` data fields starting at current
-  ///  position and sets `delimiter` to the delimiter following the fields.
-  ///
-  /// @parameter delimiter A `char` reference in which the delimiter following
-  ///  the last of the returned fields is stored. If end of data is reached, its
-  ///  value is set to '\0'.
-  /// @parameter temp_pos The position in the current chunk at which the field
-  ///  starts.
-  ///
-  /// @details Advances `temp_pos` to one past the delimiter following the
-  ///  returned field, or to `std::string_view::npos` if end of data is reached.
-  ///  If the function must extract more data using `ReadChunk`, it saves the
-  ///  prefix starting at current position.
-  ///
-  /// @exceptions Basic guarantee.
-  ///  * Throws `exceptions::ReadError` if
-  ///    - Executed after end of data was already reached.
-  ///    - `std::ifstream::read` operation signals a failure other than eof.
-  ///  * Throws `exceptions::ReadError`, or `exceptions::OutOfRange` if a row
-  ///    does not fit into internal data chunk.
-  ///
-  std::vector<std::string_view> GetAlignmentFields(
-    char& delimiter, std::string_view::size_type& temp_pos);
-
-  /// @brief Advances current position to one after the next newline character.
-  ///
-  /// @parameter temp_pos The position in current chunk at which search for
-  ///  newline character begins.
-  ///
-  /// @details current position is advanced to the character following the next
-  ///  newline character after `temp_pos`, or set to `std::string_view::npos`,
-  ///  if no newline character was found.
-  ///
-  /// @exceptions Basic guarantee.
-  ///  * Throws exceptions::ReadError` if
-  ///    - `std::ifstream::read` operation signals a failure other than eof.
-  ///    - If the current row does not fit into object's internal data chunk.
-  ///
-  void AdvanceToEndOfLine(std::string_view::size_type& temp_pos);
-
-  long chunk_size_;
-  int num_fields_;
-  std::ifstream ifs_;
-  std::string data_;
-  std::string_view current_chunk_;
-  std::string_view::size_type current_pos_{std::string_view::npos};
-  std::string next_qseqid_;
-  std::string next_sseqid_;
-  int next_alignment_id_{0};
+  int num_fields_; // Number of fields passed to `Alignment::FromStringFields`.
+  bool end_of_data_{false};
+  long next_alignment_id_{1};
+  std::unique_ptr<std::istream> is_;
+  std::string row_;
+  std::string_view next_qseqid_; // Must be non-empty if end_of_data_ is false.
+  std::string_view next_sseqid_; // Must be non-empty if end_of_data_ is false.
 };
 /// @}
 

@@ -44,6 +44,130 @@ namespace paste_alignments {
 
 namespace test {
 
+const std::string kValidInput{
+    "qseq1\tsseq1\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "qseq1\tsseq1\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "qseq1\tsseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "qseq1\tsseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "qseq2\tsseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "qseq2\tsseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "sseq2\tqseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "sseq2\tqseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "qseq1\tsseq1\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "qseq1\tsseq1\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\n"
+    "qseq4\tsseq4\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\n"
+    "qseq4\tsseq4\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT"};
+
+const std::string kValidInputAdditionalColumns{
+    "qseq1\tsseq1\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq2\tsseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "sseq2\tqseq2\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq1\tsseq1\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t125\t1101\t1125\t24\t1\t0\t0\t10000\t100000\tGCCCCAAAATTCCCCAAAATTCCCC\tACCCCAAAATTCCCCAAAATTCCCC\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t120\t1131\t1150\t20\t0\t0\t0\t10000\t100000\tCCCCAAAATTCCCCAAAATT\tCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t150\t1001\t1050\t40\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t110\t2111\t2120\t10\t0\t0\t0\t10000\t100000\tCCCCAAAATT\tCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t125\t1111\t1135\t20\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATTCCCCAAAATT\tAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t140\t1121\t1160\t30\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT\tAAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t115\t1096\t1110\t10\t5\t0\t0\t10000\t100000\tGGGGGCCCCAAAATT\tAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t135\t101\t135\t20\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t120\t201\t220\t10\t10\t0\t0\t10000\t100000\tGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,\n"
+    "qseq4\tsseq4\t101\t125\t2101\t2125\t10\t15\t0\t0\t10000\t100000\tGGGGGGGGGGGGGGGCCCCAAAATT\tAAAAAAAAAAAAAAACCCCAAAATT\t1.23e-45\tfoo_bar-baz,"};
+
 // Creates a vector of alignments from `alignment_input_data` with consecutive
 // run of id's starting at `start_id`.
 //
@@ -69,109 +193,55 @@ std::vector<Alignment> MakeAlignments(
 namespace {
 
 SCENARIO("Test correctness of AlignmentReader::FromFile.",
-         "[AlignmentReader][FromFile][correctness]") {
+         "[AlignmentReader][FromIStream][exceptions]") {
 
-  GIVEN("A valid input file.") {
-    std::string input_file{"test_data/valid_alignment_file.tsv"};
-
-    WHEN("Default number of fields and chunk size.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file)};
-
-      THEN("Field number and chunk size are at default values.") {
-        CHECK(reader.NumFields() == 12);
-        CHECK(reader.ChunkSize() == 128l * 1000l * 1000l);
-      }
-    }
-
-    WHEN("Non-default number of fields and default chunk size.") {
-      int num_fields = GENERATE(take(5, random(1, 100)));
-      AlignmentReader reader{AlignmentReader::FromFile(input_file, num_fields)};
-
-      THEN("Field number is the specified non-default number.") {
-        CHECK(reader.NumFields() == num_fields);
-        CHECK(reader.ChunkSize() == 128l * 1000l * 1000l);
-      }
-    }
-
-    WHEN("Default number of fields and non-default chunk size.") {
-      long chunk_size
-          = GENERATE(take(5, random(128l, 128l * 1000l * 1000l)));
-      AlignmentReader reader{AlignmentReader::FromFile(input_file, 12,
-                                                       chunk_size)};
-
-      THEN("Field number is the specified non-default number.") {
-        CHECK(reader.NumFields() == 12);
-        CHECK(reader.ChunkSize() == chunk_size);
-      }
-    }
-
-    WHEN("Non-default number of fields and chunk size.") {
-      int num_fields = GENERATE(take(3, random(1, 100)));
-      long chunk_size
-          = GENERATE(take(3, random(128l, 128l * 1000l * 1000l)));
-      AlignmentReader reader{AlignmentReader::FromFile(input_file, num_fields,
-                                                       chunk_size)};
-
-      THEN("Field number is the specified non-default number.") {
-        CHECK(reader.NumFields() == num_fields);
-        CHECK(reader.ChunkSize() == chunk_size);
-      }
-    }
-  }
-}
-
-SCENARIO("Test exceptions thrown by AlignmentReader::FromFile.",
-         "[AlignmentReader][FromFile][exceptions]") {
-
-  THEN("Not being able to open the input file causes exception.") {
-    CHECK_THROWS_AS(AlignmentReader::FromFile("invalid-file-name"),
-                    exceptions::InvalidInput);
-  }
-
-  THEN("An empty file causes exception.") {
-    CHECK_THROWS_AS(AlignmentReader::FromFile("empty_data_file.tsv"),
-                    exceptions::InvalidInput);
-  }
-
-  THEN("Zero number of fields causes exception.") {
-    CHECK_THROWS_AS(AlignmentReader::FromFile("test_data/valid_alignment_file.tsv", 0),
-                    exceptions::OutOfRange);
+  THEN("Valid input does not cause exception.") {
+    std::unique_ptr<std::istream> is{new std::stringstream{kValidInput}};
+    CHECK_NOTHROW(AlignmentReader::FromIStream(std::move(is)));
   }
 
   THEN("Negative number of fields causes exception.") {
+    std::unique_ptr<std::istream> is{new std::stringstream{kValidInput}};
     int num_fields = GENERATE(take(5, random(-100, -1)));
-    CHECK_THROWS_AS(AlignmentReader::FromFile("test_data/valid_alignment_file.tsv",
-                                              num_fields),
+    CHECK_THROWS_AS(AlignmentReader::FromIStream(std::move(is), num_fields),
                     exceptions::OutOfRange);
   }
 
-  THEN("Zero chunk size causes exception.") {
-    CHECK_THROWS_AS(AlignmentReader::FromFile("test_data/valid_alignment_file.tsv", 12,
-                                              0l),
-                    exceptions::OutOfRange);
+  THEN("An empty input stream causes exception.") {
+    std::unique_ptr<std::istream> is{new std::stringstream};
+    CHECK_THROWS_AS(AlignmentReader::FromIStream(std::move(is)),
+                    exceptions::ReadError);
   }
 
-  THEN("Negative number of fields causes exception.") {
-    long chunk_size = GENERATE(take(5, random(-1000l, -1l)));
-    CHECK_THROWS_AS(AlignmentReader::FromFile("test_data/valid_alignment_file.tsv", 12,
-                                              chunk_size),
-                    exceptions::OutOfRange);
+  THEN("No tab characters in first line of input stream cause exception.") {
+    std::string invalid_input{"Some string without tab characters.\n"};
+    invalid_input.append(kValidInput);
+    std::unique_ptr<std::istream> is{new std::stringstream{invalid_input}};
+    CHECK_THROWS_AS(AlignmentReader::FromIStream(std::move(is)),
+                    exceptions::ReadError);
   }
 
-  THEN("Using too small chunk size causes exception.") {
-    CHECK_THROWS_AS(AlignmentReader::FromFile("test_data/valid_alignment_file.tsv", 12,
-                                              1l),
+  THEN("Single tab character in first line of input stream causes exception.") {
+    std::string invalid_input{"Some string with single \t character.\n"};
+    invalid_input.append(kValidInput);
+    std::unique_ptr<std::istream> is{new std::stringstream{invalid_input}};
+    CHECK_THROWS_AS(AlignmentReader::FromIStream(std::move(is)),
                     exceptions::ReadError);
   }
 }
 
 SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
          "[AlignmentReader][ReadBatch][correctness]") {
+  ScoringSystem scoring_system
+      = GENERATE(ScoringSystem::Create(100000l, 1, 2, 1, 1),
+                 ScoringSystem::Create(10000000l, 2, 3, 0, 0));
 
-  GIVEN("A valid input file.") {
-    std::string input_file{"test_data/valid_alignment_file.tsv"};
+  float epsilon = GENERATE(0.05f, 0.15f);
+  PasteParameters paste_parameters;
+  paste_parameters.float_epsilon = epsilon;
 
-    // Pairs of identifiers in their order of appearance in input file.
+  GIVEN("Expected input data.") {
+    // Pairs of identifiers in their order of appearance in input stream.
     std::vector<std::pair<std::string, std::string>> sequence_identifiers{
         {"qseq1", "sseq1"}, {"qseq1", "sseq2"}, {"qseq2", "sseq2"},
         {"sseq2", "qseq2"}, {"qseq1", "sseq1"}, {"qseq4", "sseq4"}
@@ -191,76 +261,72 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
         {"101", "125", "2101", "2125", "10", "15", "0", "0", "10000", "100000", "GGGGGGGGGGGGGGGCCCCAAAATT", "AAAAAAAAAAAAAAACCCCAAAATT"}
     };
 
-    WHEN("Run repeatedly with default various scoring systems.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file)};
-      ScoringSystem scoring_system = GENERATE(ScoringSystem::Create(100000l, 1, 2, 1, 1),
-                                              ScoringSystem::Create(10000000l, 2, 3, 0, 0));
+    std::vector<AlignmentBatch> expected_batches;
+    for (int i = 0; i < sequence_identifiers.size(); ++i) {
+      AlignmentBatch batch{
+          sequence_identifiers.at(i).first,
+          sequence_identifiers.at(i).second};
+      batch.ResetAlignments(MakeAlignments(alignment_input_data, 1 + 10 * i,
+                                           scoring_system, paste_parameters),
+                            paste_parameters);
+      expected_batches.emplace_back(std::move(batch));
+    }
 
-      float epsilon = GENERATE(0.05f, 0.15f);
-      PasteParameters paste_parameters;
-      paste_parameters.float_epsilon = epsilon;
+    WHEN("Input stream contains data exactly.") {
+      std::unique_ptr<std::istream> is{new std::stringstream{kValidInput}};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is))};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
         for (int i = 0; i < sequence_identifiers.size(); ++i) {
-          AlignmentBatch true_output_batch{reader.ReadBatch(scoring_system,
-                                                            paste_parameters)};
-          AlignmentBatch expected_output_batch{
-              sequence_identifiers.at(i).first,
-              sequence_identifiers.at(i).second};
-          expected_output_batch.ResetAlignments(
-              MakeAlignments(alignment_input_data, 0 + 10 * i, scoring_system,
-                             paste_parameters),
-              paste_parameters);
-          CHECK(true_output_batch == expected_output_batch);
+          AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
+                                                         paste_parameters)};
+          CHECK(computed_batch == expected_batches.at(i));
         }
       }
     }
-  }
 
-  GIVEN("A valid input file with additional columns and trailing newline.") {
-    std::string input_file{
-        "test_data/valid_alignment_file_with_additional_columns.tsv"};
-
-    // Pairs of identifiers in their order of appearance in input file.
-    std::vector<std::pair<std::string, std::string>> sequence_identifiers{
-        {"qseq1", "sseq1"}, {"qseq1", "sseq2"}, {"qseq2", "sseq2"},
-        {"sseq2", "qseq2"}, {"qseq1", "sseq1"}, {"qseq4", "sseq4"}
-    };
-
-    // Alignments are the same for each pair of sequence identifiers.
-    std::vector<std::vector<std::string>> alignment_input_data{
-        {"101", "125", "1101", "1125", "24", "1", "0", "0", "10000", "100000", "GCCCCAAAATTCCCCAAAATTCCCC", "ACCCCAAAATTCCCCAAAATTCCCC"},
-        {"101", "120", "1131", "1150", "20", "0", "0", "0", "10000", "100000", "CCCCAAAATTCCCCAAAATT", "CCCCAAAATTCCCCAAAATT"},
-        {"101", "150", "1001", "1050", "40", "10", "0", "0", "10000", "100000", "GGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT", "AAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT"},
-        {"101", "110", "2111", "2120", "10", "0", "0", "0", "10000", "100000", "CCCCAAAATT", "CCCCAAAATT"},
-        {"101", "125", "1111", "1135", "20", "5", "0", "0", "10000", "100000", "GGGGGCCCCAAAATTCCCCAAAATT", "AAAAACCCCAAAATTCCCCAAAATT"},
-        {"101", "140", "1121", "1160", "30", "10", "0", "0", "10000", "100000", "GGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT", "AAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT"},
-        {"101", "115", "1096", "1110", "10", "5", "0", "0", "10000", "100000", "GGGGGCCCCAAAATT", "AAAAACCCCAAAATT"},
-        {"101", "135", "101", "135", "20", "15", "0", "0", "10000", "100000", "GGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT", "AAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT"},
-        {"101", "120", "201", "220", "10", "10", "0", "0", "10000", "100000", "GGGGGGGGGGCCCCAAAATT", "AAAAAAAAAACCCCAAAATT"},
-        {"101", "125", "2101", "2125", "10", "15", "0", "0", "10000", "100000", "GGGGGGGGGGGGGGGCCCCAAAATT", "AAAAAAAAAAAAAAACCCCAAAATT"}
-    };
-
-    WHEN("Run repeatedly with default scoring system.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file)};
-      ScoringSystem scoring_system = GENERATE(ScoringSystem::Create(100000l, 1, 2, 1, 1),
-                                              ScoringSystem::Create(10000000l, 2, 3, 0, 0));
-      float epsilon = GENERATE(0.05f, 0.15f);
-      PasteParameters paste_parameters;
-      paste_parameters.float_epsilon = epsilon;
+    WHEN("Input stream has exact number of columns and trailing newline.") {
+      std::string with_trailing_newline{kValidInput};
+      with_trailing_newline.push_back('\n');
+      std::unique_ptr<std::istream> is{
+          new std::stringstream{with_trailing_newline}};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is))};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
         for (int i = 0; i < sequence_identifiers.size(); ++i) {
-          AlignmentBatch true_output_batch{reader.ReadBatch(scoring_system,
-                                                            paste_parameters)};
-          AlignmentBatch expected_output_batch{
-              sequence_identifiers.at(i).first,
-              sequence_identifiers.at(i).second};
-          expected_output_batch.ResetAlignments(
-              MakeAlignments(alignment_input_data, 0 + 10 * i, scoring_system,
-                             paste_parameters),
-              paste_parameters);
-          CHECK(true_output_batch == expected_output_batch);
+          AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
+                                                         paste_parameters)};
+          CHECK(computed_batch == expected_batches.at(i));
+        }
+      }
+    }
+
+    WHEN("Input stream has additional columns.") {
+      std::unique_ptr<std::istream> is{
+          new std::stringstream{kValidInputAdditionalColumns}};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is))};
+
+      THEN("Each run of equal first two columns will constitute one batch.") {
+        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+          AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
+                                                         paste_parameters)};
+          CHECK(computed_batch == expected_batches.at(i));
+        }
+      }
+    }
+
+    WHEN("Input stream has additional columns and trailing newline.") {
+      std::string with_trailing_newline{kValidInputAdditionalColumns};
+      with_trailing_newline.push_back('\n');
+      std::unique_ptr<std::istream> is{
+          new std::stringstream{with_trailing_newline}};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is))};
+
+      THEN("Each run of equal first two columns will constitute one batch.") {
+        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+          AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
+                                                         paste_parameters)};
+          CHECK(computed_batch == expected_batches.at(i));
         }
       }
     }
@@ -269,31 +335,30 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
 
 SCENARIO("Test exceptions thrown by AlignmentReader::ReadBatch.",
          "[AlignmentReader][ReadBatch][exceptions]") {
+  ScoringSystem scoring_system
+      = GENERATE(ScoringSystem::Create(100000l, 1, 2, 1, 1),
+                 ScoringSystem::Create(10000000l, 2, 3, 0, 0));
 
-  GIVEN("A valid input file.") {
-    std::string input_file{"test_data/valid_alignment_file.tsv"};
-    ScoringSystem scoring_system{ScoringSystem::Create(100000l, 1, 2, 1, 1)};
-    PasteParameters paste_parameters;
+  float epsilon = GENERATE(0.05f, 0.15f);
+  PasteParameters paste_parameters;
+  paste_parameters.float_epsilon = epsilon;
+
+  GIVEN("A valid input stream.") {
+    std::unique_ptr<std::istream> is{new std::stringstream{kValidInput}};
 
     THEN("Call when already at the end of the data causes exception.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file)};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is))};
       while (!reader.EndOfData()) {
         reader.ReadBatch(scoring_system, paste_parameters);
       }
 
-      REQUIRE(reader.EndOfData());
-      CHECK_THROWS_AS(reader.ReadBatch(scoring_system, paste_parameters),
-                      exceptions::ReadError);
-    }
-
-    THEN("Not allowing enough capacity for an input row causes exeception.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file, 12, 100l)};
+      assert(reader.EndOfData());
       CHECK_THROWS_AS(reader.ReadBatch(scoring_system, paste_parameters),
                       exceptions::ReadError);
     }
 
     THEN("Expecting more fields than given in the file causes exception.") {
-      AlignmentReader reader{AlignmentReader::FromFile(input_file, 14)};
+      AlignmentReader reader{AlignmentReader::FromIStream(std::move(is), 14)};
       CHECK_THROWS_AS(reader.ReadBatch(scoring_system, paste_parameters),
                       exceptions::ReadError);
     }

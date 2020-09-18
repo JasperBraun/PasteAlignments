@@ -545,8 +545,8 @@ std::string Alignment::DebugString() const {
      << ", gaps=" << gaps_
      << ", qlen=" << qlen_
      << ", slen=" << slen_
-     << ", qseq='" << qseq_
-     << "', sseq='" << sseq_
+     << ", qseq='" //<< qseq_
+     << "', sseq='" //<< sseq_
      << "', pident=" << pident_
      << ", raw_score=" << raw_score_
      << ", bitscore=" << bitscore_

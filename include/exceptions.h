@@ -59,12 +59,12 @@ struct UnexpectedEmptyString final : public BaseException {
 struct ScoringError final : public BaseException {
   using BaseException::BaseException;
 };
-
+/*
 /// @brief Thrown by some functions when an invalid argument is given.
 ///
 struct InvalidInput final : public BaseException {
   using BaseException::BaseException;
-};
+};*/
 
 /// @brief Thrown when error occurred while reading input data.
 ///

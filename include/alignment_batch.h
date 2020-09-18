@@ -44,7 +44,8 @@ namespace paste_alignments {
 ///  * Query end coordinate ascending.
 ///
 /// @invariant The collections ScoreSorted, QstartSorted, and QendSorted each
-///  consist precisely of the set of integers `{0, 1, ..., Size() - 1}`.
+///  consist precisely of the set of integers `{0, 1, ..., Size() - 1}` (as
+///  second coordinate for QstartSorted and QendSorted).
 ///
 class AlignmentBatch {
  public:
@@ -116,23 +117,25 @@ class AlignmentBatch {
 
   /// @brief Indices of stored alignments sorted by query start coordinate.
   ///
-  /// @details Indices refer to positions in vector returned by
-  ///  `AlignmentBatch::Alignments`.
+  /// @details First coordinate of each item is the query start coordinate of
+  ///  the original alignment, and second coordinate refers to positions in
+  ///  vector returned by `AlignmentBatch::Alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& QstartSorted() const {
+  inline const std::vector<std::pair<int,int>>& QstartSorted() const {
     return qstart_sorted_;
   }
 
   /// @brief Indices of stored alignments sorted by query end coordinate.
   ///
-  /// @details Indices refer to positions in vector returned by
-  ///  `AlignmentBatch::Alignments`.
+  /// @details First coordinate of each item is the query end coordinate of the
+  ///  original alignment, and second coordinate refers to positions in vector
+  ///  returned by `AlignmentBatch::Alignments`.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline const std::vector<int>& QendSorted() const {
+  inline const std::vector<std::pair<int,int>>& QendSorted() const {
     return qend_sorted_;
   }
 
@@ -223,8 +226,8 @@ class AlignmentBatch {
   std::string sseqid_;
   std::vector<Alignment> alignments_;
   std::vector<int> score_sorted_;
-  std::vector<int> qstart_sorted_;
-  std::vector<int> qend_sorted_;
+  std::vector<std::pair<int,int>> qstart_sorted_;
+  std::vector<std::pair<int,int>> qend_sorted_;
 };
 /// @}
 

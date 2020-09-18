@@ -30,7 +30,7 @@
 namespace {
 
 const char* kUsageMessage{
-    "\nusage: paste_alignments [options] INPUT_FILE [OUTPUT_FILE] --db_size INTEGER\n"};
+    "\nusage: paste_alignments [options] --db_size INTEGER INPUT_FILE [OUTPUT_FILE]\n"};
 
 const char* kVersionMessage{
     "\nPasteAlignments v1.0.0"
@@ -259,9 +259,10 @@ paste_alignments::PasteParameters GetPasteParameters(
 //
 void PasteAlignments(
     const paste_alignments::PasteParameters& paste_parameters) {
+  std::unique_ptr<std::ifstream> inputs_ifs{
+      new std::ifstream{paste_parameters.input_filename}};
   paste_alignments::AlignmentReader reader{
-      paste_alignments::AlignmentReader::FromFile(
-          paste_parameters.input_filename, 12, paste_parameters.batch_size)};
+      paste_alignments::AlignmentReader::FromIStream(std::move(inputs_ifs))};
   paste_alignments::ScoringSystem scoring_system{
       paste_alignments::ScoringSystem::Create(
           paste_parameters.db_size, paste_parameters.reward,

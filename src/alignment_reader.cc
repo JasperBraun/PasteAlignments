@@ -20,231 +20,182 @@
 
 #include "alignment_reader.h"
 
-#include <sstream>
-
 #include "exceptions.h"
 #include "helpers.h"
 
 namespace paste_alignments {
 
-// AlignmentReader::FromFile
+// AlignmentReader read operations helpers.
 //
-AlignmentReader AlignmentReader::FromFile(std::string file_name, int num_fields,
-                                          long chunk_size) {
-  AlignmentReader result;
-  result.num_fields_ = helpers::TestPositive(num_fields);
-  result.chunk_size_ = helpers::TestPositive(chunk_size);
-  std::stringstream error_message;
+namespace {
 
-  result.ifs_.open(file_name);
-  if (result.ifs_.fail()) {
-    error_message << "Unable to open file: '" << file_name << "'.";
-    throw exceptions::InvalidInput(error_message.str());
+// Used during field extraction to indicate whether a field is expected to
+// terminate with a `\t` before the end of a row.
+//
+enum class FieldTerminator{
+  kTab, // Expects `\t` as field terminator.
+  kAny // Field may not terminate with '\t'.
+};
+
+// Replaces contents of `row` with the next line from `is`.
+//
+// Basic guarantee. Both `is` and `row` are modified. Throws
+// `exceptions::ReadError` if `failbit` or `badbit` of `is` are set during
+// character extraction.
+//
+void ExtractRow(std::istream& is, std::string& row) {
+  std::getline(is, row);
+  if (is.fail() || is.bad()) {
+    throw exceptions::ReadError("Something went wrong when attempting to"
+                                   " read from input stream.");
+  }
+}
+
+// Extracts data field from `row` starting at `start_pos` and terminated with
+// '\t', or the end of the row.
+//
+// Strong guarantee. Throws `exceptions::ReadError` if
+// * The field is empty.
+// * No `\t` found beginning at `start_pos` and `terminator` is
+//   `FieldTerminator::kTab`.
+//
+std::string_view GetNonEmptyField(const std::string& row,
+                                  std::string::size_type start_pos,
+                                  FieldTerminator terminator) {
+  // Find end of field.
+  std::string::size_type end_pos{row.find('\t', start_pos)};
+  if (terminator == FieldTerminator::kTab && end_pos == std::string::npos) {
+    std::stringstream error_message;
+    error_message << "Unable to find tab-terminated field starting at position:"
+                  << start_pos << " in row: '" << row << "'.";
+    throw exceptions::ReadError(error_message.str());
+  } else if (end_pos == std::string::npos) {
+    end_pos = row.length();
   }
 
-  result.data_.resize(result.chunk_size_);
-  result.ReadChunk(result.chunk_size_);
-  if (result.EndOfData()) {
-    error_message << "File: '" << file_name << "' seems to be empty.";
-    throw exceptions::InvalidInput(error_message.str());
-  }
-
-  char first_delimiter, second_delimiter;
-  std::string_view::size_type temp_pos{result.current_pos_};
-  result.next_qseqid_ = result.GetField(first_delimiter, temp_pos);
-  result.next_sseqid_ = result.GetField(second_delimiter, temp_pos);
-  result.current_pos_ = temp_pos;
-  if (first_delimiter != '\t' || second_delimiter != '\t') {
-    error_message << "Premature end of line or data for alignment id: "
-                  << result.next_alignment_id_ << ". Expected "
-                  << (num_fields + 2) << " columns, but found less than 3.";
+  // Create view of field.
+  std::string_view field = std::string_view{row.data() + start_pos,
+                                            end_pos - start_pos};
+  if (field.empty()) {
+    std::stringstream error_message;
+    error_message << "Empty field starting at position:" << start_pos
+                  << " in row: '" << row << "'.";
     throw exceptions::ReadError(error_message.str());
   }
+  
+  return field;
+}
+
+// Extracts first two fields from `row` and stores them in `first_field` and
+// `second_field`.
+//
+// Basic guarantee. Throws `exceptions::ReadError` if
+// * `row` does not contain at least 2 '\t' characters.
+// * One of the first two fields is empty.
+//
+void ExtractFirstTwoFields(const std::string& row,
+                           std::string_view& first_field,
+                           std::string_view& second_field) {
+  std::string::size_type pos{0};
+  first_field = GetNonEmptyField(row, pos, FieldTerminator::kTab);
+  assert(row.at(first_field.length()) == '\t');
+  pos = first_field.length() + 1;
+  second_field = GetNonEmptyField(row, pos, FieldTerminator::kTab);
+  assert(row.at(first_field.length() + second_field.length() + 1) == '\t');
+}
+
+// Returns `num_fields` tab-delimited non-empty fields from `row` starting at
+// `start_pos`.
+//
+// Strong guarantee. Throws `exceptions::ReadError` if
+// * Not enough field delimiters are found in `row` starting at `start_pos`.
+// * One of the fields is empty.
+//
+std::vector<std::string_view> GetFields(const std::string& row,
+                                        std::string::size_type start_pos,
+                                        int num_fields) {
+  std::vector<std::string_view> fields;
+  for (int i = 1; i < num_fields; ++i) {
+    fields.push_back(GetNonEmptyField(row, start_pos, FieldTerminator::kTab));
+    start_pos += fields.back().length() + 1; // Position one past delimiter.
+  }
+  fields.push_back(GetNonEmptyField(row, start_pos, FieldTerminator::kAny));
+  return fields;
+}
+
+} // namespace
+
+// AlignmentReader::FromIStream
+//
+AlignmentReader AlignmentReader::FromIStream(std::unique_ptr<std::istream> is,
+                                             int num_fields) {
+  AlignmentReader result;
+  result.num_fields_ = helpers::TestPositive(num_fields);
+
+  result.is_ = std::move(is);
+  ExtractRow(*(result.is_), result.row_);
+
+  ExtractFirstTwoFields(result.row_, result.next_qseqid_, result.next_sseqid_);
   return result;
 }
 
 // AlignmentReader::ReadBatch
 //
-AlignmentBatch AlignmentReader::ReadBatch(const ScoringSystem& scoring_system,
-                                          const PasteParameters& parameters) {
+AlignmentBatch AlignmentReader::ReadBatch(
+    const ScoringSystem& scoring_system,
+    const PasteParameters& paste_parameters) {
+  // Precondition.
+  if (end_of_data_) {
+    std::stringstream error_message;
+    error_message << "Attempted to read more alignments when end of data was"
+                  << " reached after row " << (num_fields_ - 1) << '.';
+    throw exceptions::ReadError(error_message.str());
+  }
+
+  assert(!next_qseqid_.empty() && !next_sseqid_.empty());
   AlignmentBatch batch{next_qseqid_, next_sseqid_};
+
+  // Read batch's alignments.
   std::vector<Alignment> alignments;
-  char last_delimiter{'\t'};
-  std::string_view::size_type temp_pos{current_pos_};
-
-  while (next_qseqid_ == batch.Qseqid() && next_sseqid_ == batch.Sseqid()) {
-    alignments.emplace_back(Alignment::FromStringFields(
-        next_alignment_id_, GetAlignmentFields(last_delimiter, temp_pos),
-        scoring_system, parameters));
-
-    if (last_delimiter == '\t') {
-      AdvanceToEndOfLine(temp_pos);
-    } else if (last_delimiter == '\n') {
-      current_pos_ = temp_pos;
-    }
-    ++next_alignment_id_;
-    if (!ifs_.is_open() && (temp_pos == std::string_view::npos
-                            || temp_pos >= current_chunk_.length())) {
-      current_pos_ = std::string_view::npos;
-      break;
-    }
-    temp_pos = current_pos_;
-
-    next_qseqid_ = GetField(last_delimiter, temp_pos);
-    if (last_delimiter != '\t') {
-      std::stringstream error_message;
-      error_message << "Premature end of line or data for alignment id: "
-                    << next_alignment_id_ << ". Expected " << (num_fields_ + 2)
-                    << " columns, but found only " << 1 << '.';
-      throw exceptions::ReadError(error_message.str());
-    }
-    next_sseqid_ = GetField(last_delimiter, temp_pos);
-    current_pos_ = temp_pos;
-  }
-  batch.ResetAlignments(std::move(alignments), parameters);
-  return batch;
-}
-
-// AlignmentReader::ReadChunk
-//
-void AlignmentReader::ReadChunk(long suffix_start) {
-  long suffix_size = std::max(0l, static_cast<long>(current_chunk_.length())
-                                      - suffix_start);
-  if (!ifs_.is_open()) {
-    std::stringstream error_message;
-    error_message << "Attempted to read data from closed file for alignment id:"
-                  << next_alignment_id_ << '.';
-    throw exceptions::ReadError(error_message.str());
-  }
-
-  // Save suffix, if any, by moving its contents to beginning of data.
-  if (suffix_size > 0 && suffix_size < chunk_size_) {
-    std::memcpy(data_.data(),
-                data_.data() + suffix_start,
-                suffix_size);
-  }
-
-  // Extract new data.
-  ifs_.read(data_.data() + suffix_size, chunk_size_ - suffix_size);
-  if (ifs_.gcount() == 0) {
-    if (ifs_.bad() || (ifs_.fail() && !ifs_.eof())) {
-      throw exceptions::ReadError("Something went wrong while reading from"
-                                  " input file.");
-    }
-    ifs_.close();
-  } else {
-    current_chunk_ = std::string_view{
-        data_.data(), static_cast<std::string_view::size_type>(ifs_.gcount())};
-    ifs_.peek();
-    if (ifs_.eof()) {
-      ifs_.close();
-    }
-  }
-
-  current_pos_ = 0;
-}
-
-// AlignmentReader::GetField
-//
-std::string_view AlignmentReader::GetField(
-    char& delimiter, std::string_view::size_type& temp_pos) {
-  if (EndOfData()) {
-    std::stringstream error_message;
-    error_message << "Attempted to extract data after end of data was reached"
-                  << " for alignment id: " << next_alignment_id_ << '.';
-    throw exceptions::ReadError(error_message.str());
-  }
-
-  std::string_view result;
-  std::string_view::size_type field_end;
-  field_end = current_chunk_.find_first_of("\t\n", temp_pos);
-
-  // If no delimiter found at first try, extract more data, if any available.
-  if (field_end == std::string_view::npos && ifs_.is_open()) {
-    temp_pos -= current_pos_;
-    ReadChunk(current_pos_);
-    field_end = current_chunk_.find_first_of("\t\n", temp_pos);
-  }
-
-  // If still no delimiter found, either end of data was reached, or chunk size
-  // is too small.
-  if (field_end == std::string_view::npos) {
-    if (ifs_.is_open()) { // Chunk size too small
-      std::stringstream error_message;
-      error_message << "Object's data capacity too small for alignment id: "
-                    << next_alignment_id_ << '.';
-      throw exceptions::ReadError(error_message.str());
-    } else { // End of data
-      delimiter = '\0';
-      result = std::string_view{current_chunk_.data() + temp_pos,
-                                current_chunk_.length() - temp_pos};
-      temp_pos = std::string_view::npos;
-    }
-
-  // If delimiter is found, set current position to one past field's delimiter.
-  } else {
-    delimiter = current_chunk_.at(field_end);
-    result = std::string_view{current_chunk_.data() + temp_pos,
-                              field_end - temp_pos};
-    temp_pos = field_end + 1;
-  }
-  return result;
-}
-
-// AlignmentReader::GetAlignmentFields
-//
-std::vector<std::string_view> AlignmentReader::GetAlignmentFields(
-    char& delimiter, std::string_view::size_type& temp_pos) {
   std::vector<std::string_view> fields;
-  for (int i = 0; i < num_fields_; ++i) {
-    if (delimiter != '\t') {
-      std::stringstream error_message;
-      error_message << "Premature end of line or data for alignment id: "
-                    << next_alignment_id_ << ". Expected " << (num_fields_ + 2)
-                    << " columns, but found only " << (i + 2) << '.';
-      throw exceptions::ReadError(error_message.str());
-    }
-    fields.emplace_back(GetField(delimiter, temp_pos));
-  }
-  return fields;
-}
+  while (next_qseqid_ == batch.Qseqid() && next_sseqid_ == batch.Sseqid()) {
 
-// AlignmentReader::AdvanceToEndOfLine
-//
-void AlignmentReader::AdvanceToEndOfLine(
-    std::string_view::size_type& temp_pos) {
-  if (ifs_.is_open() || (temp_pos != std::string_view::npos
-                         && temp_pos < current_chunk_.length())) {
-    temp_pos = current_chunk_.find('\n', temp_pos);
-    if (temp_pos == std::string_view::npos && ifs_.is_open()) {
-      ReadChunk(current_pos_);
-      temp_pos -= current_pos_;
-      temp_pos = current_chunk_.find('\n', temp_pos);
-    }
-    if (temp_pos == std::string_view::npos && ifs_.is_open()) {
-      std::stringstream error_message;
-      error_message << "Object's data capacity too small for alignment id: "
-                    << next_alignment_id_ << '.';
-      throw exceptions::ReadError(error_message.str());
+    // Convert row to alignments.
+    fields = GetFields(row_, next_qseqid_.length() + next_sseqid_.length() + 2,
+                       num_fields_);
+    Alignment a{Alignment::FromStringFields(next_alignment_id_,
+        std::move(fields),
+        scoring_system,
+        paste_parameters)};
+    alignments.push_back(a);
+    ++next_alignment_id_;
+
+    // Read next row, or stop looking if end of data is reached.
+    if (end_of_data_) {
+      break;
+    } else {
+      ExtractRow(*is_, row_);
+      ExtractFirstTwoFields(row_, next_qseqid_, next_sseqid_);
+      end_of_data_ = (is_->peek() == std::istream::traits_type::eof());
     }
   }
-  if (temp_pos != std::string_view::npos) {
-    current_pos_ = temp_pos + 1;
-  } else {
-    current_pos_ = std::string_view::npos;
-  }
+
+  // Populate and return batch.
+  batch.ResetAlignments(std::move(alignments), paste_parameters);
+  return batch;
 }
 
 // AlignmentReader::DebugString
 //
 std::string AlignmentReader::DebugString() const {
   std::stringstream ss;
-  ss << "{chunk_size: " << chunk_size_ << ", num_fields: " << num_fields_
-     << ", ifs_.is_open: " << std::boolalpha << ifs_.is_open()
-     << ", data.length: " << data_.length() << ", current_chunk.length: "
-     << current_chunk_.length() << ", current_pos: " << current_pos_
-     << ", next_qseqid: " << next_qseqid_ << ", next_sseqid_: " << next_sseqid_
-     << ", next_alignment_id: " << next_alignment_id_ << '}';
+  ss << "{num_fields: " << num_fields_
+     << ", end_of_data: " << std::boolalpha << end_of_data_
+     << ", next_alignment_id: " << next_alignment_id_ 
+     << ", row: " << row_
+     << ", next_qseqid: " << next_qseqid_
+     << ", next_sseqid_: " << next_sseqid_
+     << '}';
   return ss.str();
 }
 

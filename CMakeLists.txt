@@ -7,7 +7,7 @@ project(paste_alignments)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -std=c++17")
 
 set(DEFAULT_BUILD_TYPE "Debug")
 
@@ -24,7 +24,6 @@ target_include_directories(paste_alignments PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/ArgParseConvert/include")
 target_link_libraries(paste_alignments arg_parse_convert)
-
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     project(paste_alignments_test)

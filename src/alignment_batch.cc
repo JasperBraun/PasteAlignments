@@ -23,6 +23,9 @@
 #include <algorithm>
 #include <functional>
 #include <unordered_set>
+#include <utility>
+
+#include <iostream>
 
 namespace paste_alignments {
 
@@ -30,15 +33,16 @@ namespace paste_alignments {
 //
 void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
                                      const PasteParameters& paste_parameters) {
-  std::vector<int> score_sorted, qstart_sorted, qend_sorted;
+  std::vector<int> score_sorted;
+  std::vector<std::pair<int, int>> qstart_sorted, qend_sorted;
   score_sorted.reserve(alignments.size());
   qstart_sorted.reserve(alignments.size());
   qend_sorted.reserve(alignments.size());
 
   for (int i = 0; i < alignments.size(); ++i) {
     score_sorted.push_back(i);
-    qstart_sorted.push_back(i);
-    qend_sorted.push_back(i);
+    qstart_sorted.emplace_back(alignments.at(i).Qstart(), i);
+    qend_sorted.emplace_back(alignments.at(i).Qend(), i);
   }
 
   std::sort(score_sorted.begin(), score_sorted.end(),
@@ -66,16 +70,8 @@ void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
               }
               return false;
             });
-  std::sort(qstart_sorted.begin(), qstart_sorted.end(),
-            [&alignments = std::as_const(alignments)](int first, int second) {
-              return (alignments.at(first).Qstart()
-                      < alignments.at(second).Qstart());
-            });
-  std::sort(qend_sorted.begin(), qend_sorted.end(),
-            [alignments](int first, int second) {
-              return (alignments.at(first).Qend()
-                      < alignments.at(second).Qend());
-            });
+  std::sort(qstart_sorted.begin(), qstart_sorted.end());
+  std::sort(qend_sorted.begin(), qend_sorted.end());
 
   alignments_ = std::move(alignments);
   score_sorted_ = std::move(score_sorted);
@@ -133,66 +129,66 @@ struct MatchCounts {
   int gaps;
 };
 
-// Assumes qend_sorted is not empty, each number in qend_sorted is in the range
-// [0, alignments.size()), and qend == alignments.at(i).Qend(), for at least one
-// i in qend_sorted.
+// Returns position of a pair in `pairs` whose first coordinate equals `value`.
+// At least one such pair is assumed to exist. 
 //
-int FindFirstLessQend(int qend, const std::vector<int>& qend_sorted,
-                      const std::vector<Alignment>& alignments) {
-  assert(!qend_sorted.empty());
-  if (qend_sorted.size() == 1) {
-    assert(alignments.at(qend_sorted.at(0)).Qend() == qend);
-    return -1;
-  }
-
-  int left{0}, right{static_cast<int>(qend_sorted.size())}, median;
+int FindEqualFirstCoordinate(int value,
+                             const std::vector<std::pair<int,int>>& pairs) {
+  int left{0}, right{static_cast<int>(pairs.size())}, median;
   do {
     median = left + (right - left) / 2;
-    if (alignments.at(qend_sorted.at(median)).Qend() > qend) {
-      assert(median > 0); // may fail if qend not in qend_sorted
+    if (pairs.at(median).first > value) {
+      assert(median > 0);
       right = median;
-    } else if (alignments.at(qend_sorted.at(median)).Qend() < qend) {
-      assert(median < qend_sorted.size() - 1); // may fail if qend not in qend_sorted
+    } else if (pairs.at(median).first < value) {
+      assert(median < pairs.size() - 1);
       left = median + 1;
     }
-  } while (alignments.at(qend_sorted.at(median)).Qend() != qend);
-  while (median > 0 && alignments.at(qend_sorted.at(median)).Qend() == qend) {
-    --median;
-  }
+  } while (pairs.at(median).first != value);
   return median;
 }
 
-// Assumes qstart_sorted is not empty, each number in qstart_sorted is in the
-// range [0, alignments.size()), and qstart == alignments.at(i).Qstart(), for at
-// least one i in qstart_sorted.
+// Returns position of first pair in `qend_sorted` whose first coordinate is
+// less than `qend`. Assumes `qend_sorted` contains at least one pair whose
+// first coordinate equals `qend`.
 //
-int FindFirstGreaterQstart(int qstart, const std::vector<int>& qstart_sorted,
-                           const std::vector<Alignment>& alignments) {
-  assert(!qstart_sorted.empty());
-  if (qstart_sorted.size() == 1) {
-    assert(alignments.at(qstart_sorted.at(0)).Qstart() == qstart);
+int FindFirstLessQend(int qend,
+                      const std::vector<std::pair<int,int>>& qend_sorted) {
+  assert(!qend_sorted.empty());
+  if (qend_sorted.size() == 1) {
+    assert(qend_sorted.at(0).first == qend);
     return -1;
   }
 
-  int left{0}, right{static_cast<int>(qstart_sorted.size())}, median;
-  do {
-    median = left + (right - left) / 2;
-    if (alignments.at(qstart_sorted.at(median)).Qstart() > qstart) {
-      assert(median > 0); // may fail if qstart not in qstart_sorted
-      right = median;
-    } else if (alignments.at(qstart_sorted.at(median)).Qstart() < qstart) {
-      assert(median < qstart_sorted.size() - 1); // may fail if qstart not in qstart_sorted
-      left = median + 1;
-    }
-  } while (alignments.at(qstart_sorted.at(median)).Qstart() != qstart);
-  while (median < qstart_sorted.size()
-         && alignments.at(qstart_sorted.at(median)).Qstart() == qstart) {
-    ++median;
+  int result{FindEqualFirstCoordinate(qend, qend_sorted)};
+  while (result > 0 && qend_sorted.at(result).first == qend) {
+    --result;
   }
-  if (median == qstart_sorted.size()) {
+  return result;
+}
+
+// Returns position of first pair in `qstart_sorted` whose first coordinate is
+// greater than `qstart`. Assumes `qstart_sorted` contains at least one pair
+// whose first coordinate equals `qend`. Returns -1 `qstart` is the larges first
+// coordinate of any pair in `qstart_sorted`.
+//
+int FindFirstGreaterQstart(
+    int qstart, const std::vector<std::pair<int,int>>& qstart_sorted) {
+  assert(!qstart_sorted.empty());
+  if (qstart_sorted.size() == 1) {
+    assert(qstart_sorted.at(0).first == qstart);
+    return -1;
+  }
+
+  int result{FindEqualFirstCoordinate(qstart, qstart_sorted)};
+  while (result < qstart_sorted.size()
+         && qstart_sorted.at(result).first == qstart) {
+    ++result;
+  }
+  if (result == qstart_sorted.size()) {
     return -1;
   } else {
-    return median;
+    return result;
   }
 }
 
@@ -292,14 +288,15 @@ MatchCounts GetCounts(const Alignment& first, const Alignment& second,
 // Searches for next pastable alignment to the left of `alignment `in query.
 // Assumes that `candidate_sorted_pos` is in the range [-1, qend_sorted.size()).
 //
-PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
-                                 const Alignment& alignment,
-                                 int distance_bound,
-                                 const std::vector<int>& qend_sorted,
-                                 const std::vector<Alignment>& alignments,
-                                 const std::unordered_set<int>& used,
-                                 const ScoringSystem& scoring_system,
-                                 const PasteParameters& paste_parameters) {
+PasteCandidate FindLeftCandidate(
+    int candidate_sorted_pos,
+    const Alignment& alignment,
+    int distance_bound,
+    const std::vector<std::pair<int,int>>& qend_sorted,
+    const std::vector<Alignment>& alignments,
+    const std::unordered_set<int>& used,
+    const ScoringSystem& scoring_system,
+    const PasteParameters& paste_parameters) {
   assert(-1 <= candidate_sorted_pos);
   assert(candidate_sorted_pos < static_cast<int>(qend_sorted.size()));
   int result_distance, result_qstart, max_overlap;
@@ -308,12 +305,11 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
   PasteCandidate result;
   result.sorted_pos = candidate_sorted_pos;
   if (result.sorted_pos == -1) {
-    result.sorted_pos = FindFirstLessQend(
-        alignment.Qend(), qend_sorted, alignments);
+    result.sorted_pos = FindFirstLessQend(alignment.Qend(), qend_sorted);
   }
 
   while (result.sorted_pos != -1) {
-    result.alignment_pos = qend_sorted.at(result.sorted_pos);
+    result.alignment_pos = qend_sorted.at(result.sorted_pos).second;
     result_distance = alignment.Qstart()
                       - alignments.at(result.alignment_pos).Qend()
                       - 1;
@@ -357,14 +353,15 @@ PasteCandidate FindLeftCandidate(int candidate_sorted_pos,
 // Assumes that `candidate_sorted_pos` is in the range
 // [-1, qstart_sorted.size()).
 //
-PasteCandidate FindRightCandidate(int candidate_sorted_pos,
-                                  const Alignment& alignment,
-                                  int distance_bound,
-                                  const std::vector<int>& qstart_sorted,
-                                  const std::vector<Alignment>& alignments,
-                                  const std::unordered_set<int>& used,
-                                  const ScoringSystem& scoring_system,
-                                  const PasteParameters& paste_parameters) {
+PasteCandidate FindRightCandidate(
+    int candidate_sorted_pos,
+    const Alignment& alignment,
+    int distance_bound,
+    const std::vector<std::pair<int,int>>& qstart_sorted,
+    const std::vector<Alignment>& alignments,
+    const std::unordered_set<int>& used,
+    const ScoringSystem& scoring_system,
+    const PasteParameters& paste_parameters) {
   assert(-1 <= candidate_sorted_pos);
   assert(candidate_sorted_pos < static_cast<int>(qstart_sorted.size()));
   int result_distance, result_qend, max_overlap, alignment_suffix_length;
@@ -373,12 +370,12 @@ PasteCandidate FindRightCandidate(int candidate_sorted_pos,
   PasteCandidate result;
   result.sorted_pos = candidate_sorted_pos;
   if (result.sorted_pos == -1) {
-    result.sorted_pos = FindFirstGreaterQstart(
-        alignment.Qstart(), qstart_sorted, alignments);
+    result.sorted_pos = FindFirstGreaterQstart(alignment.Qstart(),
+                                               qstart_sorted);
   }
-
+  
   while (result.sorted_pos != -1) {
-    result.alignment_pos = qstart_sorted.at(result.sorted_pos);
+    result.alignment_pos = qstart_sorted.at(result.sorted_pos).second;
     result_distance = alignments.at(result.alignment_pos).Qstart()
                       - alignment.Qend()
                       - 1;
@@ -448,9 +445,9 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
       query_distance_bound = GetDistanceBound(current, scoring_system,
                                               paste_parameters);
       left_candidate = FindLeftCandidate(left_candidate.sorted_pos, current,
-                                         query_distance_bound,
-                                         qend_sorted_, alignments_, used,
-                                         scoring_system, paste_parameters);
+                                         query_distance_bound, qend_sorted_,
+                                         alignments_, used, scoring_system,
+                                         paste_parameters);
       right_candidate = FindRightCandidate(right_candidate.sorted_pos, current,
                                            query_distance_bound, qstart_sorted_,
                                            alignments_, used, scoring_system,
@@ -546,17 +543,17 @@ std::string AlignmentBatch::DebugString() const {
   }
   ss << "], qstart_sorted_: [";
   if (!qstart_sorted_.empty()) {
-    ss << qstart_sorted_.at(0);
+    ss << '(' << qstart_sorted_.at(0).first << ',' << qstart_sorted_.at(0).second << ')';
     for (int i = 1; i < qstart_sorted_.size(); ++i) {
-      ss << ", " << qstart_sorted_.at(i);
+      ss << ", " << qstart_sorted_.at(i).first << ',' << qstart_sorted_.at(i).second << ')';
     }
   }
 
   ss << "], qend_sorted_: [";
   if (!qend_sorted_.empty()) {
-    ss << qend_sorted_.at(0);
+    ss << '(' << qend_sorted_.at(0).first << ',' << qend_sorted_.at(0).second << ')';
     for (int i = 1; i < qend_sorted_.size(); ++i) {
-      ss << ", " << qend_sorted_.at(i);
+      ss << ", " << qend_sorted_.at(i).first << ',' << qend_sorted_.at(i).second << ')';
     }
   }
 
