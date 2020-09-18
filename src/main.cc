@@ -298,15 +298,15 @@ void PasteAlignments(
     stats_ofs.close();
     if (!paste_parameters.summary_filename.empty()) {
       std::ofstream summary_ofs{paste_parameters.summary_filename};
-      summary_ofs << '{'
-                  << "\t\"num_alignments\": " << summary.num_alignments << '\n'
-                  << "\t\"num_pastings\": " << summary.num_pastings << '\n'
-                  << "\t\"average_length\": " << summary.average_length << '\n'
-                  << "\t\"average_pident\": " << summary.average_pident << '\n'
-                  << "\t\"average_score\": " << summary.average_score << '\n'
-                  << "\t\"average_bitscore\": " << summary.average_bitscore << '\n'
+      summary_ofs << "{\n"
+                  << "\t\"num_alignments\": " << summary.num_alignments << ",\n"
+                  << "\t\"num_pastings\": " << summary.num_pastings << ",\n"
+                  << "\t\"average_length\": " << summary.average_length << ",\n"
+                  << "\t\"average_pident\": " << summary.average_pident << ",\n"
+                  << "\t\"average_score\": " << summary.average_score << ",\n"
+                  << "\t\"average_bitscore\": " << summary.average_bitscore << ",\n"
                   << "\t\"average_evalue\": " << summary.average_evalue << '\n'
-                  << '}';
+                  << "}\n";
       summary_ofs.close();
     }
   }
