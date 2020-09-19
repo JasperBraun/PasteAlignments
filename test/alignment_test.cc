@@ -420,7 +420,8 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "CCCCAAAATT", "CCCCAAAATT"};
     std::vector<std::string_view> test_h{
         "101", "110", "1101", "1110",
-        "10", "0", "0", std::to_string(2 * std::numeric_limits<int>::max()),
+        "10", "0", "0",
+        std::to_string(2l * static_cast<long>(std::numeric_limits<int>::max())),
         "10000", "100000", "10"
         "CCCCAAAATT", "CCCCAAAATT"};
     std::vector<std::string_view> test_i{
@@ -508,7 +509,8 @@ SCENARIO("Test exceptions thrown by Alignment::FromStringFields.",
         "10000", "100000", "10"};
     std::vector<std::string_view> test_h{
         "101", "110", "1101", "1110",
-        "10", "0", "0", std::to_string(2 * std::numeric_limits<int>::max()),
+        "10", "0", "0",
+        std::to_string(2l * static_cast<long>(std::numeric_limits<int>::max())),
         "10000", "100000", "10"};
     std::vector<std::string_view> test_i{
         "101", "110", "1101", "1110",
