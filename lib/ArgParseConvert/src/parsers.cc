@@ -21,6 +21,7 @@
 #include "parsers.h"
 
 #include <algorithm>
+#include <cassert>
 #include <iterator>
 
 namespace arg_parse_convert {
@@ -46,7 +47,7 @@ int NumHyphens(const std::string& arg) {
 // `num_arguments` arguments.
 //
 bool IsFull(int id, int num_arguments, const ParameterMap& parameters) {
-  assert(0 <= id && id < parameters.size());
+  assert(0 <= id && id < static_cast<int>(parameters.size()));
   return (parameters.GetConfiguration(id).max_num_arguments() > 0
           && num_arguments >= parameters.GetConfiguration(id)
                                         .max_num_arguments());
@@ -164,18 +165,20 @@ void AddArgumentList(
     std::unordered_map<int, std::vector<std::string>>& tmp_args,
     std::vector<std::string>& additional_args) {
   assert(argument_list.length() > 0);
-  int start, end{-1};
+  std::string_view::size_type start{0}, end;
   do {
-    start = end + 1;
     end = argument_list.find(' ', start);
     if (start != end) {
       if (end == std::string_view::npos) {
         tmp_args[id].emplace_back(argument_list.substr(start));
       } else {
         tmp_args[id].emplace_back(argument_list.substr(start, end - start));
+        start = end + 1;
       }
+    } else {
+      ++start;
     }
-  } while (end != std::string_view::npos && end < argument_list.length() - 1);
+  } while (end != std::string_view::npos && start < argument_list.length());
 }
   
 } // namespace
@@ -242,14 +245,14 @@ std::vector<std::string> ParseArgs(int argc, const char** argv,
           }
           // Set each flag character, or open keyword parameter argument list
           // for the last character.
-          for (int j = 1; j < argument.length(); ++j) {
+          for (int j = 1; j < static_cast<int>(argument.length()); ++j) {
             short_name = std::string(1, argument.at(j));
             if (arguments.Parameters().Contains(short_name)
                 && arguments.Parameters().IsFlag(short_name)) {
               SetFlag(tmp_args[arguments.Parameters().GetId(short_name)],
                       short_name);
             } else if (arguments.Parameters().Contains(short_name)
-                       && j == argument.length() - 1
+                       && j == static_cast<int>(argument.length()) - 1
                        && arguments.Parameters().IsKeyword(short_name)) {
               OpenKeyword(keyword_it, arguments.Parameters(),
                   arguments.Parameters().GetId(short_name));
@@ -307,7 +310,8 @@ std::vector<std::string> ParseFile(std::istream& config_is,
 
   std::string line, parameter_name;
   std::string_view line_view;
-  int begin, end, id;
+  std::string_view::size_type begin, end;
+  int id;
   int row_num{0};
 
   std::stringstream error_message;

@@ -21,6 +21,7 @@
 #include "help_string_formatters.h"
 
 #include <algorithm>
+#include <cassert>
 
 namespace arg_parse_convert {
 
@@ -39,7 +40,7 @@ std::string FormattedDescription(const ParameterConfiguration& configuration,
   std::string_view::size_type break_pos;
   std::string_view window{description.substr(0, text_width + 1)};
   while (window.length() > 0) {
-    if (window.length() > text_width) {
+    if (static_cast<int>(window.length()) > text_width) {
         //&& description.at(offset + text_width) != ' ') {
       break_pos = window.rfind(' ');
     } else {
@@ -86,7 +87,9 @@ std::string DefaultArgumentList(const ParameterConfiguration& configuration) {
   if (configuration.default_arguments().size() > 0) {
     result.append(" ( = ");
     result.append(configuration.default_arguments().at(0));
-    for (int i = 1; i < configuration.default_arguments().size(); ++i) {
+    for (int i = 1;
+         i < static_cast<int>(configuration.default_arguments().size());
+         ++i) {
       result.push_back(' ');
       result.append(configuration.default_arguments().at(i));
     }
@@ -113,7 +116,7 @@ std::string NamesList(ParameterConfiguration configuration) {
   std::string result;
   result.append(HyphensPrefix(configuration.names().at(0)));
   result.append(configuration.names().at(0));
-  for (int i = 1; i < configuration.names().size(); ++i) {
+  for (int i = 1; i < static_cast<int>(configuration.names().size()); ++i) {
     result.append(", ");
     result.append(HyphensPrefix(configuration.names().at(i)));
     result.append(configuration.names().at(i));
@@ -227,7 +230,8 @@ std::string FormattedHelpString(const ParameterMap& parameter_map,
     }
   }
   // Non-required positional parameters.
-  if (parameter_map.positional_parameters().size() > required_positional) {
+  if (static_cast<int>(parameter_map.positional_parameters().size())
+      > required_positional) {
     result.append("\nOptional positional parameters:\n");
     for (const auto& pair : parameter_map.positional_parameters()) {
       if (!parameter_map.GetConfiguration(pair.second).IsRequired()) {
@@ -238,7 +242,8 @@ std::string FormattedHelpString(const ParameterMap& parameter_map,
     }
   }
   // Non-required keyword parameters.
-  if (parameter_map.keyword_parameters().size() > required_keyword) {
+  if (static_cast<int>(parameter_map.keyword_parameters().size())
+      > required_keyword) {
     result.append("\nOptional keyword parameters:\n");
     sorted_keywords = std::vector<int>{
         parameter_map.keyword_parameters().cbegin(),
