@@ -417,7 +417,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
-        for (int j = 0; j < alignment_batch.ScoreSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.ScoreSorted().size()) - 1; ++j) {
           CHECK(ScoreComp(alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
@@ -552,7 +552,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
-        for (int j = 0; j < alignment_batch.ScoreSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.ScoreSorted().size()) - 1; ++j) {
           CHECK(ScoreComp(alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
@@ -843,7 +843,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
-        for (int j = 0; j < alignment_batch.ScoreSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.ScoreSorted().size()) - 1; ++j) {
           CHECK(ScoreComp(alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
@@ -958,7 +958,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by (score, pident) works as expected.") {
-        for (int j = 0; j < alignment_batch.ScoreSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.ScoreSorted().size()) - 1; ++j) {
           CHECK(ScoreComp(alignment_batch.Alignments()
                               .at(alignment_batch.ScoreSorted().at(j)),
                           alignment_batch.Alignments()
