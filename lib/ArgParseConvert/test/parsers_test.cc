@@ -1017,19 +1017,21 @@ SCENARIO("Test invariant preservation by ParseArgs.",
       REQUIRE(additional_arguments.empty());
 
       THEN("ArgumentMap's size doesn't change.") {
-        CHECK(argument_map.size() == size);
+        CHECK(static_cast<int>(argument_map.size()) == size);
       }
 
       THEN("ArgumentMap's ParameterMap member's size doesn't change.") {
-        CHECK(argument_map.Parameters().size() == parameters_size);
+        CHECK(static_cast<int>(argument_map.Parameters().size())
+              == parameters_size);
       }
 
       THEN("ArgumentMap's number of stored argument lists doesn't change.") {
-        CHECK(argument_map.Arguments().size() == arguments_size);
+        CHECK(static_cast<int>(argument_map.Arguments().size())
+              == arguments_size);
       }
 
       THEN("ArgumentMap's number of stored value lists doesn't change.") {
-        CHECK(argument_map.Values().size() == values_size);
+        CHECK(static_cast<int>(argument_map.Values().size()) == values_size);
       }
     }
 
@@ -1044,19 +1046,21 @@ SCENARIO("Test invariant preservation by ParseArgs.",
       REQUIRE_FALSE(additional_arguments.empty());
 
       THEN("ArgumentMap's size doesn't change.") {
-        CHECK(argument_map.size() == size);
+        CHECK(static_cast<int>(argument_map.size()) == size);
       }
 
       THEN("ArgumentMap's ParameterMap member's size doesn't change.") {
-        CHECK(argument_map.Parameters().size() == parameters_size);
+        CHECK(static_cast<int>(argument_map.Parameters().size())
+              == parameters_size);
       }
 
       THEN("ArgumentMap's number of stored argument lists doesn't change.") {
-        CHECK(argument_map.Arguments().size() == arguments_size);
+        CHECK(static_cast<int>(argument_map.Arguments().size())
+              == arguments_size);
       }
 
       THEN("ArgumentMap's number of stored value lists doesn't change.") {
-        CHECK(argument_map.Values().size() == values_size);
+        CHECK(static_cast<int>(argument_map.Values().size()) == values_size);
       }
     }
   }
@@ -1849,19 +1853,21 @@ SCENARIO("Test invariant preservation by ParseFile.",
       REQUIRE(additional_arguments.empty());
 
       THEN("ArgumentMap's size doesn't change.") {
-        CHECK(argument_map.size() == size);
+        CHECK(static_cast<int>(argument_map.size()) == size);
       }
 
       THEN("ArgumentMap's ParameterMap member's size doesn't change.") {
-        CHECK(argument_map.Parameters().size() == parameters_size);
+        CHECK(static_cast<int>(argument_map.Parameters().size())
+              == parameters_size);
       }
 
       THEN("ArgumentMap's number of stored argument lists doesn't change.") {
-        CHECK(argument_map.Arguments().size() == arguments_size);
+        CHECK(static_cast<int>(argument_map.Arguments().size())
+              == arguments_size);
       }
 
       THEN("ArgumentMap's number of stored value lists doesn't change.") {
-        CHECK(argument_map.Values().size() == values_size);
+        CHECK(static_cast<int>(argument_map.Values().size()) == values_size);
       }
     }
 
@@ -1883,19 +1889,21 @@ SCENARIO("Test invariant preservation by ParseFile.",
       REQUIRE_FALSE(additional_arguments.empty());
 
       THEN("ArgumentMap's size doesn't change.") {
-        CHECK(argument_map.size() == size);
+        CHECK(static_cast<int>(argument_map.size()) == size);
       }
 
       THEN("ArgumentMap's ParameterMap member's size doesn't change.") {
-        CHECK(argument_map.Parameters().size() == parameters_size);
+        CHECK(static_cast<int>(argument_map.Parameters().size())
+              == parameters_size);
       }
 
       THEN("ArgumentMap's number of stored argument lists doesn't change.") {
-        CHECK(argument_map.Arguments().size() == arguments_size);
+        CHECK(static_cast<int>(argument_map.Arguments().size())
+              == arguments_size);
       }
 
       THEN("ArgumentMap's number of stored value lists doesn't change.") {
-        CHECK(argument_map.Values().size() == values_size);
+        CHECK(static_cast<int>(argument_map.Values().size()) == values_size);
       }
     }
   }
