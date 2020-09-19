@@ -53,7 +53,7 @@ void WriteBatch(AlignmentBatch batch, std::ostream& os) {
          << '\t' << a.Bitscore()
          << '\t' << a.Evalue()
          << '\t' << a.PastedIdentifiers().at(0);
-      for (int i = 1; i < a.PastedIdentifiers().size(); ++i) {
+      for (int i = 1; i < static_cast<int>(a.PastedIdentifiers().size()); ++i) {
         os << ',' << a.PastedIdentifiers().at(i);
       }
       os << '\n';
