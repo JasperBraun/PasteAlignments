@@ -36,7 +36,7 @@ std::string PasteStats::DebugString() const {
      << ", average_score=" << average_score
      << ", average_bitscore=" << average_bitscore
      << ", average_evalue=" << average_evalue
-     << ", num_nmatches=" << num_nmatches
+     << ", average_nmatches=" << average_nmatches
      << ')';
   return ss.str();
 }
@@ -57,7 +57,7 @@ void StatsCollector::CollectStats(const AlignmentBatch& batch) {
       stats.average_score += a.RawScore();
       stats.average_bitscore += a.Bitscore();
       stats.average_evalue += a.Evalue();
-      stats.num_nmatches += static_cast<long>(a.Nmatches());
+      stats.average_nmatches += static_cast<float>(a.Nmatches());
     }
   }
   if (stats.num_alignments > 0) {
@@ -67,6 +67,7 @@ void StatsCollector::CollectStats(const AlignmentBatch& batch) {
     stats.average_score /= f_num_alignments;
     stats.average_bitscore /= f_num_alignments;
     stats.average_evalue /= static_cast<double>(stats.num_alignments);
+    stats.average_nmatches /= f_num_alignments;
     batch_stats_.emplace_back(std::move(stats));
   }
 }
@@ -89,7 +90,8 @@ PasteStats StatsCollector::WriteData(std::ostream& os) {
                                      * s.num_alignments;
       global_stats.average_evalue += s.average_evalue
                                      * s.num_alignments;
-      global_stats.num_nmatches += s.num_nmatches;
+      global_stats.average_nmatches += s.average_nmatches
+                                       * s.num_alignments;
 
       os << s.qseqid
          << '\t' << s.sseqid
@@ -100,7 +102,7 @@ PasteStats StatsCollector::WriteData(std::ostream& os) {
          << '\t' << s.average_score
          << '\t' << s.average_bitscore
          << '\t' << s.average_evalue
-         << '\t' << s.num_nmatches
+         << '\t' << s.average_nmatches
          << '\n';
     }
     float f_num_alignments{static_cast<float>(global_stats.num_alignments)};
@@ -109,6 +111,7 @@ PasteStats StatsCollector::WriteData(std::ostream& os) {
     global_stats.average_score /= f_num_alignments;
     global_stats.average_bitscore /= f_num_alignments;
     global_stats.average_evalue /= static_cast<double>(f_num_alignments);
+    global_stats.average_nmatches /= f_num_alignments;
   }
   return global_stats;
 }

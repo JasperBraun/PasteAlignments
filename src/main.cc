@@ -45,13 +45,27 @@ arg_parse_convert::ParameterMap InitParameters() {
                    arg_parse_convert::converters::StringIdentity,
                    "input_file", 0)
                 .MinArgs(1).MaxArgs(1).Placeholder("INPUT_FILE")
-                .Description("Input file description."))
+                .Description(
+                    "Tab-delimited HSP table as returned by BLAST with option"
+                    " `-outfmt '6 qseqid sseqid qstart qend sstart send nident"
+                    " mismatch gapopen gaps qlen slen length qseq sseq. If"
+                    " executing in blind mode, the last two columns can be left"
+                    " out. Each alignment is considered to be on the minus"
+                    " strand if it's subject end coordinate precedes its"
+                    " subject start coordinate. Fields in excess of 13 (11 if"
+                    " in blind mode) are ignored."))
 
                (arg_parse_convert::Parameter<std::string>::Positional(
                     arg_parse_convert::converters::StringIdentity,
                     "output_file", 1)
                 .MinArgs(0).MaxArgs(1).Placeholder("OUTPUT_FILE")
-                .Description("Output file description."))
+                .Description(
+                    "Tab-delimited HSP table with columns: qseqid sseqid qstart"
+                    " qend sstart send nident mismatch gapopen gaps qlen slen"
+                    " length qseq sseq pident score bitscore evalue. If"
+                    " executing in blind mode, the qseq and sseq columns are"
+                    " omitted. For alignments on the minus strand, the subject"
+                    " end coordinate precedes its subject start coordinate."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
@@ -324,7 +338,7 @@ void PasteAlignments(
                   << "\t\"average_score\": " << summary.average_score << ",\n"
                   << "\t\"average_bitscore\": " << summary.average_bitscore << ",\n"
                   << "\t\"average_evalue\": " << summary.average_evalue << ",\n"
-                  << "\t\"num_nmatches\": " << summary.num_nmatches << '\n'
+                  << "\t\"average_nmatches\": " << summary.average_nmatches << '\n'
                   << "}\n";
       summary_ofs.close();
     }

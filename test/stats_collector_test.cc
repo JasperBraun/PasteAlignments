@@ -59,13 +59,14 @@ PasteStats CalculateStats(const std::string& qseqid, const std::string& sseqid,
     stats.average_score += alignments.at(pos).RawScore();
     stats.average_bitscore += alignments.at(pos).Bitscore();
     stats.average_evalue += alignments.at(pos).Evalue();
-    stats.num_nmatches += alignments.at(pos).Nmatches();
+    stats.average_nmatches += static_cast<float>(alignments.at(pos).Nmatches());
   }
   stats.average_length /= f_num_alignments;
   stats.average_pident /= f_num_alignments;
   stats.average_score /= f_num_alignments;
   stats.average_bitscore /= f_num_alignments;
   stats.average_evalue /= f_num_alignments;
+  stats.average_nmatches /= f_num_alignments;
   return stats;
 }
 
@@ -84,7 +85,8 @@ bool FuzzyEquals(const PasteStats& first, const PasteStats& second) {
                                        second.average_bitscore)
           && helpers::FuzzyDoubleEquals(first.average_evalue,
                                         second.average_evalue)
-          && first.num_nmatches == second.num_nmatches);
+          && helpers::FuzzyFloatEquals(first.average_nmatches,
+                                       second.average_nmatches));
 }
 
 void Print(const PasteStats& stats, std::ostream& os,
@@ -101,6 +103,8 @@ void Print(const PasteStats& stats, std::ostream& os,
                                      * stats.num_alignments;
   cumulative_stats.average_evalue += stats.average_evalue
                                      * stats.num_alignments;
+  cumulative_stats.average_nmatches += stats.average_nmatches
+                                       * stats.num_alignments;
   os << stats.qseqid
      << '\t' << stats.sseqid
      << '\t' << stats.num_alignments
@@ -110,7 +114,7 @@ void Print(const PasteStats& stats, std::ostream& os,
      << '\t' << stats.average_score
      << '\t' << stats.average_bitscore
      << '\t' << stats.average_evalue
-     << '\t' << stats.num_nmatches
+     << '\t' << stats.average_nmatches
      << '\n';
 }
 
@@ -121,6 +125,7 @@ void Average(PasteStats& stats) {
   stats.average_score /= f_num_alignments;
   stats.average_bitscore /= f_num_alignments;
   stats.average_evalue /= static_cast<double>(f_num_alignments);
+  stats.average_nmatches /= f_num_alignments;
 }
 
 namespace {
