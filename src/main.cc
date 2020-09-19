@@ -62,122 +62,164 @@ arg_parse_convert::ParameterMap InitParameters() {
                 .Description(
                     "Tab-delimited HSP table with columns: qseqid sseqid qstart"
                     " qend sstart send nident mismatch gapopen gaps qlen slen"
-                    " length qseq sseq pident score bitscore evalue. If"
-                    " executing in blind mode, the qseq and sseq columns are"
-                    " omitted. For alignments on the minus strand, the subject"
-                    " end coordinate precedes its subject start coordinate."))
+                    " length qseq sseq pident score bitscore evalue rows, where"
+                    " 'rows' is a comma-separated list of row numbers for the"
+                    " alignments from the input file that, when pasted"
+                    " together, constitute the output alignments. If executing"
+                    " in blind mode, the qseq and sseq columns are omitted. For"
+                    " alignments on the minus strand, the subject end"
+                    " coordinate precedes its subject start coordinate."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"d", "db", "db_size"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
-                .Description("Description."))
+                .Description(
+                    "Size of the database used for the BLAST search. Required"
+                    " for the computation of evalues."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"g", "gap", "gap_tolerance"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
-                .AddDefault("10")
-                .Description("Description."))
+                .AddDefault("4")
+                .Description(
+                    "Maximum gap length allowed to be introduced through"
+                    " pasting."))
 
                (arg_parse_convert::Parameter<float>::Keyword(
                     arg_parse_convert::converters::stof,
                     {"final_pident", "final_pident_threshold"})
                 .MinArgs(1).MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.0")
-                .Description("Description."))
+                .Description(
+                    "Percent identity threshold alignments must satisfy to be"
+                    " included in the output."))
 
                (arg_parse_convert::Parameter<float>::Keyword(
                     arg_parse_convert::converters::stof,
                     {"final_score", "final_score_threshold"})
                 .MinArgs(1).MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.0")
-                .Description("Description."))
+                .Description(
+                    "Raw score threshold alignments must satisfy to be included"
+                    " in the output."))
 
                (arg_parse_convert::Parameter<float>::Keyword(
                     arg_parse_convert::converters::stof,
                     {"intermediate_pident", "intermediate_pident_threshold"})
                 .MinArgs(1).MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.0")
-                .Description("Description."))
+                .Description(
+                    "Percent identity threshold that must be satisfied during"
+                    " pasting."))
 
                (arg_parse_convert::Parameter<float>::Keyword(
                     arg_parse_convert::converters::stof,
                     {"intermediate_score", "intermediate_score_threshold"})
                 .MinArgs(1).MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.0")
-                .Description("Description."))
+                .Description(
+                    "Raw score threshold that must be satisfied during"
+                    " pasting."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"r", "reward", "match_reward"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
                 .AddDefault("1")
-                .Description("Description."))
+                .Description(
+                    "Match reward used to compute score, bitscore, and evalue."
+                    " Only a fixed set of values is supported."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"p", "penalty", "mismatch_penalty"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
                 .AddDefault("2")
-                .Description("Description."))
+                .Description(
+                    "Mismatch penalty used to compute score, bitscore, and"
+                    " evalue. Only a fixed set of values is supported."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"o", "gapopen", "gapopen_cost"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
                 .AddDefault("0")
-                .Description("Description."))
+                .Description(
+                    "Gap opening cost used to compute score, bitscore, and"
+                    " evalue. Only a fixed set of values is supported. For"
+                    " megablast scoring parameters set this value to 0."))
 
                (arg_parse_convert::Parameter<int>::Keyword(
                     arg_parse_convert::converters::stoi,
                     {"e", "gapextend", "gapextend_cost"})
                 .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
                 .AddDefault("0")
-                .Description("Description."))
+                .Description(
+                    "Gap extension cost used to compute score, bitscore, and"
+                    " evalue. Only a fixed set of values is supported. For"
+                    " megablast scoring parameters set this value to 0."))
 
                (arg_parse_convert::Parameter<std::string>::Keyword(
                     arg_parse_convert::converters::StringIdentity,
                     {"y", "summary", "summary_file"})
                 .MaxArgs(1).Placeholder("SUMMARY_FILE")
-                .Description("Summary file description."))
+                .Description(
+                    "Print overall statistics in JSON format with 1: number of"
+                    " alignments, 2: number of pastings performed, 3: average"
+                    " alignment length, 4: average percent identity, 5: average"
+                    " raw alignment score, 6: average bitscore, 7: average"
+                    " evalue, 8: average number of unknown N-N matches (which"
+                    " are treated as mismatches."))
 
                (arg_parse_convert::Parameter<std::string>::Keyword(
                     arg_parse_convert::converters::StringIdentity,
                     {"s", "stats", "stats_file"})
                 .MaxArgs(1).Placeholder("STATS_FILE")
-                .Description("Stats file description."))
+                .Description(
+                    "Print tab-separated data with columns: 1: query sequence"
+                    " identifier, 2: subject sequence identifier, 3:"
+                    " number of alignments, 4: number of pastings performed, 5:"
+                    " average alignment length, 6: average percent identity, 7:"
+                    " average raw alignment score, 8: average bitscore, 9:"
+                    " average evalue, 10: average number of unknown N-N matches"
+                    " (which are treated as mismatches."))
 
                (arg_parse_convert::Parameter<std::string>::Keyword(
                     arg_parse_convert::converters::StringIdentity,
                     {"c", "config", "configuration_file"})
                 .MaxArgs(1).Placeholder("CONFIGURATION_FILE")
-                .Description("Description."))
-
-               (arg_parse_convert::Parameter<long>::Keyword(
-                    arg_parse_convert::converters::stol,
-                    {"b", "batch", "batch_size"})
-                .MinArgs(1).MaxArgs(1).Placeholder("INTEGER")
-                .AddDefault("256000000")
-                .Description("Description."))
+                .Description(
+                    "Read parameters from configuration file."))
 
                (arg_parse_convert::Parameter<float>::Keyword(
                     arg_parse_convert::converters::stof,
                     {"float_epsilon"})
                 .MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.01")
-                .Description("Description."))
+                .Description(
+                    "Used for floating point comparison of the C++ `float` data"
+                    " type."))
 
                (arg_parse_convert::Parameter<double>::Keyword(
                     arg_parse_convert::converters::stod,
                     {"double_epsilon"})
                 .MaxArgs(1).Placeholder("FLOAT")
                 .AddDefault("0.01")
-                .Description("Description."))
+                .Description(
+                    "Used for floating point comparison of the C++ `double`"
+                    " data type."))
 
                (arg_parse_convert::Parameter<bool>::Flag(
                     {"blind", "blind_mode"})
-                .Description("Execute in blind mode."))
+                .Description(
+                    "Disregard actual sequences during pasting. No alignment"
+                    " sequences are read or constructed during pasting in this"
+                    " mode. However query and subject coordinates, number of"
+                    " identities, mismatches, gap openings, and gap extensions"
+                    " (and thus percent identity, score, bitscore, and evalue)"
+                    " are still computed."))
 
                (arg_parse_convert::Parameter<bool>::Flag(
                     {"h", "help"})
@@ -268,7 +310,6 @@ paste_alignments::PasteParameters GetPasteParameters(
   }
 
   // Other.
-  result.batch_size = argument_map.GetValue<long>("batch_size");
   result.float_epsilon = argument_map.GetValue<float>("float_epsilon");
   result.double_epsilon = argument_map.GetValue<double>("double_epsilon");
 

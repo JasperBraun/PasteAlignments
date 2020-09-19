@@ -124,10 +124,6 @@ struct PasteParameters {
   /// @name Other:
   ///
   /// @{
-  
-  /// @brief Maximum size of the chunks of input data read.
-  ///
-  long batch_size{256l * 1000l * 1000l};
 
   /// @brief Parameter that determines how far apart two floating points may be
   ///  to be considered equal.
