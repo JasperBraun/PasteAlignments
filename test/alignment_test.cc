@@ -2224,7 +2224,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2310,7 +2310,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2400,7 +2400,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2490,7 +2490,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2578,7 +2578,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2666,7 +2666,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2756,7 +2756,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2846,7 +2846,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -2936,7 +2936,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3026,7 +3026,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3116,7 +3116,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3206,7 +3206,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3296,7 +3296,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3386,7 +3386,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3477,7 +3477,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3568,7 +3568,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3659,7 +3659,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3750,7 +3750,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3840,7 +3840,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -3930,7 +3930,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4020,7 +4020,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4110,7 +4110,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4200,7 +4200,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4290,7 +4290,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4380,7 +4380,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -4470,7 +4470,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq() == pasted_qseq);
         CHECK(left.Sseq() == pasted_sseq);
         CHECK(left.IncludeInOutput() == false);
@@ -6292,7 +6292,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6378,7 +6378,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6468,7 +6468,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6558,7 +6558,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6646,7 +6646,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6734,7 +6734,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6824,7 +6824,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -6914,7 +6914,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7004,7 +7004,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7094,7 +7094,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7184,7 +7184,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7274,7 +7274,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7364,7 +7364,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7454,7 +7454,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7545,7 +7545,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7636,7 +7636,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7727,7 +7727,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7818,7 +7818,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7908,7 +7908,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -7998,7 +7998,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8088,7 +8088,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8178,7 +8178,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8268,7 +8268,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8358,7 +8358,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8448,7 +8448,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -8538,7 +8538,7 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.Gaps() == pasted_gaps);
         CHECK(left.Qlen() == qlen);
         CHECK(left.Slen() == slen);
-        CHECK(left.Length() == pasted_qseq.length());
+        CHECK(left.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(left.Qseq().empty());
         CHECK(left.Sseq().empty());
         CHECK(left.IncludeInOutput() == false);
@@ -10381,7 +10381,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10467,7 +10467,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10557,7 +10557,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10647,7 +10647,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10735,7 +10735,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10823,7 +10823,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -10913,7 +10913,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11003,7 +11003,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11093,7 +11093,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11183,7 +11183,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11273,7 +11273,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11363,7 +11363,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11453,7 +11453,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11543,7 +11543,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11634,7 +11634,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11725,7 +11725,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11816,7 +11816,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11907,7 +11907,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -11997,7 +11997,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12087,7 +12087,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12177,7 +12177,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12267,7 +12267,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12357,7 +12357,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12447,7 +12447,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12537,7 +12537,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -12627,7 +12627,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq() == pasted_qseq);
         CHECK(right.Sseq() == pasted_sseq);
         CHECK(right.IncludeInOutput() == false);
@@ -14465,7 +14465,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14551,7 +14551,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14641,7 +14641,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14731,7 +14731,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14819,7 +14819,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14907,7 +14907,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -14997,7 +14997,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15087,7 +15087,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15177,7 +15177,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15267,7 +15267,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15357,7 +15357,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15447,7 +15447,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15537,7 +15537,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15627,7 +15627,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15718,7 +15718,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15809,7 +15809,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15900,7 +15900,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -15991,7 +15991,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16081,7 +16081,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16171,7 +16171,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16261,7 +16261,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16351,7 +16351,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16441,7 +16441,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16531,7 +16531,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16621,7 +16621,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
@@ -16711,7 +16711,7 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.Gaps() == pasted_gaps);
         CHECK(right.Qlen() == qlen);
         CHECK(right.Slen() == slen);
-        CHECK(right.Length() == pasted_qseq.length());
+        CHECK(right.Length() == static_cast<int>(pasted_qseq.length()));
         CHECK(right.Qseq().empty());
         CHECK(right.Sseq().empty());
         CHECK(right.IncludeInOutput() == false);
