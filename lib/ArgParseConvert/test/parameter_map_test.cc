@@ -229,7 +229,7 @@ SCENARIO("Test invariant preservation by ParameterMap::operator().",
           converters::StringIdentity,
           std::vector<std::string>{names.begin() + mid_count, names.end()}));
 
-      REQUIRE(parameters.size() == mid_count + 1);
+      REQUIRE(static_cast<int>(parameters.size()) == mid_count + 1);
 
       for (const Parameter<std::string>& p : parameters) {
         parameter_map(p);
@@ -387,7 +387,7 @@ SCENARIO("Test exceptions thrown by ParameterMap::GetPrimaryName."
       }
 
       THEN("Id's inside the range [0, size) will not cause exception.") {
-        for (int i = 0; i < parameter_map.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(parameter_map.size()); ++i) {
           CHECK_NOTHROW(parameter_map.GetPrimaryName(i));
         }
       }
