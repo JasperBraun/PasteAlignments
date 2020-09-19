@@ -124,7 +124,7 @@ std::string StatsCollector::DebugString() const {
      << "batch_stats: [";
   if (batch_stats_.size() > 0) {
     ss << batch_stats_.at(0).DebugString();
-    for (int i = 1; i < batch_stats_.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(batch_stats_.size()); ++i) {
       ss << ',' << batch_stats_.at(i).DebugString();
     }
   }
