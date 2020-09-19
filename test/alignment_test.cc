@@ -4520,8 +4520,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4548,8 +4548,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4576,8 +4576,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4604,8 +4604,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4632,8 +4632,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4660,8 +4660,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4688,8 +4688,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4716,8 +4716,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4744,8 +4744,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4772,8 +4772,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4800,8 +4800,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4828,8 +4828,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -4856,8 +4856,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteRight <aware>.",
         CHECK_FALSE(left.Qseq().empty());
         CHECK_FALSE(left.Sseq().empty());
         CHECK(left.Qseq().length() == left.Sseq().length());
-        CHECK(left.Length() == left.Qseq().length());
-        CHECK(left.Length() == left.Sseq().length());
+        CHECK(left.Length() == static_cast<int>(left.Qseq().length()));
+        CHECK(left.Length() == static_cast<int>(left.Sseq().length()));
         CHECK(std::find(left.PastedIdentifiers().begin(),
                         left.PastedIdentifiers().end(),
                         left.Id())
@@ -12677,8 +12677,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12705,8 +12705,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12733,8 +12733,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12761,8 +12761,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12789,8 +12789,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12817,8 +12817,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12845,8 +12845,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12873,8 +12873,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12901,8 +12901,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12929,8 +12929,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12957,8 +12957,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -12985,8 +12985,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
@@ -13013,8 +13013,8 @@ SCENARIO("Test invariant preservation by Alignment::PasteLeft <aware>.",
         CHECK_FALSE(right.Qseq().empty());
         CHECK_FALSE(right.Sseq().empty());
         CHECK(right.Qseq().length() == right.Sseq().length());
-        CHECK(right.Length() == right.Qseq().length());
-        CHECK(right.Length() == right.Sseq().length());
+        CHECK(right.Length() == static_cast<int>(right.Qseq().length()));
+        CHECK(right.Length() == static_cast<int>(right.Sseq().length()));
         CHECK(std::find(right.PastedIdentifiers().begin(),
                         right.PastedIdentifiers().end(),
                         right.Id())
