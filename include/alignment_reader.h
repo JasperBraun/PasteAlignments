@@ -53,14 +53,15 @@ class AlignmentReader {
   ///
   /// @exceptions Basic guarantee. Modifies `is`.
   ///  * Throws `exceptions::OutOfRange` if `num_fields` is not positive.
-  ///  * Throws `exceptions::ParsingError` if
+  ///  * Throws `exceptions::ReadError` if
+  ///    - `is` compares to `nullptr`.
   ///    - While extracting first line from `is`, `failbit` or `badbit` are set.
   ///    - First line in `is` does not contain at least 2 '\t' characters.
   ///    - One of the first two fields in the first line of `is` is empty.
   ///  * `Alignment::FromStringFields` may throw.
   ///
   static AlignmentReader FromIStream(std::unique_ptr<std::istream> is,
-                                     int num_fields = 12);
+                                     int num_fields = 13);
   /// @}
 
   /// @name Constructors:

@@ -162,6 +162,10 @@ arg_parse_convert::ParameterMap InitParameters() {
                 .Description("Description."))
 
                (arg_parse_convert::Parameter<bool>::Flag(
+                    {"blind", "blind_mode"})
+                .Description("Execute in blind mode."))
+
+               (arg_parse_convert::Parameter<bool>::Flag(
                     {"h", "help"})
                 .Description("Print this help message and exit."))
 
@@ -226,6 +230,9 @@ paste_alignments::PasteParameters GetPasteParameters(
       "intermediate_score");
   result.final_pident_threshold = argument_map.GetValue<float>("final_pident");
   result.final_score_threshold = argument_map.GetValue<float>("final_score");
+  if (argument_map.IsSet("blind_mode")) {
+    result.blind_mode = true;
+  }
 
   // Scoring parameters.
   result.reward = argument_map.GetValue<int>("reward");
@@ -259,21 +266,32 @@ paste_alignments::PasteParameters GetPasteParameters(
 //
 void PasteAlignments(
     const paste_alignments::PasteParameters& paste_parameters) {
+
+  // Input file.
+  int num_fields = 13;
+  if (paste_parameters.blind_mode) {
+    num_fields -= 2;
+  }
   std::unique_ptr<std::ifstream> inputs_ifs{
       new std::ifstream{paste_parameters.input_filename}};
   paste_alignments::AlignmentReader reader{
-      paste_alignments::AlignmentReader::FromIStream(std::move(inputs_ifs))};
+      paste_alignments::AlignmentReader::FromIStream(std::move(inputs_ifs),
+                                                     num_fields)};
+
+  // Scoring system.
   paste_alignments::ScoringSystem scoring_system{
       paste_alignments::ScoringSystem::Create(
           paste_parameters.db_size, paste_parameters.reward,
           paste_parameters.penalty, paste_parameters.open_cost,
           paste_parameters.extend_cost)};
-  paste_alignments::StatsCollector stats_collector;
+
+  // Output file.
   std::ofstream alignments_ofs;
   if (!paste_parameters.output_filename.empty()) {
     alignments_ofs.open(paste_parameters.output_filename);
   }
 
+  paste_alignments::StatsCollector stats_collector;
   while (!reader.EndOfData()) {
     paste_alignments::AlignmentBatch batch = reader.ReadBatch(scoring_system,
                                                               paste_parameters);

@@ -130,6 +130,11 @@ std::vector<std::string_view> GetFields(const std::string& row,
 AlignmentReader AlignmentReader::FromIStream(std::unique_ptr<std::istream> is,
                                              int num_fields) {
   AlignmentReader result;
+  if (is == nullptr) {
+    throw exceptions::ReadError("Attempted to create `AlignmentReader` object"
+                                " without providing input stream; `nullptr` was"
+                                " given.");
+  }
   result.num_fields_ = helpers::TestPositive(num_fields);
 
   result.is_ = std::move(is);

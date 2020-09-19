@@ -92,9 +92,9 @@ struct AlignmentConfiguration {
 ///
 /// @invariant All integral data members are non-negative.
 /// @invariant `Qstart <= Qend`, and `Sstart <= Send`.
-/// @invariant `Qlen` and `Slen` are positive.
-/// @invariant `Qseq` and `Sseq` are non-empty.
-/// @invariatn `Qseq` and `Sseq` have the same length.
+/// @invariant `Qlen`, `Slen` and `Length` are positive.
+/// @invariant `Qseq` and `Sseq` are non-empty unless in blind mode.
+/// @invariant `Qseq` and `Sseq` have same length as `Length`.
 /// @invariant `PastedIdentifiers` contains `Id`.
 ///
 class Alignment {
@@ -110,23 +110,27 @@ class Alignment {
   /// @parameter scoring_system Scoring system used to compute score, bitscore,
   ///  and evalue.
   /// @parameter paste_parameters Additional arguments used for handling
-  ///  floating points.
+  ///  floating points. Also indicates whether executing in blind mode.
   ///
   /// @details `fields` values are interpreted in the order:
-  ///  qstart qend sstart send nident mismatch gapopen gaps qlen slen qseq sseq.
-  ///  The object is considered to be on the minus strand if it's subject end
-  ///  coordinate precedes its subject start coordinate. Fields in excess of 12
-  ///  are ignored.
+  ///  qstart qend sstart send nident mismatch gapopen gaps qlen slen length
+  ///  qseq sseq. If executing in blind mode, the last two columns are not
+  ///  expected. The object is considered to be on the minus strand if it's
+  ///  subject end coordinate precedes its subject start coordinate. Fields in
+  ///  excess of 13 (11 if in blind mode) are ignored.
   ///
   /// @exceptions Strong guarantee. Throws `exceptions::ParsingError` if
-  ///  * Fewer than 12 fields are provided.
+  ///  * Fewer than 13 fields are provided (or fewer than 11 in blind mode).
   ///  * One of the fields, except qseq and sseq cannot be converted to integer.
   ///  * qstart is larger than qend coordinate.
   ///  * One of qstart, qend, sstart, or send is negative.
   ///  * One of nident, mismatch, gapopen, or gaps is negative.
-  ///  * One of qlen, or slen is non-positive.
-  ///  * One of qseq, or sseq is empty.
-  ///  * Length of qseq is not the same as length of sseq.
+  ///  * One of qlen, slen, ot length is non-positive.
+  ///  * One of qseq, or sseq is empty (unless in blind mode).
+  ///  * Length of qseq is not the same as length of sseq (unless in blind
+  ///    mode).
+  ///  * Length of qseq or sseq is not the same as length (unless in blind
+  ///    mode).
   ///
   static Alignment FromStringFields(int id,
                                     std::vector<std::string_view> fields,
@@ -260,23 +264,19 @@ class Alignment {
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline int Length() const {return qseq_.length();}
+  inline int Length() const {return length_;}
 
   /// @brief Alignment's percent identity.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline float Pident() const {
-    return pident_;
-  }
+  inline float Pident() const {return pident_;}
 
   /// @brief Alignment's score.
   ///
   /// @exceptions Strong guarantee.
   ///
-  inline float RawScore() const {
-    return raw_score_;
-  }
+  inline float RawScore() const {return raw_score_;}
 
   /// @brief Alignment's bitscore.
   ///
@@ -478,6 +478,7 @@ class Alignment {
   int gaps_;
   int qlen_;
   int slen_;
+  int length_;
   std::string qseq_;
   std::string sseq_;
   float pident_;

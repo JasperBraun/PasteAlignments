@@ -34,85 +34,98 @@ Alignment Alignment::FromStringFields(int id,
                                       const ScoringSystem& scoring_system,
                                       const PasteParameters& paste_parameters) {
   std::stringstream error_message;
-  if (fields.size() < 12) {
-    error_message << "Not enough fields provided to create `Alignment` object."
-                  << " Alignments require 12 fields, but only " << fields.size()
-                  << " were provided. (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+  if (fields.size() >= 13
+      || (paste_parameters.blind_mode && fields.size() >= 11)) {
 
-  Alignment result{id};
+    Alignment result{id};
 
-  // Query coordinates.
-  result.qstart_ = helpers::StringViewToInteger(fields.at(0));
-  result.qend_ = helpers::StringViewToInteger(fields.at(1));
-  if (result.qstart_ > result.qend_
-      || result.qstart_ < 0
-      || result.qend_ < 0) {
-    error_message << "Invalid query start and end coordinates provide to create"
-                  << " `Alignment` object: (qstart: " << result.qstart_
-                  << ", qend: " << result.qend_ << "). (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+    // Query coordinates.
+    result.qstart_ = helpers::StringViewToInteger(fields.at(0));
+    result.qend_ = helpers::StringViewToInteger(fields.at(1));
+    if (result.qstart_ > result.qend_
+        || result.qstart_ < 0
+        || result.qend_ < 0) {
+      error_message << "Invalid query start and end coordinates provide to"
+                    << " create `Alignment` object: (qstart: " << result.qstart_
+                    << ", qend: " << result.qend_ << "). (id: " << id << ").";
+      throw exceptions::ParsingError(error_message.str());
+    }
 
-  // Subject coordinates.
-  result.sstart_ = helpers::StringViewToInteger(fields.at(2));
-  result.send_ = helpers::StringViewToInteger(fields.at(3));
-  if (result.sstart_ < 0 || result.send_ < 0) {
-    error_message << "Invalid subject start and end coordinates provide to"
-                  << " create `Alignment` object: (sstart: " << result.sstart_
-                  << ", send: " << result.send_ << "). (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+    // Subject coordinates.
+    result.sstart_ = helpers::StringViewToInteger(fields.at(2));
+    result.send_ = helpers::StringViewToInteger(fields.at(3));
+    if (result.sstart_ < 0 || result.send_ < 0) {
+      error_message << "Invalid subject start and end coordinates provide to"
+                    << " create `Alignment` object: (sstart: " << result.sstart_
+                    << ", send: " << result.send_ << "). (id: " << id << ").";
+      throw exceptions::ParsingError(error_message.str());
+    }
 
-  // Identities, mismatches, gap openings and gap extensions.
-  result.nident_ = helpers::StringViewToInteger(fields.at(4));
-  result.mismatch_ = helpers::StringViewToInteger(fields.at(5));
-  result.gapopen_ = helpers::StringViewToInteger(fields.at(6));
-  result.gaps_ = helpers::StringViewToInteger(fields.at(7));
-  if (result.nident_ < 0 || result.mismatch_ < 0
-      || result.gapopen_ < 0 || result.gaps_ < 0) {
-    error_message << "Invalid field value. Fields must not be negative:"
-                  << " (nident: " << result.nident_ << ", mismatch: "
-                  << result.mismatch_ << ", gapopen: " << result.gapopen_
-                  << ", gaps: " << result.gaps_ << "). (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+    // Identities, mismatches, gap openings and gap extensions.
+    result.nident_ = helpers::StringViewToInteger(fields.at(4));
+    result.mismatch_ = helpers::StringViewToInteger(fields.at(5));
+    result.gapopen_ = helpers::StringViewToInteger(fields.at(6));
+    result.gaps_ = helpers::StringViewToInteger(fields.at(7));
+    if (result.nident_ < 0 || result.mismatch_ < 0
+        || result.gapopen_ < 0 || result.gaps_ < 0) {
+      error_message << "Invalid field value. Fields must not be negative:"
+                    << " (nident: " << result.nident_ << ", mismatch: "
+                    << result.mismatch_ << ", gapopen: " << result.gapopen_
+                    << ", gaps: " << result.gaps_ << "). (id: " << id << ").";
+      throw exceptions::ParsingError(error_message.str());
+    }
 
-  // Sequence lengths.
-  result.qlen_ = helpers::StringViewToInteger(fields.at(8));
-  result.slen_ = helpers::StringViewToInteger(fields.at(9));
-  if (result.qlen_ <= 0 || result.slen_ <= 0) {
-    error_message << "Invalid sequence length. Aligned sequences must have"
-                  << " positive length: (qlen: " << result.qlen_ << ", slen: "
-                  << result.slen_ << "). (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+    // Sequence lengths.
+    result.qlen_ = helpers::StringViewToInteger(fields.at(8));
+    result.slen_ = helpers::StringViewToInteger(fields.at(9));
+    result.length_ = helpers::StringViewToInteger(fields.at(10));
+    if (result.qlen_ <= 0 || result.slen_ <= 0 || result.length_ <= 0) {
+      error_message << "Invalid sequence length. Aligned sequences must have"
+                    << " positive length: (qlen: " << result.qlen_ << ", slen: "
+                    << result.slen_ << ", length: " << result.length_
+                    << "). (id: " << id << ").";
+      throw exceptions::ParsingError(error_message.str());
+    }
 
-  // Sequence alignment.
-  result.qseq_ = fields.at(10);
-  result.sseq_ = fields.at(11);
-  if (result.qseq_.empty() || result.sseq_.empty()) {
-    error_message << "Invalid sequence alignment. Alignment must be non-empty."
-                  << " (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  } else if (result.qseq_.length() != result.sseq_.length()) {
-    error_message << "Invalid sequence alignment. Both sides of the alignment"
-                  << " must have the same length. (id: " << id << ").";
-    throw exceptions::ParsingError(error_message.str());
-  }
+    // Sequence alignment.
+    if (!paste_parameters.blind_mode) {
+      result.qseq_ = fields.at(11);
+      result.sseq_ = fields.at(12);
+      if (result.qseq_.empty() || result.sseq_.empty()) {
+        error_message << "Invalid sequence alignment. Alignment must be"
+                      << " non-empty. (id: " << id << ").";
+        throw exceptions::ParsingError(error_message.str());
+      } else if (result.qseq_.length() != result.sseq_.length()) {
+        error_message << "Invalid sequence alignment. Both sides of the"
+                      << " alignment must have the same length. (id: " << id
+                      << ").";
+        throw exceptions::ParsingError(error_message.str());
+      } else if (result.qseq_.length() != result.length_) {
+        error_message << "Alignment length must be the same as the length of"
+                      << " either side of the alignment. (id: " << id << ").";
+        throw exceptions::ParsingError(error_message.str());
+      }
+    }
 
-  // Derived values.
-  if (result.sstart_ <= result.send_) {
-    result.plus_strand_ = true;
+    // Derived values.
+    if (result.sstart_ <= result.send_) {
+      result.plus_strand_ = true;
+    } else {
+      std::swap(result.sstart_, result.send_);
+      result.plus_strand_ = false;
+    }
+    result.UpdateSimilarityMeasures(scoring_system, paste_parameters);
+    result.ungapped_prefix_end_ = result.length_;
+    result.ungapped_suffix_begin_ = 0;
+    return result;
+
   } else {
-    std::swap(result.sstart_, result.send_);
-    result.plus_strand_ = false;
+    error_message << "Not enough fields provided to create `Alignment` object."
+                  << " Alignments require 13 fields (11 if in blind mode), but"
+                  << " only " << fields.size() << " were provided. (id: " << id
+                  << ").";
+    throw exceptions::ParsingError(error_message.str());
   }
-  result.UpdateSimilarityMeasures(scoring_system, paste_parameters);
-  result.ungapped_prefix_end_ = result.qseq_.length();
-  result.ungapped_suffix_begin_ = 0;
-  return result;
 }
 
 // Alignment::PasteRight / Alignment::PasteLeft helper
@@ -369,35 +382,38 @@ void Alignment::PasteRight(const Alignment& other,
   }
 
   // Combine sequences.
-  std::string new_qseq, new_sseq;
   PastedPartition partition;
-  char query_gap_char, subject_gap_char;
-  new_qseq.reserve(config.pasted_length);
-  new_sseq.reserve(config.pasted_length);
-
   partition = GetRightPartition(config);
-
-  // Add gap characters on one side and unknown on other side of gap.
-  if (config.query_offset > config.subject_offset) {
-    query_gap_char = 'N';
-    subject_gap_char = '-';
-  } else {
-    query_gap_char = '-';
-    subject_gap_char = 'N';
-  }
-  new_qseq = CombineRight(qseq_, other.Qseq(), partition, query_gap_char);
-  new_sseq = CombineRight(sseq_, other.Sseq(), partition, subject_gap_char);
 
   // Update ungapped prefix and suffix.
   int new_ungapped_prefix_end, new_ungapped_suffix_begin;
   new_ungapped_prefix_end = GetPrefixEnd((*this), other, partition, config);
   new_ungapped_suffix_begin = GetSuffixBegin((*this), other, partition, config);
 
+  // Deploy changes.
+  if (!paste_parameters.blind_mode) {
+    std::string new_qseq, new_sseq;
+    char query_gap_char, subject_gap_char;
+    new_qseq.reserve(config.pasted_length);
+    new_sseq.reserve(config.pasted_length);
+
+    // Add gap characters on one side and unknown on other side of gap.
+    if (config.query_offset > config.subject_offset) {
+      query_gap_char = 'N';
+      subject_gap_char = '-';
+    } else {
+      query_gap_char = '-';
+      subject_gap_char = 'N';
+    }
+    new_qseq = CombineRight(qseq_, other.Qseq(), partition, query_gap_char);
+    new_sseq = CombineRight(sseq_, other.Sseq(), partition, subject_gap_char);
+    qseq_ = std::move(new_qseq);
+    sseq_ = std::move(new_sseq);
+  }
   pasted_identifiers_.insert(pasted_identifiers_.end(),
                              other.PastedIdentifiers().begin(),
                              other.PastedIdentifiers().end());
-  qseq_ = std::move(new_qseq);
-  sseq_ = std::move(new_sseq);
+  length_ = config.pasted_length;
   qend_ = other.Qend();
   if (plus_strand_) {
     send_ = other.Send();
@@ -438,36 +454,38 @@ void Alignment::PasteLeft(const Alignment& other,
   } 
 
   // Combine sequences.
-  std::string new_qseq, new_sseq;
   PastedPartition partition;
-  char query_gap_char, subject_gap_char;
-  new_qseq.reserve(config.pasted_length);
-  new_sseq.reserve(config.pasted_length);
-
   partition = GetLeftPartition(config);
-
-  // Add gap characters on one side and unknown on other side of gap.
-  if (config.query_offset > config.subject_offset) {
-    query_gap_char = 'N';
-    subject_gap_char = '-';
-  } else {
-    query_gap_char = '-';
-    subject_gap_char = 'N';
-  }
-  new_qseq = CombineLeft(other.Qseq(), qseq_, partition, query_gap_char);
-
-  new_sseq = CombineLeft(other.Sseq(), sseq_, partition, subject_gap_char);
 
   // Update ungapped prefix and suffix.
   int new_ungapped_prefix_end, new_ungapped_suffix_begin;
   new_ungapped_prefix_end = GetPrefixEnd(other, (*this), partition, config);
   new_ungapped_suffix_begin = GetSuffixBegin(other, (*this), partition, config);
 
+  // Deploy changes.
+  if (!paste_parameters.blind_mode) {
+    std::string new_qseq, new_sseq;
+    char query_gap_char, subject_gap_char;
+    new_qseq.reserve(config.pasted_length);
+    new_sseq.reserve(config.pasted_length);
+
+    // Add gap characters on one side and unknown on other side of gap.
+    if (config.query_offset > config.subject_offset) {
+      query_gap_char = 'N';
+      subject_gap_char = '-';
+    } else {
+      query_gap_char = '-';
+      subject_gap_char = 'N';
+    }
+    new_qseq = CombineLeft(other.Qseq(), qseq_, partition, query_gap_char);
+    new_sseq = CombineLeft(other.Sseq(), sseq_, partition, subject_gap_char);
+    qseq_ = std::move(new_qseq);
+    sseq_ = std::move(new_sseq);
+  }
   pasted_identifiers_.insert(pasted_identifiers_.end(),
                              other.PastedIdentifiers().begin(),
                              other.PastedIdentifiers().end());
-  qseq_ = std::move(new_qseq);
-  sseq_ = std::move(new_sseq);
+  length_ = config.pasted_length;
   qstart_ = other.Qstart();
   if (plus_strand_) {
     sstart_ = other.Sstart();
@@ -497,6 +515,7 @@ bool Alignment::operator==(const Alignment& other) const {
           && other.gaps_ == gaps_
           && other.qlen_ == qlen_
           && other.slen_ == slen_
+          && other.length_ == length_
           && other.qseq_ == qseq_
           && other.sseq_ == sseq_
           && helpers::FuzzyFloatEquals(other.pident_, pident_)
@@ -545,8 +564,9 @@ std::string Alignment::DebugString() const {
      << ", gaps=" << gaps_
      << ", qlen=" << qlen_
      << ", slen=" << slen_
-     << ", qseq='" //<< qseq_
-     << "', sseq='" //<< sseq_
+     << ", length=" << length_
+     << ", qseq='" << qseq_
+     << "', sseq='" << sseq_
      << "', pident=" << pident_
      << ", raw_score=" << raw_score_
      << ", bitscore=" << bitscore_

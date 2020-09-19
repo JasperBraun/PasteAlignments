@@ -45,6 +45,7 @@ void WriteBatch(AlignmentBatch batch, std::ostream& os) {
          << '\t' << a.Gaps()
          << '\t' << a.Qlen()
          << '\t' << a.Slen()
+         << '\t' << a.Length()
          << '\t' << a.Qseq()
          << '\t' << a.Sseq()
          << '\t' << a.Pident()

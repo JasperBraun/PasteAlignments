@@ -54,6 +54,10 @@ struct PasteParameters {
   /// @brief Minimum score for returned pasted alignments.
   ///
   float final_score_threshold{0.0f};
+
+  /// @brief When executed in blind mode, nucleotide sequences are disregarded.
+  ///
+  bool blind_mode{false};
   /// @}
 
   /// @name Scoring parameters:
@@ -154,6 +158,7 @@ struct PasteParameters {
        << ", i_score_t=" << intermediate_score_threshold
        << ", f_pident_t=" << final_pident_threshold
        << ", f_score_t=" << final_score_threshold
+       << ", blind_mode=" << blind_mode
        << ", reward=" << reward
        << ", penalty=" << penalty
        << ", open_cost=" << open_cost

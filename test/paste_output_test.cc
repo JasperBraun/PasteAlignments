@@ -45,7 +45,8 @@ namespace test {
 
 void AddRow(const std::string& qseqid, const std::string& sseqid,
             const Alignment& a, std::stringstream& ss) {
-  ss << qseqid << '\t' << sseqid << '\t' << a.Qstart() << '\t' << a.Qend() << '\t';
+  ss << qseqid << '\t' << sseqid << '\t' << a.Qstart() << '\t' << a.Qend()
+     << '\t';
   if (a.PlusStrand()) {
     ss << a.Sstart() << '\t' << a.Send();
   } else {
@@ -53,8 +54,8 @@ void AddRow(const std::string& qseqid, const std::string& sseqid,
   }
   ss << '\t' << a.Nident() << '\t' << a.Mismatch() << '\t' << a.Gapopen()
      << '\t' << a.Gaps() << '\t' << a.Qlen() << '\t' << a.Slen()
-     << '\t' << a.Qseq() << '\t' << a.Sseq() << '\t' << a.Pident()
-     << '\t' << a.RawScore() << '\t' << a.Bitscore()
+     << '\t' << a.Length() << '\t' << a.Qseq() << '\t' << a.Sseq()
+     << '\t' << a.Pident() << '\t' << a.RawScore() << '\t' << a.Bitscore()
      << '\t' << a.Evalue() << '\t' << a.PastedIdentifiers().at(0);
   for (int i = 1; i < a.PastedIdentifiers().size(); ++i) {
     ss << ',' << a.PastedIdentifiers().at(i);
@@ -82,61 +83,61 @@ SCENARIO("Test correctness of WriteBatch.", "[WriteBatch][correctness]") {
     std::vector<Alignment> alignments{
         Alignment::FromStringFields(0, {"101", "125", "1101", "1125",
                                      "24", "1", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "25",
                                      "GCCCCAAAATTCCCCAAAATTCCCC",
                                      "ACCCCAAAATTCCCCAAAATTCCCC"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(1, {"101", "120", "1131", "1150",
                                      "20", "0", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "20",
                                      "CCCCAAAATTCCCCAAAATT",
                                      "CCCCAAAATTCCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(2, {"101", "150", "1050", "1001",
                                      "40", "10", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "50",
                                      "GGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT",
                                      "AAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATTCCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(3, {"101", "110", "2111", "2120",
                                      "10", "0", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "10",
                                      "CCCCAAAATT",
                                      "CCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(4, {"101", "125", "1135", "1111",
                                      "20", "5", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "25",
                                      "GGGGGCCCCAAAATTCCCCAAAATT",
                                      "AAAAACCCCAAAATTCCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(5, {"101", "140", "1121", "1160",
                                      "30", "10", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "40",
                                      "GGGGGGGGGGCCCCAAAATTCCCCAAAATTCCCCAAAATT",
                                      "AAAAAAAAAACCCCAAAATTCCCCAAAATTCCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(6, {"101", "115", "1096", "1110",
                                      "10", "5", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "15",
                                      "GGGGGCCCCAAAATT",
                                      "AAAAACCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(7, {"101", "135", "101", "135",
                                      "20", "15", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "35",
                                      "GGGGGGGGGGGGGGGCCCCAAAATTCCCCAAAATT",
                                      "AAAAAAAAAAAAAAACCCCAAAATTCCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(8, {"101", "120", "201", "220",
                                      "10", "10", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "20",
                                      "GGGGGGGGGGCCCCAAAATT",
                                      "AAAAAAAAAACCCCAAAATT"},
                                     scoring_system, paste_parameters),
         Alignment::FromStringFields(9, {"101", "125", "2101", "2125",
                                      "10", "15", "0", "0",
-                                     "10000", "100000",
+                                     "10000", "100000", "25",
                                      "GGGGGGGGGGGGGGGCCCCAAAATT",
                                      "AAAAAAAAAAAAAAACCCCAAAATT"},
                                     scoring_system, paste_parameters)};
