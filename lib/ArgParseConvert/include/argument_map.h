@@ -379,7 +379,7 @@ std::vector<ParameterType> ArgumentMap::GetAllValues(const std::string& name) {
     throw exceptions::ValueAccessError(error_message.str());
   }
 
-  for (int pos = 0; pos < arguments_.at(id).size(); ++pos) {
+  for (int pos = 0; pos < static_cast<int>(arguments_.at(id).size()); ++pos) {
     result.push_back(GetValue<ParameterType>(name, pos));
   }
   return result;

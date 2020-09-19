@@ -1865,7 +1865,7 @@ SCENARIO("Test correctness of ArgumentMap::GetAllValues.",
           argument_map.GetAllValues<double>("kYesMinYesMaxFullArgs")};
 
       THEN("Values for all arguments are returned.") {
-        for (int i = 0; i < kDefaultArgs.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(kDefaultArgs.size()); ++i) {
           CHECK(kNoMinNoMaxNoArgs_vals.at(i)
                 == converters::StringIdentity(
                   argument_map.ArgumentsOf("kNoMinNoMaxNoArgs").at(i)));
