@@ -322,7 +322,7 @@ ParameterType ArgumentMap::GetValue(const std::string& name, int pos) {
   std::stringstream error_message;
 
   // Test if argument at position `pos` was assigned.
-  if (arguments_.at(id).size() <= pos) {
+  if (static_cast<int>(arguments_.at(id).size()) <= pos) {
     error_message << "Attempted to access argument at position '" << pos
                   << "' for parameter named '" << name << "' but only '"
                   << arguments_.at(id).size()
@@ -344,7 +344,7 @@ ParameterType ArgumentMap::GetValue(const std::string& name, int pos) {
   }
 
   // Compute value only if it wasn't computed before.
-  if (value_lists_.at(id).size() <= pos
+  if (static_cast<int>(value_lists_.at(id).size()) <= pos
       || !value_lists_.at(id).at(pos).has_value()) {
     value_lists_.at(id).reserve(pos);
     for (int i = value_lists_.at(id).size(); i < pos; ++i) {

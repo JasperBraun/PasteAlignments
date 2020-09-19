@@ -20,6 +20,7 @@
 
 #include "alignment.h"
 
+#include <cassert>
 #include <sstream>
 
 #include "exceptions.h"
@@ -100,7 +101,7 @@ Alignment Alignment::FromStringFields(int id,
                       << " alignment must have the same length. (id: " << id
                       << ").";
         throw exceptions::ParsingError(error_message.str());
-      } else if (result.qseq_.length() != result.length_) {
+      } else if (static_cast<int>(result.qseq_.length()) != result.length_) {
         error_message << "Alignment length must be the same as the length of"
                       << " either side of the alignment. (id: " << id << ").";
         throw exceptions::ParsingError(error_message.str());
@@ -553,7 +554,7 @@ std::string Alignment::DebugString() const {
   std::stringstream  ss;
   ss << std::boolalpha << "(id=" << Id()
      << ", pasted_identifiers=[" << pasted_identifiers_.at(0);
-  for (int i = 1; i < pasted_identifiers_.size(); ++i) {
+  for (int i = 1; i < static_cast<int>(pasted_identifiers_.size()); ++i) {
     ss << ',' << pasted_identifiers_.at(i);
   }
   ss << "], qstart=" << qstart_
