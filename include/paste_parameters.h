@@ -164,7 +164,6 @@ struct PasteParameters {
        << ", output_filename=" << output_filename
        << ", summary_filename=" << summary_filename
        << ", stats_filename=" << stats_filename
-       << ", batch_size=" << batch_size
        << ", float_epsilon=" << float_epsilon
        << ", double_epsilon=" << double_epsilon
        << '}';
