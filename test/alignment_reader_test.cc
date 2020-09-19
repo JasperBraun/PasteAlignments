@@ -421,7 +421,7 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
     };
 
     std::vector<AlignmentBatch> expected_batches, blind_expected_batches;
-    for (int i = 0; i < sequence_identifiers.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
       AlignmentBatch batch{
           sequence_identifiers.at(i).first,
           sequence_identifiers.at(i).second};
@@ -449,12 +449,12 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
           std::move(blind_is), 11)};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
                                                          paste_parameters)};
           CHECK(computed_batch == expected_batches.at(i));
         }
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{blind_reader.ReadBatch(
               scoring_system, blind_paste_parameters)};
           CHECK(computed_batch == blind_expected_batches.at(i));
@@ -477,12 +477,12 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
           std::move(blind_is), 11)};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
                                                          paste_parameters)};
           CHECK(computed_batch == expected_batches.at(i));
         }
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{blind_reader.ReadBatch(
               scoring_system, blind_paste_parameters)};
           CHECK(computed_batch == blind_expected_batches.at(i));
@@ -501,12 +501,12 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
           std::move(blind_is), 11)};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
                                                          paste_parameters)};
           CHECK(computed_batch == expected_batches.at(i));
         }
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{blind_reader.ReadBatch(
               scoring_system, blind_paste_parameters)};
           CHECK(computed_batch == blind_expected_batches.at(i));
@@ -529,12 +529,12 @@ SCENARIO("Test correctness of AlignmentReader::ReadBatch.",
           std::move(blind_is), 11)};
 
       THEN("Each run of equal first two columns will constitute one batch.") {
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{reader.ReadBatch(scoring_system,
                                                          paste_parameters)};
           CHECK(computed_batch == expected_batches.at(i));
         }
-        for (int i = 0; i < sequence_identifiers.size(); ++i) {
+        for (int i = 0; i < static_cast<int>(sequence_identifiers.size()); ++i) {
           AlignmentBatch computed_batch{blind_reader.ReadBatch(
               scoring_system, blind_paste_parameters)};
           CHECK(computed_batch == blind_expected_batches.at(i));
