@@ -397,7 +397,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       alignment_batch.ResetAlignments(shuffled_alignments.at(i),
                                       paste_parameters);
       std::unordered_set<int> alignment_positions;
-      for (int i = 0; i < alignment_batch.Size(); ++i) {
+      for (int i = 0; i < static_cast<int>(alignment_batch.Size()); ++i) {
         alignment_positions.insert(i);
       }
 
@@ -428,7 +428,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qstart works as expected.") {
-        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QstartSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
@@ -439,7 +439,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qend works as expected.") {
-        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QendSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
@@ -532,7 +532,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
                                       scoring_system, paste_parameters)};
       alignment_batch.ResetAlignments(new_alignments, paste_parameters);
       std::unordered_set<int> alignment_positions;
-      for (int i = 0; i < alignment_batch.Size(); ++i) {
+      for (int i = 0; i < static_cast<int>(alignment_batch.Size()); ++i) {
         alignment_positions.insert(i);
       }
 
@@ -563,7 +563,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qstart works as expected.") {
-        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QstartSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
@@ -574,7 +574,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qend works as expected.") {
-        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QendSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
@@ -823,7 +823,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       alignment_batch.ResetAlignments(shuffled_alignments.at(i),
                                       paste_parameters);
       std::unordered_set<int> alignment_positions;
-      for (int i = 0; i < alignment_batch.Size(); ++i) {
+      for (int i = 0; i < static_cast<int>(alignment_batch.Size()); ++i) {
         alignment_positions.insert(i);
       }
 
@@ -854,7 +854,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qstart works as expected.") {
-        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QstartSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
@@ -865,7 +865,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qend works as expected.") {
-        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QendSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
@@ -938,7 +938,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
                                       scoring_system, paste_parameters)};
       alignment_batch.ResetAlignments(new_alignments, paste_parameters);
       std::unordered_set<int> alignment_positions;
-      for (int i = 0; i < alignment_batch.Size(); ++i) {
+      for (int i = 0; i < static_cast<int>(alignment_batch.Size()); ++i) {
         alignment_positions.insert(i);
       }
 
@@ -969,7 +969,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qstart works as expected.") {
-        for (int j = 0; j < alignment_batch.QstartSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QstartSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QstartSorted().at(j).second).Qstart()
                 <= alignment_batch.Alignments()
@@ -980,7 +980,7 @@ SCENARIO("Test invariant preservation by AlignmentBatch::ResetAlignments"
       }
 
       THEN("Sorting by qend works as expected.") {
-        for (int j = 0; j < alignment_batch.QendSorted().size() - 1; ++j) {
+        for (int j = 0; j < static_cast<int>(alignment_batch.QendSorted().size()) - 1; ++j) {
           CHECK(alignment_batch.Alignments()
                     .at(alignment_batch.QendSorted().at(j).second).Qend()
                 <= alignment_batch.Alignments()
