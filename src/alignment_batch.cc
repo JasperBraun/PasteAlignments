@@ -21,6 +21,7 @@
 #include "alignment_batch.h"
 
 #include <algorithm>
+#include <cassert>
 #include <functional>
 #include <unordered_set>
 #include <utility>
@@ -39,7 +40,7 @@ void AlignmentBatch::ResetAlignments(std::vector<Alignment> alignments,
   qstart_sorted.reserve(alignments.size());
   qend_sorted.reserve(alignments.size());
 
-  for (int i = 0; i < alignments.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(alignments.size()); ++i) {
     score_sorted.push_back(i);
     qstart_sorted.emplace_back(alignments.at(i).Qstart(), i);
     qend_sorted.emplace_back(alignments.at(i).Qend(), i);
@@ -141,7 +142,7 @@ int FindEqualFirstCoordinate(int value,
       assert(median > 0);
       right = median;
     } else if (pairs.at(median).first < value) {
-      assert(median < pairs.size() - 1);
+      assert(median < static_cast<int>(pairs.size()) - 1);
       left = median + 1;
     }
   } while (pairs.at(median).first != value);
@@ -181,11 +182,11 @@ int FindFirstGreaterQstart(
   }
 
   int result{FindEqualFirstCoordinate(qstart, qstart_sorted)};
-  while (result < qstart_sorted.size()
+  while (result < static_cast<int>(qstart_sorted.size())
          && qstart_sorted.at(result).first == qstart) {
     ++result;
   }
-  if (result == qstart_sorted.size()) {
+  if (result == static_cast<int>(qstart_sorted.size())) {
     return -1;
   } else {
     return result;
@@ -412,7 +413,7 @@ PasteCandidate FindRightCandidate(
     } else {
       result.sorted_pos += 1;
     }
-    if (result.sorted_pos == qstart_sorted.size()) {
+    if (result.sorted_pos == static_cast<int>(qstart_sorted.size())) {
       result.sorted_pos = -1;
     }
   }
@@ -471,7 +472,7 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
                              paste_parameters);
           temp_used.insert(right_candidate.alignment_pos);
           right_candidate.sorted_pos += 1;
-          if (right_candidate.sorted_pos == Size()) {
+          if (right_candidate.sorted_pos == static_cast<int>(Size())) {
             right_candidate.sorted_pos = -1;
           }
         }
@@ -530,21 +531,21 @@ std::string AlignmentBatch::DebugString() const {
      << ", alignments: [";
   if (!alignments_.empty()) {
     ss << alignments_.at(0).DebugString();
-    for (int i = 1; i < alignments_.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(alignments_.size()); ++i) {
       ss << ", " << alignments_.at(i).DebugString();
     }
   }
   ss << "], score_sorted: [";
   if (!score_sorted_.empty()) {
     ss << score_sorted_.at(0);
-    for (int i = 1; i < score_sorted_.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(score_sorted_.size()); ++i) {
       ss << ", " << score_sorted_.at(i);
     }
   }
   ss << "], qstart_sorted_: [";
   if (!qstart_sorted_.empty()) {
     ss << '(' << qstart_sorted_.at(0).first << ',' << qstart_sorted_.at(0).second << ')';
-    for (int i = 1; i < qstart_sorted_.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(qstart_sorted_.size()); ++i) {
       ss << ", " << qstart_sorted_.at(i).first << ',' << qstart_sorted_.at(i).second << ')';
     }
   }
@@ -552,7 +553,7 @@ std::string AlignmentBatch::DebugString() const {
   ss << "], qend_sorted_: [";
   if (!qend_sorted_.empty()) {
     ss << '(' << qend_sorted_.at(0).first << ',' << qend_sorted_.at(0).second << ')';
-    for (int i = 1; i < qend_sorted_.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(qend_sorted_.size()); ++i) {
       ss << ", " << qend_sorted_.at(i).first << ',' << qend_sorted_.at(i).second << ')';
     }
   }
