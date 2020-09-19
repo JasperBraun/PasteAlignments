@@ -490,7 +490,7 @@ SCENARIO("Test correctness of StatsCollector::WriteData.",
                                      "AAAAAAAAAAAAAAACCCCAAAATT"},
                                     scoring_system, paste_parameters)};
     std::set<int> pos_of_final;
-    for (int pos = 0; static_cast<int>(pos) < alignments.size(); ++pos) {
+    for (int pos = 0; pos < static_cast<int>(alignments.size()); ++pos) {
       pos_of_final.insert(pos);
       alignments.at(pos).IncludeInOutput(true);
     }
@@ -573,7 +573,7 @@ SCENARIO("Test correctness of StatsCollector::WriteData.",
                                      "AAAAAAAAAAAAAAACCCCAAAATT"},
                                     scoring_system, paste_parameters)};
     std::set<int> pos_of_final;
-    for (int pos = 0; static_cast<int>(pos) < alignments.size(); ++pos) {
+    for (int pos = 0; pos < static_cast<int>(alignments.size()); ++pos) {
       pos_of_final.insert(pos);
       alignments.at(pos).IncludeInOutput(true);
     }
