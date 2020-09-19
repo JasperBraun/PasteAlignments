@@ -21,6 +21,8 @@
 #ifndef PASTE_ALIGNMENTS_ALIGNMENT_READER_H_
 #define PASTE_ALIGNMENTS_ALIGNMENT_READER_H_
 
+#include <memory>
+
 #include "alignment.h"
 #include "alignment_batch.h"
 
