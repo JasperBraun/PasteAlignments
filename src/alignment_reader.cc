@@ -20,6 +20,8 @@
 
 #include "alignment_reader.h"
 
+#include <cassert>
+
 #include "exceptions.h"
 #include "helpers.h"
 
