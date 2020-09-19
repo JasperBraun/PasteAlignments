@@ -20,7 +20,7 @@
 
 #include "scoring_system.h"
 
-#include <cmath>
+#include <math.h>
 #include <sstream>
 
 namespace paste_alignments {
@@ -33,10 +33,10 @@ namespace {
 //
 float NextLowerEven(float x, float epsilon = 0.05f) {
   float result;
-  float modulo{std::abs(std::fmod(x, 2.0f))};
+  float modulo{::abs(::fmod(x, 2.0f))};
   if (!helpers::FuzzyFloatEquals(0.0f, modulo, epsilon)
       && !helpers::FuzzyFloatEquals(2.0f, modulo, epsilon)) {
-    result = 2.0f * (std::floorf(x / 2.0f));
+    result = 2.0f * (::floorf(x / 2.0f));
   } else {
     result = x;
   }
@@ -93,10 +93,10 @@ float ScoringSystem::Bitscore(float raw_score,
                               const PasteParameters& parameters) const {
   if (reward_ == 2 && (penalty_ == 3 || penalty_ == 5 || penalty_ == 7)) {
     return ((lambda_ * NextLowerEven(raw_score, parameters.float_epsilon)
-             - std::log(k_))
-            / std::log(2.0f));
+             - ::log(k_))
+            / ::log(2.0f));
   } else {
-    return ((lambda_ * raw_score - std::log(k_)) / std::log(2.0f));
+    return ((lambda_ * raw_score - ::log(k_)) / ::log(2.0f));
   }
 }
 
@@ -114,22 +114,8 @@ double ScoringSystem::Evalue(float raw_score, int qlen,
   return (static_cast<double>(k_)
           * static_cast<double>(qlen)
           * static_cast<double>(db_size_)
-          * std::exp((-1.0) * static_cast<double>(lambda_) * score));
+          * ::exp((-1.0) * static_cast<double>(lambda_) * score));
 }
-
-/*
-// ScoringSystem::operator==
-//
-bool ScoringSystem::operator==(const ScoringSystem& other) const {
-  return(reward_ == other.reward_
-         && penalty_ == other.penalty_
-         && open_cost_ == other.open_cost_
-         && helpers::FuzzyFloatEquals(extend_cost_, other.extend_cost_)
-         && helpers::FuzzyFloatEquals(lambda_, other.lambda_)
-         && helpers::FuzzyFloatEquals(k_, other.k_)
-         && db_size_ == other.db_size_);
-}
-*/
 
 // ScoringSystem::DebugString()
 //
