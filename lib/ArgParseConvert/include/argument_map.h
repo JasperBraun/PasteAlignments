@@ -93,7 +93,7 @@ class ArgumentMap {
   /// @exceptions Basic guarantee.
   ///
   inline void SetDefaultArguments() {
-    for (int i = 0; i < arguments_.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(arguments_.size()); ++i) {
       if (parameters_.GetConfiguration(i).category() != ParameterCategory::kFlag
           && arguments_.at(i).size() == 0) {
         arguments_.at(i) = parameters_.GetConfiguration(i).default_arguments();
@@ -113,7 +113,8 @@ class ArgumentMap {
   inline void AddArgument(const std::string& name, std::string arg) {
     int id{parameters_.GetId(name)},
         max_num_args{parameters_.GetConfiguration(name).max_num_arguments()};
-    if (max_num_args == 0 || arguments_.at(id).size() < max_num_args) {
+    if (max_num_args == 0
+        || static_cast<int>(arguments_.at(id).size()) < max_num_args) {
       arguments_.at(parameters_.GetId(name)).emplace_back(std::move(arg));
     }
   }
@@ -170,9 +171,9 @@ class ArgumentMap {
   ///
   inline std::vector<std::string> GetUnfilledParameters() const {
     std::vector<std::string> result;
-    for (int i = 0; i < parameters_.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(parameters_.size()); ++i) {
       if (parameters_.GetConfiguration(i).min_num_arguments()
-          > arguments_.at(i).size()) {
+          > static_cast<int>(arguments_.at(i).size())) {
         result.emplace_back(parameters_.GetPrimaryName(i));
       }
     }

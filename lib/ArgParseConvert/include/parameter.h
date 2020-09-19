@@ -151,7 +151,7 @@ class ParameterConfiguration {
     if (category_ == ParameterCategory::kFlag) {
       return false;
     } else {
-      return (min_num_arguments_ > default_arguments_.size());
+      return (min_num_arguments_ > static_cast<int>(default_arguments_.size()));
     }
   }
 
