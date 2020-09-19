@@ -323,7 +323,8 @@ void PasteAlignments(
                   << "\t\"average_pident\": " << summary.average_pident << ",\n"
                   << "\t\"average_score\": " << summary.average_score << ",\n"
                   << "\t\"average_bitscore\": " << summary.average_bitscore << ",\n"
-                  << "\t\"average_evalue\": " << summary.average_evalue << '\n'
+                  << "\t\"average_evalue\": " << summary.average_evalue << ",\n"
+                  << "\t\"num_nmatches\": " << summary.num_nmatches << '\n'
                   << "}\n";
       summary_ofs.close();
     }

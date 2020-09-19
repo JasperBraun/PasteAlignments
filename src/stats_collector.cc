@@ -36,6 +36,7 @@ std::string PasteStats::DebugString() const {
      << ", average_score=" << average_score
      << ", average_bitscore=" << average_bitscore
      << ", average_evalue=" << average_evalue
+     << ", num_nmatches=" << num_nmatches
      << ')';
   return ss.str();
 }
@@ -44,7 +45,6 @@ std::string PasteStats::DebugString() const {
 //
 void StatsCollector::CollectStats(const AlignmentBatch& batch) {
   PasteStats stats;
-  stats.num_alignments = 0;
   stats.qseqid = batch.Qseqid();
   stats.sseqid = batch.Sseqid();
   for (const Alignment& a : batch.Alignments()) {
@@ -57,6 +57,7 @@ void StatsCollector::CollectStats(const AlignmentBatch& batch) {
       stats.average_score += a.RawScore();
       stats.average_bitscore += a.Bitscore();
       stats.average_evalue += a.Evalue();
+      stats.num_nmatches += static_cast<long>(a.Nmatches());
     }
   }
   if (stats.num_alignments > 0) {
@@ -88,6 +89,7 @@ PasteStats StatsCollector::WriteData(std::ostream& os) {
                                      * s.num_alignments;
       global_stats.average_evalue += s.average_evalue
                                      * s.num_alignments;
+      global_stats.num_nmatches += s.num_nmatches;
 
       os << s.qseqid
          << '\t' << s.sseqid
@@ -98,6 +100,7 @@ PasteStats StatsCollector::WriteData(std::ostream& os) {
          << '\t' << s.average_score
          << '\t' << s.average_bitscore
          << '\t' << s.average_evalue
+         << '\t' << s.num_nmatches
          << '\n';
     }
     float f_num_alignments{static_cast<float>(global_stats.num_alignments)};

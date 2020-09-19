@@ -59,6 +59,7 @@ PasteStats CalculateStats(const std::string& qseqid, const std::string& sseqid,
     stats.average_score += alignments.at(pos).RawScore();
     stats.average_bitscore += alignments.at(pos).Bitscore();
     stats.average_evalue += alignments.at(pos).Evalue();
+    stats.num_nmatches += alignments.at(pos).Nmatches();
   }
   stats.average_length /= f_num_alignments;
   stats.average_pident /= f_num_alignments;
@@ -82,7 +83,8 @@ bool FuzzyEquals(const PasteStats& first, const PasteStats& second) {
           && helpers::FuzzyFloatEquals(first.average_bitscore,
                                        second.average_bitscore)
           && helpers::FuzzyDoubleEquals(first.average_evalue,
-                                        second.average_evalue));
+                                        second.average_evalue)
+          && first.num_nmatches == second.num_nmatches);
 }
 
 void Print(const PasteStats& stats, std::ostream& os,
@@ -108,6 +110,7 @@ void Print(const PasteStats& stats, std::ostream& os,
      << '\t' << stats.average_score
      << '\t' << stats.average_bitscore
      << '\t' << stats.average_evalue
+     << '\t' << stats.num_nmatches
      << '\n';
 }
 

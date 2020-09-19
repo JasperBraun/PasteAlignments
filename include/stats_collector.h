@@ -76,6 +76,10 @@ struct PasteStats {
   ///
   double average_evalue{0.0};
 
+  /// @brief Number of aligned unknown residues counted as mismatches.
+  ///
+  long num_nmatches{0l};
+
   /// @name Other:
   ///
   /// @{

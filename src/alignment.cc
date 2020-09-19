@@ -225,7 +225,7 @@ std::string CombineLeft(const std::string& left, const std::string& right,
 // account for pasting `other` onto the object.
 //
 void AdjustCounts(int& nident, int& mismatch, int& gap_open, int& gaps,
-                  const Alignment& other,
+                  int& nmatches, const Alignment& other,
                   const AlignmentConfiguration& config) {
   nident += other.Nident() - std::max(config.query_overlap,
                                       config.subject_overlap);
@@ -236,6 +236,8 @@ void AdjustCounts(int& nident, int& mismatch, int& gap_open, int& gaps,
     gap_open += 1;
   }
   gaps += other.Gaps() + config.shift;
+
+  nmatches += std::min(config.query_distance, config.subject_distance);
 }
 
 // Returns end of an ungapped prefix of alignment obtained by pasting left and
@@ -424,7 +426,7 @@ void Alignment::PasteRight(const Alignment& other,
   ungapped_suffix_begin_ = new_ungapped_suffix_begin;
 
   // Adjust counts of identities, mismatches and gaps.
-  AdjustCounts(nident_, mismatch_, gapopen_, gaps_, other, config);
+  AdjustCounts(nident_, mismatch_, gapopen_, gaps_, nmatches_, other, config);
   UpdateSimilarityMeasures(scoring_system, paste_parameters);
 }
 
@@ -496,7 +498,7 @@ void Alignment::PasteLeft(const Alignment& other,
   ungapped_suffix_begin_ = new_ungapped_suffix_begin;
 
   // Adjust counts of identities, mismatches and gaps.
-  AdjustCounts(nident_, mismatch_, gapopen_, gaps_, other, config);
+  AdjustCounts(nident_, mismatch_, gapopen_, gaps_, nmatches_, other, config);
   UpdateSimilarityMeasures(scoring_system, paste_parameters);
 }
 
@@ -524,7 +526,8 @@ bool Alignment::operator==(const Alignment& other) const {
           && helpers::FuzzyDoubleEquals(other.evalue_, evalue_)
           && other.include_in_output_ == include_in_output_
           && other.ungapped_suffix_begin_ == ungapped_suffix_begin_
-          && other.ungapped_prefix_end_ == ungapped_prefix_end_);
+          && other.ungapped_prefix_end_ == ungapped_prefix_end_
+          && other.nmatches_ == nmatches_);
 }
 
 // AlignmentConfiguration::DebugString
@@ -574,6 +577,7 @@ std::string Alignment::DebugString() const {
      << ", include_in_output=" << include_in_output_
      << ", ungapped_prefix_end=" << ungapped_prefix_end_
      << ", ungapped_suffix_begin=" << ungapped_suffix_begin_
+     << ", nmatches=" << nmatches_
      << ')';
   return ss.str();
 }

@@ -314,6 +314,12 @@ class Alignment {
   ///
   inline int UngappedSuffixBegin() const {return ungapped_suffix_begin_;}
 
+  /// @brief Number of aligned pairs of unknown residues introduced via pasting.
+  ///
+  /// @exception Strong guarantee.
+  ///
+  inline int Nmatches() const {return nmatches_;}
+
   /// @brief Indicates whether alignment satisfies both quality thesholds.
   ///
   /// @parameter pident_threshold Minimum percent identity alignment must have.
@@ -488,6 +494,7 @@ class Alignment {
   bool include_in_output_{false};
   int ungapped_prefix_end_;
   int ungapped_suffix_begin_;
+  int nmatches_{0};
 };
 /// @}
 

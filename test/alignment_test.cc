@@ -2230,6 +2230,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2314,6 +2316,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2402,6 +2406,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2490,6 +2496,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2576,6 +2584,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2662,6 +2672,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2750,6 +2762,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2838,6 +2852,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -2926,6 +2942,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3014,6 +3032,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3102,6 +3122,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3190,6 +3212,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3278,6 +3302,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3366,6 +3392,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3455,6 +3483,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3544,6 +3574,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3633,6 +3665,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3722,6 +3756,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3810,6 +3846,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3898,6 +3936,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -3986,6 +4026,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -4074,6 +4116,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -4162,6 +4206,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -4250,6 +4296,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -4338,6 +4386,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -4426,6 +4476,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <aware>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6246,6 +6298,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6330,6 +6384,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6418,6 +6474,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6506,6 +6564,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6592,6 +6652,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6678,6 +6740,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6766,6 +6830,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6854,6 +6920,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -6942,6 +7010,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7030,6 +7100,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7118,6 +7190,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7206,6 +7280,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7294,6 +7370,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7382,6 +7460,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7471,6 +7551,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7560,6 +7642,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7649,6 +7733,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7738,6 +7824,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7826,6 +7914,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -7914,6 +8004,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8002,6 +8094,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8090,6 +8184,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8178,6 +8274,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8266,6 +8364,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8354,6 +8454,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -8442,6 +8544,8 @@ SCENARIO("Test correctness of Alignment::PasteRight <main> <blind>.",
         CHECK(left.IncludeInOutput() == false);
         CHECK(left.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(left.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(left.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Right remains unchanged.") {
@@ -10283,6 +10387,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10367,6 +10473,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10455,6 +10563,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10543,6 +10653,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10629,6 +10741,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10715,6 +10829,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10803,6 +10919,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10891,6 +11009,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -10979,6 +11099,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11067,6 +11189,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11155,6 +11279,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11243,6 +11369,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11331,6 +11459,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11419,6 +11549,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11508,6 +11640,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11597,6 +11731,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11686,6 +11822,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11775,6 +11913,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11863,6 +12003,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -11951,6 +12093,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12039,6 +12183,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12127,6 +12273,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12215,6 +12363,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12303,6 +12453,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12391,6 +12543,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -12479,6 +12633,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <aware>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14315,6 +14471,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14399,6 +14557,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14487,6 +14647,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14575,6 +14737,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14661,6 +14825,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14747,6 +14913,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14835,6 +15003,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -14923,6 +15093,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15011,6 +15183,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15099,6 +15273,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15187,6 +15363,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15275,6 +15453,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15363,6 +15543,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15451,6 +15633,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15540,6 +15724,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15629,6 +15815,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15718,6 +15906,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15807,6 +15997,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15895,6 +16087,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -15983,6 +16177,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16071,6 +16267,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16159,6 +16357,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16247,6 +16447,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16335,6 +16537,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16423,6 +16627,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
@@ -16511,6 +16717,8 @@ SCENARIO("Test correctness of Alignment::PasteLeft <main> <blind>.",
         CHECK(right.IncludeInOutput() == false);
         CHECK(right.UngappedPrefixEnd() == pasted_prefix_end);
         CHECK(right.UngappedSuffixBegin() == pasted_suffix_begin);
+        CHECK(right.Nmatches()
+              == std::min(config.query_distance, config.subject_distance));
       }
 
       THEN("Left remains unchanged.") {
