@@ -256,7 +256,8 @@ SCENARIO("Test invariant preservation by ScoringSystem::SetScoringParameters.",
     open_cost = parameters.open_cost;
     extend_cost = parameters.extend_cost;
 
-    ScoringSystem scoring_system{ScoringSystem::Create(1l)};
+    ScoringSystem scoring_system{ScoringSystem::Create(1l, reward, penalty,
+                                                       open_cost, extend_cost)};
 
     THEN("Database size is still positive.") {
       CHECK(scoring_system.DatabaseSize() > 0);
