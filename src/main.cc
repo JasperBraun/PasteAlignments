@@ -223,6 +223,12 @@ arg_parse_convert::ParameterMap InitParameters() {
                     " are still computed."))
 
                (arg_parse_convert::Parameter<bool>::Flag(
+                    {"enforce_avg_score", "enforce_average_score"})
+                .Description(
+                    "Paste alignments only when the pasted score is at least as"
+                    " large as the average score of the two alignments."))
+
+               (arg_parse_convert::Parameter<bool>::Flag(
                     {"h", "help"})
                 .Description("Print this help message and exit."))
 
@@ -287,9 +293,8 @@ paste_alignments::PasteParameters GetPasteParameters(
       "intermediate_score");
   result.final_pident_threshold = argument_map.GetValue<float>("final_pident");
   result.final_score_threshold = argument_map.GetValue<float>("final_score");
-  if (argument_map.IsSet("blind_mode")) {
-    result.blind_mode = true;
-  }
+  result.blind_mode = argument_map.IsSet("blind_mode");
+  result.enforce_average_score = argument_map.IsSet("enforce_average_score");
 
   // Scoring parameters.
   result.reward = argument_map.GetValue<int>("reward");
@@ -333,14 +338,12 @@ void PasteAlignments(
   paste_alignments::AlignmentReader reader{
       paste_alignments::AlignmentReader::FromIStream(std::move(inputs_ifs),
                                                      num_fields)};
-
   // Scoring system.
   paste_alignments::ScoringSystem scoring_system{
       paste_alignments::ScoringSystem::Create(
           paste_parameters.db_size, paste_parameters.reward,
           paste_parameters.penalty, paste_parameters.open_cost,
           paste_parameters.extend_cost)};
-
   // Output file.
   std::ofstream alignments_ofs;
   if (!paste_parameters.output_filename.empty()) {

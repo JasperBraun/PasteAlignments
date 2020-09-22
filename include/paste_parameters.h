@@ -55,6 +55,11 @@ struct PasteParameters {
   ///
   float final_score_threshold{0.0f};
 
+  /// @brief Paste alignments only when the pasted score is at least as large as
+  ///  the average score of the two alignments.
+  ///
+  bool enforce_average_score{false};
+
   /// @brief When executed in blind mode, nucleotide sequences are disregarded.
   ///
   bool blind_mode{false};

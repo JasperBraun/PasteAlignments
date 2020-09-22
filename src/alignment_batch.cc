@@ -26,8 +26,6 @@
 #include <unordered_set>
 #include <utility>
 
-#include <iostream>
-
 namespace paste_alignments {
 
 // AlignmentBatch::ResetAlignments
@@ -300,7 +298,7 @@ PasteCandidate FindLeftCandidate(
     const PasteParameters& paste_parameters) {
   assert(-1 <= candidate_sorted_pos);
   assert(candidate_sorted_pos < static_cast<int>(qend_sorted.size()));
-  int result_distance, result_qstart, max_overlap;
+  int result_distance, result_qstart, max_overlap, result_sstart, result_send;
   MatchCounts counts;
   bool result_plus_strand;
   PasteCandidate result;
@@ -315,12 +313,22 @@ PasteCandidate FindLeftCandidate(
                       - alignments.at(result.alignment_pos).Qend()
                       - 1;
     result_qstart = alignments.at(result.alignment_pos).Qstart();
+    result_sstart = alignments.at(result.alignment_pos).Sstart();
+    result_send = alignments.at(result.alignment_pos).Send();
     result_plus_strand = alignments.at(result.alignment_pos).PlusStrand();
 
     if (result_distance > distance_bound) {
       result.sorted_pos = -1;
     } else if (alignment.PlusStrand() == result_plus_strand
                && result_qstart < alignment.Qstart()
+               && ((alignment.PlusStrand() && (result_sstart
+                                               < alignment.Sstart()
+                                               && result_send
+                                               < alignment.Send()))
+                   || (!alignment.PlusStrand() && (result_sstart
+                                                  > alignment.Sstart()
+                                                  && result_send
+                                                  > alignment.Send())))
                && !used.count(result.alignment_pos)) {
       result.config = GetConfiguration(alignments.at(result.alignment_pos),
                                        alignment);
@@ -365,7 +373,8 @@ PasteCandidate FindRightCandidate(
     const PasteParameters& paste_parameters) {
   assert(-1 <= candidate_sorted_pos);
   assert(candidate_sorted_pos < static_cast<int>(qstart_sorted.size()));
-  int result_distance, result_qend, max_overlap, alignment_suffix_length;
+  int result_distance, result_qend, max_overlap, alignment_suffix_length,
+      result_sstart, result_send;
   MatchCounts counts;
   bool result_plus_strand;
   PasteCandidate result;
@@ -381,11 +390,21 @@ PasteCandidate FindRightCandidate(
                       - alignment.Qend()
                       - 1;
     result_qend = alignments.at(result.alignment_pos).Qend();
+    result_sstart = alignments.at(result.alignment_pos).Sstart();
+    result_send = alignments.at(result.alignment_pos).Send();
     result_plus_strand = alignments.at(result.alignment_pos).PlusStrand();
     if (result_distance > distance_bound) {
       result.sorted_pos = -1;
     } else if (alignment.PlusStrand() == result_plus_strand
                && alignment.Qend() < result_qend
+               && ((alignment.PlusStrand() && (result_sstart
+                                               > alignment.Sstart()
+                                               && result_send
+                                               > alignment.Send()))
+                   || (!alignment.PlusStrand() && (result_sstart
+                                                  < alignment.Sstart()
+                                                  && result_send
+                                                  < alignment.Send())))
                && !used.count(result.alignment_pos)) {
       result.config = GetConfiguration(alignment,
                                        alignments.at(result.alignment_pos));
@@ -435,6 +454,7 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
   std::unordered_set<int> used, temp_used;
   PasteCandidate left_candidate, right_candidate;
   int query_distance_bound;
+  float cumulative_score;
 
   for (int i : score_sorted_) {
     if (!used.count(i)) {
@@ -443,6 +463,7 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
       used.insert(i);
       temp_used.clear();
       Alignment current{alignments_.at(i)};
+      cumulative_score = current.RawScore();
       query_distance_bound = GetDistanceBound(current, scoring_system,
                                               paste_parameters);
       left_candidate = FindLeftCandidate(left_candidate.sorted_pos, current,
@@ -461,12 +482,16 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
         // Prefer pasting more promising candidate.
         if (BetterCandidate(left_candidate, right_candidate,
                             paste_parameters)) {
+          cumulative_score += alignments_.at(left_candidate.alignment_pos)
+                                         .RawScore();
           current.PasteLeft(alignments_.at(left_candidate.alignment_pos),
                             left_candidate.config, scoring_system,
                             paste_parameters);
           temp_used.insert(left_candidate.alignment_pos);
           left_candidate.sorted_pos -= 1;
         } else {
+          cumulative_score += alignments_.at(right_candidate.alignment_pos)
+                                         .RawScore();
           current.PasteRight(alignments_.at(right_candidate.alignment_pos),
                              right_candidate.config, scoring_system,
                              paste_parameters);
@@ -480,7 +505,13 @@ void AlignmentBatch::PasteAlignments(const ScoringSystem& scoring_system,
         // Make accumulated temporary pastes permanent if final thresholds met.
         if (current.SatisfiesThresholds(paste_parameters.final_pident_threshold,
                                         paste_parameters.final_score_threshold,
-                                        paste_parameters)) {
+                                        paste_parameters)
+            && (!paste_parameters.enforce_average_score
+                || (!helpers::FuzzyFloatLess(
+                        current.RawScore(),
+                        cumulative_score / static_cast<float>(
+                            current.PastedIdentifiers().size()),
+                        paste_parameters.float_epsilon)))) {
           alignments_.at(i) = current;
           used.merge(temp_used);
         }

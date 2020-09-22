@@ -2733,6 +2733,104 @@ SCENARIO("Test correctness of AlignmentBatch::PasteAlignments <aware>.",
     }
   }
 
+  GIVEN("Avg. score enforced; distances; plus.") {
+    paste_parameters.enforce_average_score = true;
+    std::vector<Alignment> alignments{
+        Alignment::FromStringFields(0, {"101", "120", "1001", "1020",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(1, {"132", "151", "1032", "1051",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(2, {"161", "180", "1061", "1080",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(3, {"192", "211", "1092", "1111",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters)};
+    std::vector<Alignment> original{alignments};
+    alignment_batch.ResetAlignments(std::move(alignments), paste_parameters);
+    alignment_batch.PasteAlignments(scoring_system, paste_parameters);
+
+    THEN("Alignment pasting rolls back to last final.") {
+      original.at(0).PasteRight(original.at(1),
+                                GetConfiguration(original.at(0),
+                                                 original.at(1)),
+                                scoring_system, paste_parameters);
+      original.at(0).PasteRight(original.at(2),
+                                GetConfiguration(original.at(0),
+                                                 original.at(2)),
+                                scoring_system, paste_parameters);
+      original.at(0).IncludeInOutput(true);
+      original.at(3).IncludeInOutput(true);
+      CHECK(original.at(0) == alignment_batch.Alignments().at(0));
+      CHECK(original.at(1) == alignment_batch.Alignments().at(1));
+      CHECK(original.at(2) == alignment_batch.Alignments().at(2));
+      CHECK(original.at(3) == alignment_batch.Alignments().at(3));
+    }
+  }
+
+  GIVEN("Avg. score enforced; distances; minus.") {
+    paste_parameters.enforce_average_score = true;
+    std::vector<Alignment> alignments{
+        Alignment::FromStringFields(0, {"101", "120", "1111", "1092",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(1, {"132", "151", "1080", "1061",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(2, {"161", "180", "1051", "1032",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(3, {"192", "211", "1020", "1001",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20",
+                                        "AAAAAAAAAAAAAAAAAAAA",
+                                        "AAAAAAAAAAAAAAAAAAAA"},
+                                       scoring_system, paste_parameters)};
+    std::vector<Alignment> original{alignments};
+    alignment_batch.ResetAlignments(std::move(alignments), paste_parameters);
+    alignment_batch.PasteAlignments(scoring_system, paste_parameters);
+
+    THEN("Alignment pasting rolls back to last final.") {
+      original.at(0).PasteRight(original.at(1),
+                                GetConfiguration(original.at(0),
+                                                 original.at(1)),
+                                scoring_system, paste_parameters);
+      original.at(0).PasteRight(original.at(2),
+                                GetConfiguration(original.at(0),
+                                                 original.at(2)),
+                                scoring_system, paste_parameters);
+      original.at(0).IncludeInOutput(true);
+      original.at(3).IncludeInOutput(true);
+      CHECK(original.at(0) == alignment_batch.Alignments().at(0));
+      CHECK(original.at(1) == alignment_batch.Alignments().at(1));
+      CHECK(original.at(2) == alignment_batch.Alignments().at(2));
+      CHECK(original.at(3) == alignment_batch.Alignments().at(3));
+    }
+  }
+
   GIVEN("Final score threshold; gaps; plus.") {
     paste_parameters.final_score_threshold = 13.0f;
     std::vector<Alignment> alignments{
@@ -5748,6 +5846,88 @@ SCENARIO("Test correctness of AlignmentBatch::PasteAlignments <blind>.",
                                                  original.at(2)),
                                 scoring_system, paste_parameters);
       original.at(0).IncludeInOutput(true);
+      CHECK(original.at(0) == alignment_batch.Alignments().at(0));
+      CHECK(original.at(1) == alignment_batch.Alignments().at(1));
+      CHECK(original.at(2) == alignment_batch.Alignments().at(2));
+      CHECK(original.at(3) == alignment_batch.Alignments().at(3));
+    }
+  }
+
+  GIVEN("Avg. score enforced; distances; plus.") {
+    paste_parameters.enforce_average_score = true;
+    std::vector<Alignment> alignments{
+        Alignment::FromStringFields(0, {"101", "120", "1001", "1020",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(1, {"132", "151", "1032", "1051",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(2, {"161", "180", "1061", "1080",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(3, {"192", "211", "1092", "1111",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters)};
+    std::vector<Alignment> original{alignments};
+    alignment_batch.ResetAlignments(std::move(alignments), paste_parameters);
+    alignment_batch.PasteAlignments(scoring_system, paste_parameters);
+
+    THEN("Alignment pasting rolls back to last final.") {
+      original.at(0).PasteRight(original.at(1),
+                                GetConfiguration(original.at(0),
+                                                 original.at(1)),
+                                scoring_system, paste_parameters);
+      original.at(0).PasteRight(original.at(2),
+                                GetConfiguration(original.at(0),
+                                                 original.at(2)),
+                                scoring_system, paste_parameters);
+      original.at(0).IncludeInOutput(true);
+      original.at(3).IncludeInOutput(true);
+      CHECK(original.at(0) == alignment_batch.Alignments().at(0));
+      CHECK(original.at(1) == alignment_batch.Alignments().at(1));
+      CHECK(original.at(2) == alignment_batch.Alignments().at(2));
+      CHECK(original.at(3) == alignment_batch.Alignments().at(3));
+    }
+  }
+
+  GIVEN("Avg. score enforced; distances; minus.") {
+    paste_parameters.enforce_average_score = true;
+    std::vector<Alignment> alignments{
+        Alignment::FromStringFields(0, {"101", "120", "1111", "1092",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(1, {"132", "151", "1080", "1061",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(2, {"161", "180", "1051", "1032",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters),
+        Alignment::FromStringFields(3, {"192", "211", "1020", "1001",
+                                        "20", "0", "0", "0",
+                                        "10000", "100000", "20"},
+                                       scoring_system, paste_parameters)};
+    std::vector<Alignment> original{alignments};
+    alignment_batch.ResetAlignments(std::move(alignments), paste_parameters);
+    alignment_batch.PasteAlignments(scoring_system, paste_parameters);
+
+    THEN("Alignment pasting rolls back to last final.") {
+      original.at(0).PasteRight(original.at(1),
+                                GetConfiguration(original.at(0),
+                                                 original.at(1)),
+                                scoring_system, paste_parameters);
+      original.at(0).PasteRight(original.at(2),
+                                GetConfiguration(original.at(0),
+                                                 original.at(2)),
+                                scoring_system, paste_parameters);
+      original.at(0).IncludeInOutput(true);
+      original.at(3).IncludeInOutput(true);
       CHECK(original.at(0) == alignment_batch.Alignments().at(0));
       CHECK(original.at(1) == alignment_batch.Alignments().at(1));
       CHECK(original.at(2) == alignment_batch.Alignments().at(2));
