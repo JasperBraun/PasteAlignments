@@ -355,8 +355,7 @@ void PasteAlignments(
     paste_alignments::AlignmentBatch batch = reader.ReadBatch(scoring_system,
                                                               paste_parameters);
     batch.PasteAlignments(scoring_system, paste_parameters);
-    if (!paste_parameters.stats_filename.empty()
-        || !paste_parameters.summary_filename.empty()) {
+    if (!paste_parameters.stats_filename.empty()) {
       stats_collector.CollectStats(batch);
     }
     if (!paste_parameters.output_filename.empty()) {
@@ -374,20 +373,20 @@ void PasteAlignments(
     std::ofstream stats_ofs{paste_parameters.stats_filename};
     paste_alignments::PasteStats summary{stats_collector.WriteData(stats_ofs)};
     stats_ofs.close();
-  }
-  if (!paste_parameters.summary_filename.empty()) {
-    std::ofstream summary_ofs{paste_parameters.summary_filename};
-    summary_ofs << "{\n"
-                << "\t\"num_alignments\": " << summary.num_alignments << ",\n"
-                << "\t\"num_pastings\": " << summary.num_pastings << ",\n"
-                << "\t\"average_length\": " << summary.average_length << ",\n"
-                << "\t\"average_pident\": " << summary.average_pident << ",\n"
-                << "\t\"average_score\": " << summary.average_score << ",\n"
-                << "\t\"average_bitscore\": " << summary.average_bitscore << ",\n"
-                << "\t\"average_evalue\": " << summary.average_evalue << ",\n"
-                << "\t\"average_nmatches\": " << summary.average_nmatches << '\n'
-                << "}\n";
-    summary_ofs.close();
+    if (!paste_parameters.summary_filename.empty()) {
+      std::ofstream summary_ofs{paste_parameters.summary_filename};
+      summary_ofs << "{\n"
+                  << "\t\"num_alignments\": " << summary.num_alignments << ",\n"
+                  << "\t\"num_pastings\": " << summary.num_pastings << ",\n"
+                  << "\t\"average_length\": " << summary.average_length << ",\n"
+                  << "\t\"average_pident\": " << summary.average_pident << ",\n"
+                  << "\t\"average_score\": " << summary.average_score << ",\n"
+                  << "\t\"average_bitscore\": " << summary.average_bitscore << ",\n"
+                  << "\t\"average_evalue\": " << summary.average_evalue << ",\n"
+                  << "\t\"average_nmatches\": " << summary.average_nmatches << '\n'
+                  << "}\n";
+      summary_ofs.close();
+    }
   }
 }
 
