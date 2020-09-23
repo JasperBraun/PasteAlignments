@@ -42,8 +42,8 @@ namespace paste_alignments {
 /// @parameter os The stream to write the data into.
 ///
 /// @details Column order: qseqid, sseqid, qstart, qend, sstart, send, nident,
-///  gapopen, qlen, qseq, pident, score, bitscore, evalue, identifiers. Only
-///  writes alignments which are marked as final.
+///  gapopen, qlen, qseq, pident, score, bitscore, evalue, nmatches,
+///  identifiers. Only writes alignments which are marked as final.
 ///
 void WriteBatch(AlignmentBatch batch, std::ostream& os = std::cout);
 /// @}

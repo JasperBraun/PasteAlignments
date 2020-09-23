@@ -56,7 +56,8 @@ void AddRow(const std::string& qseqid, const std::string& sseqid,
      << '\t' << a.Gaps() << '\t' << a.Qlen() << '\t' << a.Slen()
      << '\t' << a.Length() << '\t' << a.Qseq() << '\t' << a.Sseq()
      << '\t' << a.Pident() << '\t' << a.RawScore() << '\t' << a.Bitscore()
-     << '\t' << a.Evalue() << '\t' << a.PastedIdentifiers().at(0);
+     << '\t' << a.Evalue() << '\t' << a.Nmatches()
+     << '\t' << a.PastedIdentifiers().at(0);
   for (int i = 1; i < static_cast<int>(a.PastedIdentifiers().size()); ++i) {
     ss << ',' << a.PastedIdentifiers().at(i);
   }

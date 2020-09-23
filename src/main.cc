@@ -63,7 +63,8 @@ arg_parse_convert::ParameterMap InitParameters() {
                 .Description(
                     "Tab-delimited HSP table with columns: qseqid sseqid qstart"
                     " qend sstart send nident mismatch gapopen gaps qlen slen"
-                    " length qseq sseq pident score bitscore evalue rows, where"
+                    " length qseq sseq pident score bitscore evalue nmatches"
+                    " rows, where nmatches is the number of N-N matches and"
                     " 'rows' is a comma-separated list of row numbers for the"
                     " alignments from the input file that, when pasted"
                     " together, constitute the output alignments. If executing"
