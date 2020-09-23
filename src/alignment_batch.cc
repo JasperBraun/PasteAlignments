@@ -197,7 +197,7 @@ int FindFirstGreaterQstart(
 int GetDistanceBound(const Alignment& alignment,
                      const ScoringSystem& scoring_system,
                      const PasteParameters& paste_parameters) {
-  return ((alignment.RawScore() / scoring_system.Penalty())
+  return ((2.0f * alignment.RawScore() / scoring_system.Penalty())
           + static_cast<float>(paste_parameters.gap_tolerance));
 }
 
