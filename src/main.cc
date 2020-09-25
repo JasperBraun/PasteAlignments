@@ -360,9 +360,11 @@ void PasteAlignments(
       stats_collector.CollectStats(batch);
     }
     if (!paste_parameters.output_filename.empty()) {
-      paste_alignments::WriteBatch(std::move(batch), alignments_ofs);
+      paste_alignments::WriteBatch(std::move(batch), alignments_ofs,
+                                   paste_parameters);
     } else {
-      paste_alignments::WriteBatch(std::move(batch), std::cout);
+      paste_alignments::WriteBatch(std::move(batch), std::cout,
+                                   paste_parameters);
     }
   }
   if (!paste_parameters.output_filename.empty()) {

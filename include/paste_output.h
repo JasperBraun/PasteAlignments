@@ -25,6 +25,7 @@
 #include <string>
 
 #include "alignment_batch.h"
+#include "paste_parameters.h"
 
 namespace paste_alignments {
 
@@ -45,7 +46,8 @@ namespace paste_alignments {
 ///  gapopen, qlen, qseq, pident, score, bitscore, evalue, nmatches,
 ///  identifiers. Only writes alignments which are marked as final.
 ///
-void WriteBatch(AlignmentBatch batch, std::ostream& os = std::cout);
+void WriteBatch(AlignmentBatch batch, std::ostream& os,
+                const PasteParameters& paste_parameters);
 /// @}
 
 /// @}

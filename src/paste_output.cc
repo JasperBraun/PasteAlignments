@@ -24,7 +24,8 @@ namespace paste_alignments {
 
 // WriteBatch
 //
-void WriteBatch(AlignmentBatch batch, std::ostream& os) {
+void WriteBatch(AlignmentBatch batch, std::ostream& os,
+                const PasteParameters& paste_parameters) {
   if (batch.Size() == 0) {return;}
   for (const Alignment& a : batch.Alignments()) {
     if (a.IncludeInOutput()) {
@@ -45,10 +46,12 @@ void WriteBatch(AlignmentBatch batch, std::ostream& os) {
          << '\t' << a.Gaps()
          << '\t' << a.Qlen()
          << '\t' << a.Slen()
-         << '\t' << a.Length()
-         << '\t' << a.Qseq()
-         << '\t' << a.Sseq()
-         << '\t' << a.Pident()
+         << '\t' << a.Length();
+    if (!paste_parameters.blind_mode) {
+      os << '\t' << a.Qseq()
+         << '\t' << a.Sseq();
+    }
+      os << '\t' << a.Pident()
          << '\t' << a.RawScore()
          << '\t' << a.Bitscore()
          << '\t' << a.Evalue()
