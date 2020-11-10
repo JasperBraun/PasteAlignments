@@ -400,6 +400,14 @@ done
 
 ## List of allowed scoring parameters
 
+The following list of scoring parameters comprises the available options for the
+`--match_reward`, `--mismatch_penalty`, `--gapopen_cost`, and `--gapextend_cost`
+parameter values. Corresponding statistical parameters lambda and K are used for
+computation of bitscore, and evalue and are listed here for reference. gap open
+and gap extension cost 0 means that megablast default method for computing these
+values is used, which leaves gap open cost as 0 and calculates gap extension
+cost as `(reward / 2) + penalty`.
+
 reward | penalty | gap open cost | gap extension cost | lambda | K
 --- | --- | --- | --- | --- | ---
 1 | 5 | 0 | 0 | 1.39 | 0.747
