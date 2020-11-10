@@ -262,7 +262,8 @@ in `u` starting at the start coordinate of `u1` and ending at the end coordinate
 of `u2` and the region in `v` starting at the start coordinate of `v1` and
 ending at the end coordinate of `v2`.
 
-*Case 1:*
+**Case 1:**
+
 `u1` and `u2` are a non-negative distance `Du` apart and `v1` and `v2` are a
 non-negative distance `Dv` apart. Assume `Du <= Dv`; the opposite case works
 analogously.
@@ -285,7 +286,8 @@ And the percent identity is at least:
 Note that the grey regions here are all assumed to be mismatches and returned as
 `N-N` matches by the software.
 
-*Case 2:*
+**Case 2:**
+
 `u1` and `u2` intersect in `I` basepairs and `v1` and `v2` are a non-negative
 distance `D` apart. The case where `v1` and `v2` intersect and `u1` and `u2` do
 not, works analogously.
@@ -307,7 +309,8 @@ And the percent identity is at least:
 Note that the chopped-off portion of the alignment (`u2'`, `v2'`) was assumed to
 consist entirely of identical matches.
 
-*Case 3:*
+**Case 3:**
+
 `u1` and `u2` intersect in `Iu` basepairs and `v1` and `v2` intersect in `Iv`
 basepairs. Assume `Iu >= Iv`; the opposite case works analogously.
 
