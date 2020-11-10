@@ -18,6 +18,7 @@ gapped alignments.
   + [Legal configuration](#legal-configuration)
   + [Pastability](#pastability)
   + [Order of pasting](#order-of-pasting)
+* [List of allowed scoring parameters](#list-of-allowed-scoring-parameters)
 
 ## Installation
 
@@ -248,7 +249,7 @@ To describe how percent identity and score of a pasted alignment are calculated,
 we break down legal configurations of a pair of alignments (`A1`, `A2`) into
 three cases.
 
-![Image of three cases for computing pasted alignment scores.](docs/pasting_cases_image.pdf)
+![Image of three cases for computing pasted alignment scores.](docs/pasting_cases.png)
 
 The images show how the pasted alignments are constructed. In all three cases,
 two local alignments of sequences `u` and `v` are shown. One of the alignments
