@@ -76,38 +76,46 @@ paste_alignments --db_size 1000000 ungapped_alignment_file pasted_output_file
 
 ### Input/output parameters
 
-* INPUT_FILE
-  Tab-delimited HSP table as returned by BLAST with option `-outfmt '6
-  qseqid sseqid qstart qend sstart send nident mismatch gapopen gaps qlen
-  slen length qseq sseq`. If executing in blind mode, the last two columns
-  can be left out. Each alignment is considered to be on the minus strand
-  if it's subject end coordinate precedes its subject start coordinate.
-  Fields in excess of 13 (11 if in blind mode) are ignored.
-* OUTPUT_FILE
-  Tab-delimited HSP table with columns: qseqid sseqid qstart qend sstart
-  send nident mismatch gapopen gaps qlen slen length qseq sseq pident
-  score bitscore evalue nmatches rows, where nmatches is the number of N-N
-  matches and 'rows' is a comma-separated list of row numbers for the
-  alignments from the input file that, when pasted together, constitute
-  the output alignments. If executing in blind mode, the qseq and sseq
-  columns are omitted. For alignments on the minus strand, the subject end
-  coordinate precedes its subject start coordinate.
-* -y, --summary, --summary_file SUMMARY_FILE
-  Print overall statistics in JSON format with 1: number of alignments, 2:
-  number of pastings performed, 3: average alignment length, 4: average
-  percent identity, 5: average raw alignment score, 6: average bitscore,
-  7: average evalue, 8: average number of unknown N-N matches (which are
-  treated as mismatches.
-* -s, --stats, --stats_file STATS_FILE
-  Print tab-separated data with columns: 1: query sequence identifier, 2:
-  subject sequence identifier, 3: number of alignments, 4: number of
-  pastings performed, 5: average alignment length, 6: average percent
-  identity, 7: average raw alignment score, 8: average bitscore, 9:
-  average evalue, 10: average number of unknown N-N matches (which are
-  treated as mismatches.
-* -c, --config, --configuration_file CONFIGURATION_FILE
-  Read parameters from configuration file (see
-  [Configuration file](#configuration-file)).
+`INPUT_FILE`
+
+Tab-delimited HSP table as returned by BLAST with option `-outfmt '6 qseqid
+sseqid qstart qend sstart send nident mismatch gapopen gaps qlen slen length
+qseq sseq`. If executing in blind mode, the last two columns can be left out.
+Each alignment is considered to be on the minus strand if it's subject end
+coordinate precedes its subject start coordinate. Fields in excess of 13 (11 if
+in blind mode) are ignored.
+
+`OUTPUT_FILE`
+
+Tab-delimited HSP table with columns: qseqid sseqid qstart qend sstart
+send nident mismatch gapopen gaps qlen slen length qseq sseq pident
+score bitscore evalue nmatches rows, where nmatches is the number of N-N
+matches and 'rows' is a comma-separated list of row numbers for the
+alignments from the input file that, when pasted together, constitute
+the output alignments. If executing in blind mode, the qseq and sseq
+columns are omitted. For alignments on the minus strand, the subject end
+coordinate precedes its subject start coordinate.
+
+`-y, --summary, --summary_file SUMMARY_FILE`
+
+Print overall statistics in JSON format with 1: number of alignments, 2:
+number of pastings performed, 3: average alignment length, 4: average
+percent identity, 5: average raw alignment score, 6: average bitscore,
+7: average evalue, 8: average number of unknown N-N matches (which are
+treated as mismatches.
+
+`-s, --stats, --stats_file STATS_FILE`
+
+Print tab-separated data with columns: 1: query sequence identifier, 2:
+subject sequence identifier, 3: number of alignments, 4: number of
+pastings performed, 5: average alignment length, 6: average percent
+identity, 7: average raw alignment score, 8: average bitscore, 9:
+average evalue, 10: average number of unknown N-N matches (which are
+treated as mismatches.
+
+`-c, --config, --configuration_file CONFIGURATION_FILE`
+
+Read parameters from configuration file (see [Configuration file](#configuration-file)).
 
 Input/output example:
 ```bash
@@ -116,27 +124,40 @@ paste_alignments -d 1000000 -c configuration.config ungapped_alignment_file past
 
 ### Pasting parameters
 
-* -g, --gap, --gap_tolerance INTEGER ( = 4)
-  Maximum gap length allowed to be introduced through pasting.
-* --final_pident, --final_pident_threshold FLOAT ( = 0.0)
-  Percent identity threshold alignments must satisfy to be included in the
-  output.
-* --final_score, --final_score_threshold FLOAT ( = 0.0)
-  Raw score threshold alignments must satisfy to be included in the
-  output.
-* --intermediate_pident, --intermediate_pident_threshold FLOAT ( = 0.0)
-  Percent identity threshold that must be satisfied during pasting.
-* --intermediate_score, --intermediate_score_threshold FLOAT ( = 0.0)
-  Raw score threshold that must be satisfied during pasting.
-* --blind, --blind_mode
-  Disregard actual sequences during pasting. No alignment sequences are
-  read or constructed during pasting in this mode. However query and
-  subject coordinates, number of identities, mismatches, gap openings, and
-  gap extensions (and thus percent identity, score, bitscore, and evalue)
-  are still computed.
-* --enforce_avg_score, --enforce_average_score
-  Paste alignments only when the pasted score is at least as large as the
-  average score of the two alignments.
+` -g, --gap, --gap_tolerance INTEGER ( = 4)`
+
+Maximum gap length allowed to be introduced through pasting.
+
+` --final_pident, --final_pident_threshold FLOAT ( = 0.0)`
+
+Percent identity threshold alignments must satisfy to be included in the
+output.
+
+` --final_score, --final_score_threshold FLOAT ( = 0.0)`
+
+Raw score threshold alignments must satisfy to be included in the
+output.
+
+` --intermediate_pident, --intermediate_pident_threshold FLOAT ( = 0.0)`
+
+Percent identity threshold that must be satisfied during pasting.
+
+` --intermediate_score, --intermediate_score_threshold FLOAT ( = 0.0)`
+
+Raw score threshold that must be satisfied during pasting.
+
+` --blind, --blind_mode`
+
+Disregard actual sequences during pasting. No alignment sequences are
+read or constructed during pasting in this mode. However query and
+subject coordinates, number of identities, mismatches, gap openings, and
+gap extensions (and thus percent identity, score, bitscore, and evalue)
+are still computed.
+
+` --enforce_avg_score, --enforce_average_score`
+
+Paste alignments only when the pasted score is at least as large as the
+average score of the two alignments.
 
 Pasting parameters example:
 ```bash
@@ -149,25 +170,34 @@ Only a specific set of match reward, mismatch penalty, gap open cost and gap
 extension cost is allowed. See [List of allowed scoring
 parameters](#list-of-allowed-scoring-parameters).
 
-* -d, --db, --db_size INTEGER
-  Size of the database used for the BLAST search. Required for the
-  computation of evalues. (This value can be obtained using the command
-  `blastdbcmd -info -db BLAST_DATABASE_NAME` in the database's directory,
-  which lists the value as the total number of residues)
-* -r, --reward, --match_reward INTEGER ( = 1)
-  Match reward used to compute score, bitscore, and evalue. Only a fixed
-  set of values is supported.
-* -p, --penalty, --mismatch_penalty INTEGER ( = 2)
-  Mismatch penalty used to compute score, bitscore, and evalue. Only a
-  fixed set of values is supported.
-* -o, --gapopen, --gapopen_cost INTEGER ( = 0)
-  Gap opening cost used to compute score, bitscore, and evalue. Only a
-  fixed set of values is supported. For megablast scoring parameters set
-  this value to 0.
-* -e, --gapextend, --gapextend_cost INTEGER ( = 0)
-  Gap extension cost used to compute score, bitscore, and evalue. Only a
-  fixed set of values is supported. For megablast scoring parameters set
-  this value to 0.
+` -d, --db, --db_size INTEGER`
+
+Size of the database used for the BLAST search. Required for the
+computation of evalues. (This value can be obtained using the command
+`blastdbcmd -info -db BLAST_DATABASE_NAME` in the database's directory,
+which lists the value as the total number of residues)
+
+` -r, --reward, --match_reward INTEGER ( = 1)`
+
+Match reward used to compute score, bitscore, and evalue. Only a fixed
+set of values is supported.
+
+` -p, --penalty, --mismatch_penalty INTEGER ( = 2)`
+
+Mismatch penalty used to compute score, bitscore, and evalue. Only a
+fixed set of values is supported.
+
+` -o, --gapopen, --gapopen_cost INTEGER ( = 0)`
+
+Gap opening cost used to compute score, bitscore, and evalue. Only a
+fixed set of values is supported. For megablast scoring parameters set
+this value to 0.
+
+` -e, --gapextend, --gapextend_cost INTEGER ( = 0)`
+
+Gap extension cost used to compute score, bitscore, and evalue. Only a
+fixed set of values is supported. For megablast scoring parameters set
+this value to 0.
 
 Scoring parameters example:
 ```bash
@@ -176,14 +206,21 @@ paste_alignments -d 1000000 -r 2 -p 3 -o 5 -e 2 ungapped_alignment_file pasted_o
 
 ### Other parameters
 
-* -h, --help
-  Print help message and exit.
-* --version
-  Print the software's version and exit.
-* --float_epsilon FLOAT ( = 0.01)
-  Used for floating point comparison of the C++ `float` data type.
-* --double_epsilon FLOAT ( = 0.01)
-  Used for floating point comparison of the C++ `double` data type.
+` -h, --help`
+
+Print help message and exit.
+
+` --version`
+
+Print the software's version and exit.
+
+` --float_epsilon FLOAT ( = 0.01)`
+
+Used for floating point comparison of the C++ `float` data type.
+
+` --double_epsilon FLOAT ( = 0.01)`
+
+Used for floating point comparison of the C++ `double` data type.
 
 Two floating points `x` and `y` are considered equal by the software if both are
 0.0, or:
